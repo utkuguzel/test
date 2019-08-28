@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.Identity.EntityFramework" Version="2.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
@@ -23,5 +19,9 @@
     <PackageReference Include="Piranha.ImageSharp" Version="7.0.0-rc1" />
     <PackageReference Include="Piranha.Local.FileStorage" Version="7.0.0" />
     <PackageReference Include="Piranha.Manager" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\assets\libraries\" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,54 @@
+.products {
+	position: relative;
+
+	.products-inner {
+		position: absolute;
+		width: 100%;
+		padding: 0 45px;
+		z-index: 5;
+		top: -100px;
+
+		.product {
+			width: auto;
+			min-width: 100%;
+			height: auto;
+			min-height: 220px;
+			padding: 40px 20px 60px 20px;
+			background: #FFF;
+			margin-bottom: 20px;
+			box-shadow: 0px 5px 4px rgba(0,0,0,0.1);
+			border-radius: 4px;
+			text-align: center;
+			background: url('/assets/images/block-overlay.jpg') no-repeat;
+			background-size: cover;
+			cursor: pointer;
+			transition: box-shadow 0.1s, background 0.1s, color 0.1s;
+
+			&:hover {
+				background: url('/assets/images/block-overlay-hover.jpg') no-repeat;
+				background-size: cover;
+				box-shadow: 0px 5px 4px rgba(0,0,0,0.3);
+
+				i {
+					color: @COLOUR_LAVA;
+				}
+			}
+
+			h3 {
+				//text-transform: uppercase;
+				font-size: 1em;
+
+				i {
+					display: block;
+					color: @COLOUR_VIVIDBURGUNDY;
+					font-size: 4em;
+					padding: 0 0 10px 0;
+				}
+			}
+
+			p {
+				font-size: 0.9em;
+			}
+		}
+	}
+}

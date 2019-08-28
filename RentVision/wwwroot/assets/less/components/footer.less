@@ -1,0 +1,42 @@
+footer {
+	position: relative;
+	width: inherit;
+	height: auto;
+	min-height: 50px;
+	padding: 20px 45px 5px 45px;
+	background: @COLOUR_DARK;
+
+	.footer-block {
+		color: @COLOUR_ISABELLINE;
+		font-size: 0.9em;
+
+		a {
+			display: block;
+			width: 100%;
+			padding: 5px 0;
+		}
+	}
+}
+
+.footer-copyright {
+	width: inherit;
+	height: auto;
+	padding: 10px 45px;
+	background: @COLOUR_ALMOSTDARK;
+	color: lighten(@COLOUR_DARK, 20%);
+	font-size: 0.9em;
+
+	.right {
+		text-align: right;
+	}
+
+	p {
+		margin: 0;
+	}
+}
+
+@media all and ( max-width: 768px ) {
+	.footer-copyright, .right, .left {
+		text-align: center !important;
+	}
+}
