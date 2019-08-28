@@ -9,11 +9,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.Identity.EntityFramework" Version="2.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.6" />
     <PackageReference Include="Piranha" Version="7.0.0" />
     <PackageReference Include="Piranha.AspNetCore" Version="7.0.0" />
     <PackageReference Include="Piranha.AspNetCore.Identity.SQLite" Version="7.0.0" />
+    <PackageReference Include="Piranha.AspNetCore.Identity.SQLServer" Version="7.0.0" />
     <PackageReference Include="Piranha.AttributeBuilder" Version="7.0.0" />
     <PackageReference Include="Piranha.Data.EF" Version="7.0.0" />
     <PackageReference Include="Piranha.ImageSharp" Version="7.0.0-rc1" />
