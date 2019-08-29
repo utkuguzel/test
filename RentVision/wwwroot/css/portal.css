@@ -1,0 +1,108 @@
+﻿body,
+html {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  background: url('/assets/images/background.jpg') no-repeat center center;
+  background-size: cover;
+  font-family: 'Ubuntu', sans-serif;
+}
+a {
+  text-shadow: 1px 1px 0px #222;
+  color: #A9A9B9;
+}
+a:hover {
+  text-decoration: none;
+  color: #cd2543;
+}
+.logo {
+  width: 200px;
+  height: 30px;
+  margin: 0 auto;
+  background: url('/assets/images/logos/RentVision-02-Light.png') no-repeat center center;
+  background-size: contain;
+}
+.logo.logo-dark {
+  background: url('/assets/images/logos/RentVision-02-Dark.png') no-repeat center center;
+  background-size: contain;
+}
+.d-flex {
+  position: relative;
+  width: inherit;
+  height: auto;
+  padding: 100px 20px 20px 20px;
+  margin: 0 0 0 0;
+}
+.d-flex.form-register {
+  padding: 60px 20px 20px 20px;
+}
+.form {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  padding: 10px 20px 40px 20px;
+  border-radius: 4px;
+  background: url('/assets/images/form-overlay.jpg') no-repeat center center;
+  background-size: cover;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+}
+.form .d-inline-flex {
+  width: 100%;
+}
+.form .logo-box {
+  padding: 10px 0 20px 0;
+  border-radius: 4px;
+}
+.form .padding {
+  width: 100%;
+}
+.form input[type="email"],
+.form input[type="password"],
+.form input[type="text"],
+.form button,
+.form select {
+  display: block;
+  width: 100%;
+  max-width: 600px;
+  height: 50px;
+  margin: 0 0 20px 0;
+  padding: 0 0 0 7px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+.form input[name="firstname"] {
+  border-right: none;
+}
+.form input[name="confirmPassword"] {
+  border-left: none;
+}
+.form input[type="text"],
+.form input[type="password"] {
+  width: 100%;
+}
+.form input[type="password"] {
+  margin: 0 0 10px 0;
+}
+.form label {
+  font-size: 0.8em;
+}
+.form button {
+  margin: 10px 0 10px 0;
+  border: 1px solid #DDD;
+  border-radius: 4px;
+  transition: background 0.5s !important;
+  color: #FFF;
+  background: #c61120;
+  background: linear-gradient(328deg, #c61120 0%, #a2142d 100%);
+}
+.form button:hover {
+  background: #e01324;
+  background: linear-gradient(328deg, #e01324 0%, #b01530 100%);
+}
+.form a {
+  text-shadow: none;
+}
+.form a i {
+  padding: 0 10px 0 0;
+}

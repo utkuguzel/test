@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNet.Identity.EntityFramework" Version="2.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.4" />
@@ -22,6 +21,48 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\assets\libraries\" />
+    <Content Remove="compilerconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="favicon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="assets\less\base.less" />
+    <Content Include="assets\less\colours.less" />
+    <Content Include="assets\less\components\block.less" />
+    <Content Include="assets\less\components\footer.less" />
+    <Content Include="assets\less\components\header.less" />
+    <Content Include="assets\less\components\hero.less" />
+    <Content Include="assets\less\components\products.less" />
+    <Content Include="assets\less\config.less" />
+    <Content Include="assets\less\portal.less" />
+    <Content Include="assets\less\variables.less" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="compilerconfig.json" />
+    <None Include="wwwroot\assets\css\reset.css" />
+    <None Include="wwwroot\assets\images\background.jpg" />
+    <None Include="wwwroot\assets\images\block-border-grey-double.png" />
+    <None Include="wwwroot\assets\images\block-border-white-double.png" />
+    <None Include="wwwroot\assets\images\block-border-white.png" />
+    <None Include="wwwroot\assets\images\block-overlay-hover.jpg" />
+    <None Include="wwwroot\assets\images\block-overlay.jpg" />
+    <None Include="wwwroot\assets\images\block-overlay.png" />
+    <None Include="wwwroot\assets\images\footer-border-overlay.png" />
+    <None Include="wwwroot\assets\images\form-overlay.jpg" />
+    <None Include="wwwroot\assets\images\hero.jpg" />
+    <None Include="wwwroot\assets\images\hero2.jpg" />
+    <None Include="wwwroot\assets\images\hero3.jpg" />
+    <None Include="wwwroot\assets\images\hero4.jpg" />
+    <None Include="wwwroot\assets\images\logo-big.png" />
+    <None Include="wwwroot\assets\images\logos\RentVision - 01 - Dark.png" />
+    <None Include="wwwroot\assets\images\logos\RentVision - 01 - Light.png" />
+    <None Include="wwwroot\assets\images\logos\RentVision-02-Dark.png" />
+    <None Include="wwwroot\assets\images\logos\RentVision-02-Light.png" />
+    <None Include="wwwroot\assets\images\logos\rentvision-icon.png" />
+    <None Include="wwwroot\assets\js\header.js" />
   </ItemGroup>
 </Project>

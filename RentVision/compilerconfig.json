@@ -1,6 +1,42 @@
 ﻿[
   {
-    "outputFile": "wwwroot/css/style.css",
-    "inputFile": "assets/scss/style.scss"
+    "outputFile": "wwwroot/css/components/block.css",
+    "inputFile": "assets/less/components/block.less"
+  },
+  {
+    "outputFile": "wwwroot/css/variables.css",
+    "inputFile": "assets/less/variables.less"
+  },
+  {
+    "outputFile": "wwwroot/css/portal.css",
+    "inputFile": "assets/less/portal.less"
+  },
+  {
+    "outputFile": "wwwroot/css/config.css",
+    "inputFile": "assets/less/config.less"
+  },
+  {
+    "outputFile": "wwwroot/css/colours.css",
+    "inputFile": "assets/less/colours.less"
+  },
+  {
+    "outputFile": "wwwroot/css/base.css",
+    "inputFile": "assets/less/base.less"
+  },
+  {
+    "outputFile": "wwwroot/css/components/products.css",
+    "inputFile": "assets/less/components/products.less"
+  },
+  {
+    "outputFile": "wwwroot/css/components/hero.css",
+    "inputFile": "assets/less/components/hero.less"
+  },
+  {
+    "outputFile": "wwwroot/css/components/header.css",
+    "inputFile": "assets/less/components/header.less"
+  },
+  {
+    "outputFile": "wwwroot/css/components/footer.css",
+    "inputFile": "assets/less/components/footer.less"
   }
 ]
