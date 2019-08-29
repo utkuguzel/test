@@ -80,5 +80,31 @@ namespace RentVision.Controllers
 
             return View(model);
         }
+
+        /// <summary>
+        /// Gets the loginpage with the given id.
+        /// </summary>
+        /// <param name="id">The unique page id</param>
+        /// <param name="draft">If a draft is requested</param>
+        [Route("login")]
+        public async Task<IActionResult> Login(Guid id, bool draft = false)
+        {
+            var model = await _loader.GetPage<LoginPage>(id, HttpContext.User, draft);
+
+            return View(model);
+        }
+
+        /// <summary>
+        /// Gets the registerpage with the given id.
+        /// </summary>
+        /// <param name="id">The unique page id</param>
+        /// <param name="draft">If a draft is requested</param>
+        [Route("register")]
+        public async Task<IActionResult> Register(Guid id, bool draft = false)
+        {
+            var model = await _loader.GetPage<RegisterPage>(id, HttpContext.User, draft);
+
+            return View(model);
+        }
     }
 }

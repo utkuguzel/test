@@ -1,0 +1,32 @@
+@model LoginPage
+@inject IApi Api
+
+@{
+    ViewBag.Title = Model.Title;
+}
+
+@section head {
+    <link rel="stylesheet/less" type="text/css" href="~/css/portal.min.css">
+}
+
+<div class="d-flex justify-content-center">
+    <div class="form">
+        <div class="logo-box">
+            <div class="logo logo-dark"></div>
+        </div>
+
+        <form>
+            <label for="email">E-mail</label>
+            <input id="email" type="email" name="email" placeholder="E-mail...">
+
+            <label for="password">Password</label>
+            <input id="password" type="password" name="password" placeholder="Password...">
+
+            <input id="remember" type="checkbox" name="remember">
+            <label for="remember">Remember me</label>
+
+            <button>Sign in</button>
+            <a href="/"><i class="fas fa-arrow-left"></i>Return to website</a>
+        </form>
+    </div>
+</div>

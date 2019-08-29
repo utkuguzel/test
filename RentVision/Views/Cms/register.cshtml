@@ -1,0 +1,53 @@
+@model RegisterPage
+@inject IApi Api
+
+@{
+    ViewBag.Title = Model.Title;
+}
+
+@section head {
+    <link rel="stylesheet/less" type="text/css" href="~/css/portal.min.css">
+}
+
+<div class="d-flex justify-content-center form-register">
+	<div class="form">
+		<div class="logo-box">
+			<div class="logo logo-dark"></div>
+		</div>
+
+		<form>
+			<label for="type">Account type</label>
+			<select>
+				<option value="0" selected>Landlord</option>	
+			</select>
+
+			<div class="d-inline-flex">
+				<div class="padding padding-right">
+					<input id="firstname" type="text" name="firstname" placeholder="Firstname...">
+				</div>
+				<div class="padding padding-left">
+					<input id="lastname" type="text" name="lastname" placeholder="Lastname...">
+				</div>
+			</div>
+
+			<input id="email" type="email" name="email" placeholder="E-mail...">
+
+			<div class="d-inline-flex">
+				<div class="padding padding-right">
+					<input id="password" type="password" name="password" placeholder="Password...">
+				</div>
+				<div class="padding padding-left">
+					<input id="confirmPassword" type="password" name="confirmPassword" placeholder="Confirm password...">
+				</div>
+			</div>
+
+			<div class="box">
+				<input id="tos" type="checkbox" name="tos">
+				<label for="tos">I agree to the terms of service</label>
+			</div>
+
+			<button>Create account</button>
+			<a href="/"><i class="fas fa-arrow-left"></i>Return to website</a>
+		</form>
+	</div>
+</div>
