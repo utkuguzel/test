@@ -1,0 +1,26 @@
+@{
+    string PrimaryImage() {
+        if (Model.Hero.PrimaryImage.HasValue) {
+            return $"style=background-image:url({Url.Content(Model.Hero.PrimaryImage)}) no-repeat center center !important";
+        }
+        return "";
+    }
+}
+
+    <!-- START HERO -->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="hero" @PrimaryImage()>
+                <div class="overlay"></div>
+                <div class="hero-content">
+                    <div class="triangle"></div>
+
+                    <div class="hero-text">
+                        <h1>@Model.Hero.Title</h1>
+                        <h5>@Model.Hero.Ingress</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END HERO -->

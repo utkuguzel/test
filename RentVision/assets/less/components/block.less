@@ -1,110 +1,107 @@
 @import "../colours.less";
 
 .block {
-	position: relative;
-	width: 100%;
-	height: auto;
-	min-height: 500px;
-	padding: 20px 45px;
+    position: relative;
+    width: 100%;
+    height: auto;
+    min-height: 500px;
+    padding: 20px 45px;
 
-	p, li {
-		font-family: 'Open Sans';
-	}
+    p, li {
+        font-family: 'Open Sans';
+    }
 
-	img {
-		margin: 0 0 20px 0;
-	}
+    img {
+        margin: 0 0 20px 0;
+    }
 
-	&.block-grey {
-		background-color: @COLOUR_ISABELLINE;
-		padding-bottom: 30px;
-	}
+    &.block-grey {
+        background-color: @COLOUR_ISABELLINE;
+        padding-bottom: 30px;
+    }
 
-	ul {
-		list-style-type: none;
-		padding: 0 0 20px 20px;
+    ul {
+        list-style-type: none;
+        padding: 0 0 20px 20px;
 
-		li {
-			position:relative;
+        li {
+            position: relative;
 
-			&:before {
-			    content: '';
-			    display: block;
-			    position: absolute;
-			    top: 10px;
-			    left: -18px;
-			    width: 6px;
-			    height: 6px;
-			    border-radius: 50%;
-			    background: @COLOUR_LAVA;
-			    -webkit-box-shadow: 0 0 10px @COLOUR_LAVA;
-			    box-shadow: 0 0 10px @COLOUR_LAVA;
-			}
-		}
-	}
+            &:before {
+                content: '';
+                display: block;
+                position: absolute;
+                top: 10px;
+                left: -18px;
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: @COLOUR_LAVA;
+                -webkit-box-shadow: 0 0 10px @COLOUR_LAVA;
+                box-shadow: 0 0 10px @COLOUR_LAVA;
+            }
+        }
+    }
 
-	a.button {
-		display: block !important;
-		max-width: 150px;
-		text-align: center;
-		text-decoration: none;
-		color: #FFF;
-		padding: 10px 20px;
-		margin-bottom: 20px !important;
-		border: 1px solid @COLOUR_VIVIDBURGUNDY;
-		border-radius: 4px;
+    a {
+        display: block !important;
+        max-width: 150px;
+        text-align: center;
+        text-decoration: none;
+        color: #FFF;
+        padding: 10px 20px;
+        margin-bottom: 20px !important;
+        border: 1px solid @COLOUR_VIVIDBURGUNDY;
+        border-radius: 4px;
+        background-color: @COLOUR_LAVA;
 
-		i {
-			padding-left: 5px;
-		}
+        i {
+            padding-left: 5px; 
+        }
 
-		&:hover {
-			background-color: lighten(@COLOUR_LAVA, 10%) !important;
-		}
+        &:hover {
+            background-color: lighten(@COLOUR_LAVA, 10%) !important;
+        }
+    }
 
-		&.button-active {
-			background-color: @COLOUR_LAVA;
-		}
-	}
+    h3 {
+        display: block;
+        text-align: center;
+        padding: 10px 0 20px 0;
+    }
 
-	h3 {
-		display: block;
-		text-align: center;
-		padding: 10px 0 20px 0;
-	}
+    h4 {
+        i {
+            padding-right: 20px;
+            color: @COLOUR_LAVA;
+            text-shadow: 0px 0px 7px @COLOUR_LAVA;
+        }
+    }
 
-	h4 {
-		i {
-			padding-right: 20px;
-			color: @COLOUR_LAVA;
-			text-shadow: 0px 0px 7px @COLOUR_LAVA;
-		}
-	}
+    .divider {
+        display: block;
+        width: 200px;
+        height: 2px;
+        background-color: @COLOUR_LAVA;
+        margin: 0 auto 50px auto;
+    }
 
-	.divider {
-		display: block;
-		width: 200px;
-		height: 2px;
-		background-color: @COLOUR_LAVA;
-		margin: 0 auto 50px auto;
-	}
+    .border {
+        position: absolute;
+        width: 120%;
+        height: 100px;
+        top: -100px;
+        left: -45px;
+        border: none !important;
 
-	.border {
-		position: absolute;
-		width: 120%;
-		height: 100px;
-		top: -100px;
-		left: -45px;
-		border: none !important;
+        &.border-white {
+            background: url('/assets/images/block-border-white-double.png') no-repeat center center;
+            background-size: cover;
+        }
 
-		&.border-white {
-			background: url('/assets/images/block-border-white-double.png') no-repeat center center;
-			background-size: cover;
-		}
-
-		&.border-grey {
-			background: url('/assets/images/block-border-grey-double.png') no-repeat center center;
-			background-size: cover;
-		}
-	}
+        &.border-grey {
+            background: url('/assets/images/block-border-grey-double.png') no-repeat center center;
+            background-size: cover;
+        }
+    }
 }

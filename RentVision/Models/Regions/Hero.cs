@@ -12,6 +12,12 @@ namespace RentVision.Models.Regions
         public ImageField PrimaryImage { get; set; }
 
         /// <summary>
+        /// Gets/sets the optional title.
+        /// </summary>
+        [Field]
+        public TextField Title { get; set; }
+
+        /// <summary>
         /// Gets/sets the optional ingress.
         /// </summary>
         [Field]

@@ -1,0 +1,26 @@
+@model TwoColumnBlock
+
+<div class="row">
+    <div class="col-md">
+        <div class="block">
+            <div class="border border-white"></div>
+            <h3>@Model.Title</h3>
+            <div class="divider"></div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="block-left">
+                        <h4><i class="fas fa-check"></i>@Model.Subtitle</h4>
+                        
+                        @Html.Raw(Model.Column1)
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="block-right">
+                        @Html.Raw(Model.Column2)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

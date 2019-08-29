@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Piranha;
 using Piranha.AspNetCore.Identity.SQLServer;
+using Piranha.Manager;
+using RentVision.Models;
 using System.IO;
 
 namespace RentVision
@@ -103,6 +105,17 @@ namespace RentVision
                     name: "default",
                     template: "{controller=home}/{action=index}/{id?}");
             });
+
+            // Custom manager styles
+            App.Modules.Get<Module>().Styles.Add("~/css/components/block.css");
+
+            // Custom manager scripts
+            App.Modules.Get<Module>().Scripts.Add("~/assets/js/blocks/TwoColumnBlock.js");
+            App.Modules.Get<Module>().Scripts.Add("~/assets/js/blocks/TwoColumnBlockGray.js");
+
+            // Custom blocks
+            App.Blocks.Register<TwoColumnBlock>();
+            App.Blocks.Register<TwoColumnBlockGray>();
         }
     }
 }

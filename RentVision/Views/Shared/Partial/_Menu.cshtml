@@ -2,7 +2,7 @@
     var sitemap = WebApp.Site.Sitemap;
 }
 
-@*Not the best solution but meanwhile... class = d-sm-block d-md-none is hiding on md screen solution*@
+@*
 <nav class="navbar navbar-toggleable-sm navbar-dark bg-faded d-sm-block d-md-none">
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -17,7 +17,8 @@
         </div>
     </div>
 </nav>
-@*Not the best solution but meanwhile... class =  d-none d-md-block is hiding on sm screen solution*@
+
+
 <nav class="navbar d-none d-md-block">
     <ul class="nav nav-site justify-content-center">
         @foreach (var item in sitemap)
@@ -28,3 +29,28 @@
         }
     </ul>
 </nav>
+*@
+
+<!-- START HEADER -->
+<div class="row">
+    <div class="col-sm-12">
+        <header>
+            <div class="nav nav-left">
+                <div class="logo"></div>
+            </div>
+            <div class="nav nav-right">
+                <div id="rightmenu-mobile" class="nav-mobile">
+                    <i class="fas fa-bars"></i>
+                </div>
+
+                <div id="rightmenu">
+                    <ul class="menuoptions">
+                        <li><a class="button button-active" href="/register.html"><i class="fas fa-user-plus"></i>Create an account</a></li>
+                        <li><a class="button button-inactive" href="/login.html"><i class="fas fa-home"></i>Customer login</a></li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+    </div>
+</div>
+<!-- END HEADER -->
