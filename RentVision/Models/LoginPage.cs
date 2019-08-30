@@ -9,5 +9,7 @@ namespace RentVision.Models
     [PageTypeRoute(Title = "Default", Route = "/login")]
     public class LoginPage : Page<LoginPage>
     {
+        [Region]
+        public LoginFields Fields { get; set; }
     }
 }

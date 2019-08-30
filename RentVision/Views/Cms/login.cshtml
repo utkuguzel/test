@@ -15,18 +15,18 @@
             <div class="logo logo-dark"></div>
         </div>
 
-        <form>
-            <label for="email">E-mail</label>
-            <input id="email" type="email" name="email" placeholder="E-mail...">
+        <form method="post" action="@Model.Fields.ButtonLink.Value">
+            <label for="email">@Model.Fields.Email.Value</label>
+            <input id="email" type="email" name="email" placeholder="@Model.Fields.Email.Value...">
 
-            <label for="password">Password</label>
-            <input id="password" type="password" name="password" placeholder="Password...">
+            <label for="password">@Model.Fields.Password.Value</label>
+            <input id="password" type="password" name="password" placeholder="@Model.Fields.Password.Value...">
 
             <input id="remember" type="checkbox" name="remember">
-            <label for="remember">Remember me</label>
+            <label for="remember">@Model.Fields.Remember.Value</label>
 
-            <button>Sign in</button>
-            <a href="/"><i class="fas fa-arrow-left"></i>Return to website</a>
+            <button>@Model.Fields.ButtonText.Value</button>
+            <a href="/"><i class="fas fa-arrow-left"></i>@Model.Fields.ReturnButtonText.Value</a>
         </form>
     </div>
 </div>

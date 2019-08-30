@@ -10,6 +10,7 @@ using Piranha;
 using Piranha.AspNetCore.Identity.SQLServer;
 using Piranha.Manager;
 using RentVision.Models;
+using RentVision.Models.Regions;
 using System.IO;
 
 namespace RentVision
@@ -80,15 +81,15 @@ namespace RentVision
 
             // Build content types
             var pageTypeBuilder = new Piranha.AttributeBuilder.PageTypeBuilder(api)
-                .AddType(typeof(Models.BlogArchive))
-                .AddType(typeof(Models.StandardPage))
-                .AddType(typeof(Models.StartPage))
-                .AddType(typeof(Models.LoginPage))
-                .AddType(typeof(Models.RegisterPage));
+                .AddType(typeof(BlogArchive))
+                .AddType(typeof(StandardPage))
+                .AddType(typeof(StartPage))
+                .AddType(typeof(LoginPage))
+                .AddType(typeof(RegisterPage));
             pageTypeBuilder.Build()
                 .DeleteOrphans();
             var postTypeBuilder = new Piranha.AttributeBuilder.PostTypeBuilder(api)
-                .AddType(typeof(Models.BlogPost));
+                .AddType(typeof(BlogPost));
             postTypeBuilder.Build()
                 .DeleteOrphans();
 
@@ -118,6 +119,9 @@ namespace RentVision
             // Custom blocks
             App.Blocks.Register<TwoColumnBlock>();
             App.Blocks.Register<TwoColumnBlockGray>();
+
+            // Enums
+            //App.Fields.RegisterSelect<SelectFieldOptions.InputTypes>();
         }
     }
 }
