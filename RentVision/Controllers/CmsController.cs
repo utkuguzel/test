@@ -4,6 +4,14 @@ using Piranha;
 using Piranha.AspNetCore.Services;
 using System;
 using System.Threading.Tasks;
+using System.Globalization;
+using System.Threading;
+using System.Collections.Generic;
+using System.Diagnostics;
+using Piranha.Data;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Http;
+using RentVision.Helpers;
 
 namespace RentVision.Controllers
 {
@@ -11,6 +19,8 @@ namespace RentVision.Controllers
     {
         private readonly IApi _api;
         private readonly IModelLoader _loader;
+        private List<string> supportedCultures = new List<string>() { "nl", "en" };
+        private bool _debug = true;
 
         /// <summary>
         /// Default constructor.
@@ -52,6 +62,20 @@ namespace RentVision.Controllers
         {
             var model = await _loader.GetPage<StandardPage>(id, HttpContext.User, draft);
 
+            // Return user to proper culture page
+            string cultureUrl = CultureHelper.GetProperCultureUrl(Request, HttpContext);
+
+            if (cultureUrl != null)
+            {
+                return LocalRedirect(cultureUrl);
+
+                if ( _debug )
+                {
+                    ViewBag.CultureURl = cultureUrl;
+                    ViewBag.RequestPath = Request.Path.Value;
+                }
+            }
+
             return View(model);
         }
 
@@ -68,6 +92,7 @@ namespace RentVision.Controllers
             return View(model);
         }
 
+    
         /// <summary>
         /// Gets the startpage with the given id.
         /// </summary>
@@ -77,6 +102,20 @@ namespace RentVision.Controllers
         public async Task<IActionResult> Start(Guid id, bool draft = false)
         {
             var model = await _loader.GetPage<StartPage>(id, HttpContext.User, draft);
+
+            // Return user to proper culture page
+            string cultureUrl = CultureHelper.GetProperCultureUrl(Request, HttpContext);
+
+            if (cultureUrl != null)
+            {
+                return LocalRedirect(cultureUrl);
+
+                if (_debug)
+                {
+                    ViewBag.CultureURl = cultureUrl;
+                    ViewBag.RequestPath = Request.Path.Value;
+                }
+            }
 
             return View(model);
         }
@@ -91,6 +130,20 @@ namespace RentVision.Controllers
         {
             var model = await _loader.GetPage<LoginPage>(id, HttpContext.User, draft);
 
+            // Return user to proper culture page
+            string cultureUrl = CultureHelper.GetProperCultureUrl(Request, HttpContext);
+
+            if (cultureUrl != null)
+            {
+                return LocalRedirect(cultureUrl);
+
+                if (_debug)
+                {
+                    ViewBag.CultureURl = cultureUrl;
+                    ViewBag.RequestPath = Request.Path.Value;
+                }
+            }
+
             return View(model);
         }
 
@@ -103,6 +156,20 @@ namespace RentVision.Controllers
         public async Task<IActionResult> Register(Guid id, bool draft = false)
         {
             var model = await _loader.GetPage<RegisterPage>(id, HttpContext.User, draft);
+
+            // Return user to proper culture page
+            string cultureUrl = CultureHelper.GetProperCultureUrl(Request, HttpContext);
+            
+            if ( cultureUrl != null )
+            {
+                return LocalRedirect(cultureUrl);
+
+                if (_debug)
+                {
+                    ViewBag.CultureURl = cultureUrl;
+                    ViewBag.RequestPath = Request.Path.Value;
+                }
+            }
 
             return View(model);
         }

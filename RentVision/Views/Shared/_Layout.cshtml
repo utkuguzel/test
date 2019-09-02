@@ -26,16 +26,20 @@
     @RenderSection("head", required: false)
 </head>
 <body>
+    @if (!string.IsNullOrWhiteSpace(ViewBag.CultureUrl))
+    {
+        <p>New path: @ViewBag.CultureUrl</p>
+        <p>Old path: @ViewBag.RequestPath</p>
+    }
+
     @RenderBody()
-
     <!-- Scripts -->
-	<script src="~/assets/js/less.min.js" ></script>
+    <script src="~/assets/js/less.min.js"></script>
 
-	<!-- Bootstrap -->
+    <!-- Bootstrap -->
     <script type="text/javascript" src="~/assets/js/jquery-3.4.1.min.js"></script>
-	<script type="text/javascript" src="~/assets/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="~/assets/js/popper.min.js"></script>
-
+    <script type="text/javascript" src="~/assets/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/assets/js/popper.min.js"></script>
     <!-- Custom scripts -->
     @RenderSection("script", required: false)
 </body>

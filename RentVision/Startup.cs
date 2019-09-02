@@ -47,6 +47,7 @@ namespace RentVision
             services.AddPiranhaImageSharp();
             services.AddPiranhaManager();
             services.AddPiranhaMemoryCache();
+            services.AddSession();
 
             //
             // Setup Piranha & Asp.Net Identity with SQLite
@@ -94,10 +95,12 @@ namespace RentVision
                 .DeleteOrphans();
 
             // Register middleware
+            app.UseRequestLocalization();
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UsePiranha();
             app.UsePiranhaManager();
+            app.UseSession();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(name: "areaRoute",
