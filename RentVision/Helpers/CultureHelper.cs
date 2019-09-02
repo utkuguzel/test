@@ -9,13 +9,14 @@ namespace RentVision.Helpers
 {
     public class CultureHelper
     {
+        // Exclude default culture(s)
         private static List<string> excludedCultures = new List<string>()
         {
             "en"
         };
 
         /// <summary>
-        /// Returns the user culture as a ISO 639-1 two-letter code.
+        /// Returns the user culture as an ISO 639-1 two-letter code.
         /// </summary>
         /// <param name="Request"></param>
         /// <param name="Context"></param>
@@ -30,10 +31,10 @@ namespace RentVision.Helpers
                 SetUserCulture(Request, Context, culture);
             }
 
-            return Context.Session.GetString("language");
+            //return Context.Session.GetString("language");
 
             // Used for testing purposes
-            //return "nl";
+            return "nl";
         }
 
         /// <summary>

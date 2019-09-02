@@ -14,5 +14,13 @@ namespace RentVision.Models
         /// </summary>
         [Region(Display = RegionDisplayMode.Setting)]
         public Hero Hero { get; set; }
+
+        [Region]
+        public IList<FooterPage> FooterPages { get; set;}
+
+        public StartPage()
+        {
+            FooterPages = new List<FooterPage>();
+        }
     }
 }

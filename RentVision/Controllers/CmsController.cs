@@ -19,8 +19,6 @@ namespace RentVision.Controllers
     {
         private readonly IApi _api;
         private readonly IModelLoader _loader;
-        private List<string> supportedCultures = new List<string>() { "nl", "en" };
-        private bool _debug = true;
 
         /// <summary>
         /// Default constructor.
@@ -68,12 +66,6 @@ namespace RentVision.Controllers
             if (cultureUrl != null)
             {
                 return LocalRedirect(cultureUrl);
-
-                if ( _debug )
-                {
-                    ViewBag.CultureURl = cultureUrl;
-                    ViewBag.RequestPath = Request.Path.Value;
-                }
             }
 
             return View(model);
@@ -109,12 +101,6 @@ namespace RentVision.Controllers
             if (cultureUrl != null)
             {
                 return LocalRedirect(cultureUrl);
-
-                if (_debug)
-                {
-                    ViewBag.CultureURl = cultureUrl;
-                    ViewBag.RequestPath = Request.Path.Value;
-                }
             }
 
             return View(model);
@@ -136,12 +122,6 @@ namespace RentVision.Controllers
             if (cultureUrl != null)
             {
                 return LocalRedirect(cultureUrl);
-
-                if (_debug)
-                {
-                    ViewBag.CultureURl = cultureUrl;
-                    ViewBag.RequestPath = Request.Path.Value;
-                }
             }
 
             return View(model);
@@ -163,12 +143,6 @@ namespace RentVision.Controllers
             if ( cultureUrl != null )
             {
                 return LocalRedirect(cultureUrl);
-
-                if (_debug)
-                {
-                    ViewBag.CultureURl = cultureUrl;
-                    ViewBag.RequestPath = Request.Path.Value;
-                }
             }
 
             return View(model);
