@@ -26,6 +26,11 @@
     @RenderSection("head", required: false)
 </head>
 <body>
+    @if ( !string.IsNullOrWhiteSpace(ViewBag.Culture))
+    {
+        <h3>@ViewBag.Culture</h3>
+    }
+
     @RenderBody()
     
     <!-- Scripts -->

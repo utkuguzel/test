@@ -5,6 +5,7 @@ using RentVision.Models.Regions;
 namespace RentVision.Models
 {
     [PageType(Title = "Standard page")]
+    [PageTypeRoute(Title = "Default")]
     public class StandardPage  : Page<StandardPage>
     {
         /// <summary>

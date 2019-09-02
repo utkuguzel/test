@@ -60,14 +60,6 @@ namespace RentVision.Controllers
         {
             var model = await _loader.GetPage<StandardPage>(id, HttpContext.User, draft);
 
-            // Return user to proper culture page
-            string cultureUrl = CultureHelper.GetProperCultureUrl(Request, HttpContext);
-
-            if (cultureUrl != null)
-            {
-                return LocalRedirect(cultureUrl);
-            }
-
             return View(model);
         }
 
