@@ -1,17 +1,25 @@
 @model StandardPage
+@inject IApi Api
 
 @{
     ViewBag.Title = Model.Title;
 }
 
-<div class="main">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-sm-10 page-body">
-                <h1>@Model.Title</h1>
+@section head {
+    <link rel="stylesheet/less" type="text/css" href="~/css/config.min.css">
+    <link rel="stylesheet/less" type="text/css" href="~/css/components/block.min.css">
+}
 
-                @Html.DisplayFor(m => m.Blocks)
-            </div>
-        </div>
-    </div>
+<div class="container-fluid">
+	<partial name="/Views/Shared/Partial/_Menu.cshtml" />
+
+    @await Html.PartialAsync("/Views/Shared/Partial/_Hero.cshtml", Model)
+
+    @Html.DisplayFor(m => m.Blocks)
+
+    <partial name="/Views/Shared/Partial/_Footer.cshtml" />
 </div>
+
+@section script {
+    <script src="assets/js/header.js" ></script>
+}

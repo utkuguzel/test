@@ -31,6 +31,8 @@ namespace RentVision.Helpers
             }
 
             return Context.Session.GetString("language");
+
+            // Used for testing purposes
             //return "nl";
         }
 

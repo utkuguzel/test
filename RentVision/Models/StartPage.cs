@@ -14,18 +14,5 @@ namespace RentVision.Models
         /// </summary>
         [Region(Display = RegionDisplayMode.Setting)]
         public Hero Hero { get; set; }
-
-        /// <summary>
-        /// Gets/sets the available teasers.
-        /// </summary>
-        [Region(ListTitle = "Title")]
-        public IList<Teaser> Teasers { get; set; }
-
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public StartPage() {
-            Teasers = new List<Teaser>();
-        }
     }
 }
