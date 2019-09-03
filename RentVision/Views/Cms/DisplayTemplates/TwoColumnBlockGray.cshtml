@@ -15,7 +15,13 @@
                 </div>
                 <div class="col-md-6">
                     <div class="block-right">
-                        <h4><i class="fas fa-check"></i>@Model.Subtitle</h4>
+                        @if (!string.IsNullOrWhiteSpace(Model.Subtitle.Value))
+                        {
+                            <h4>
+                                <i class="fas fa-check"></i>
+                                @Model.Subtitle
+                            </h4>
+                        }
 
                         @Html.Raw(Model.Column1)
                     </div>

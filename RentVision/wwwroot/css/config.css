@@ -27,7 +27,7 @@ a:hover {
 .container-fluid {
   position: relative;
   width: inherit;
-  height: 1200px;
+  height: auto;
   padding: 0;
   margin: 0;
 }
@@ -165,9 +165,12 @@ header .nav-right .nav-mobile {
 }
 .products {
   position: relative;
+  width: auto;
+  height: auto;
+  min-height: 250px;
+  background: #ececf0;
 }
 .products .products-inner {
-  position: absolute;
   width: 100%;
   padding: 0 45px;
   z-index: 5;
@@ -320,7 +323,7 @@ footer .footer-block a {
   height: auto;
   padding: 10px 45px;
   background: #222;
-  color: #666666;
+  color: #999999;
   font-size: 0.9em;
 }
 .footer-copyright .right {

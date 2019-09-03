@@ -139,5 +139,13 @@ namespace RentVision.Controllers
 
             return View(model);
         }
+
+        [Route("product")]
+        public async Task<IActionResult> Product(Guid id, bool draft = false)
+        {
+            var model = await _loader.GetPage<ProductPage>(id, HttpContext.User, draft);
+
+            return View(model);
+        }
     }
 }

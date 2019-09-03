@@ -86,11 +86,15 @@ namespace RentVision
                 .AddType(typeof(StandardPage))
                 .AddType(typeof(StartPage))
                 .AddType(typeof(LoginPage))
-                .AddType(typeof(RegisterPage));
+                .AddType(typeof(RegisterPage))
+                .AddType(typeof(ProductPage));
+
             pageTypeBuilder.Build()
                 .DeleteOrphans();
+
             var postTypeBuilder = new Piranha.AttributeBuilder.PostTypeBuilder(api)
                 .AddType(typeof(BlogPost));
+
             postTypeBuilder.Build()
                 .DeleteOrphans();
 
@@ -113,11 +117,11 @@ namespace RentVision
             });
 
             // Custom manager styles
-            App.Modules.Get<Module>().Styles.Add("~/css/components/block.css");
+            App.Modules.Get<Piranha.Manager.Module>().Styles.Add("~/css/components/block.css");
 
             // Custom manager scripts
-            App.Modules.Get<Module>().Scripts.Add("~/assets/js/blocks/TwoColumnBlock.js");
-            App.Modules.Get<Module>().Scripts.Add("~/assets/js/blocks/TwoColumnBlockGray.js");
+            App.Modules.Get<Piranha.Manager.Module>().Scripts.Add("~/assets/js/blocks/TwoColumnBlock.js");
+            App.Modules.Get<Piranha.Manager.Module>().Scripts.Add("~/assets/js/blocks/TwoColumnBlockGray.js");
 
             // Custom blocks
             App.Blocks.Register<TwoColumnBlock>();

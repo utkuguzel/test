@@ -27,7 +27,7 @@ a:hover {
 .container-fluid {
   position: relative;
   width: inherit;
-  height: 1200px;
+  height: auto;
   padding: 0;
   margin: 0;
 }
