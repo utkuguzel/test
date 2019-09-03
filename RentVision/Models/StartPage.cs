@@ -9,17 +9,18 @@ namespace RentVision.Models
     [PageTypeRoute(Title = "Default", Route = "/start")]
     public class StartPage : Page<StartPage>
     {
-        /// <summary>
-        /// Gets/sets the page hero.
-        /// </summary>
         [Region(Display = RegionDisplayMode.Setting)]
         public Hero Hero { get; set; }
+
+        [Region]
+        public IList<HeaderItem> HeaderItems { get; set; }
 
         [Region]
         public IList<FooterPage> FooterPages { get; set;}
 
         public StartPage()
         {
+            HeaderItems = new List<HeaderItem>();
             FooterPages = new List<FooterPage>();
         }
     }
