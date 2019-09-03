@@ -1,7 +1,8 @@
 @{ 
     var sitemap = WebApp.Site.Sitemap;
     var homePageResult = await WebApp.Api.Pages.GetStartpageAsync<StartPage>();
-    var footerPages = homePageResult.FooterPages.ToList();
+    var termsAndConditions = await WebApp.Api.Pages.GetBySlugAsync<StandardPage>("terms-and-conditions");
+    var footerItems = homePageResult.FooterItems.ToList();
 }
 
 <!-- START FOOTER -->
@@ -18,7 +19,7 @@
                 <div class="col-lg-3">
                     <div class="footer-block footer-block-middle">
                         <ul>
-                            @foreach ( var item in footerPages )
+                            @foreach ( var item in footerItems)
                             {
                                 if ( item.Column == 1 )
                                 {
@@ -32,7 +33,7 @@
                 <div class="col-lg-3">
                     <div class="footer-block footer-block-right">
                         <ul>
-                            @foreach (var item in footerPages)
+                            @foreach (var item in footerItems)
                             {
                                 if (item.Column == 2)
                                 {
@@ -51,13 +52,13 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="left">
-                                <p>&copy; @DateTime.Now.Year, <a href="#">Rentvision</a>. All rights reserved.</p>
+                                <p>&copy; @DateTime.Now.Year, <a href="/">RentVision</a>. All rights reserved.</p>
                             </div>
                         </div>
 
                         <div class="col-lg-6">
                             <div class="right">
-                                <a href="#">Terms and conditions</a>
+                                <a href="@termsAndConditions.Permalink">@termsAndConditions.Title</a>
                             </div>
                         </div>
                     </div>

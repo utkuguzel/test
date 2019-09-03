@@ -11,6 +11,7 @@ using Piranha.AspNetCore.Identity.SQLServer;
 using Piranha.Manager;
 using RentVision.Models;
 using RentVision.Models.Regions;
+using System;
 using System.IO;
 
 namespace RentVision
@@ -47,15 +48,23 @@ namespace RentVision
             services.AddPiranhaImageSharp();
             services.AddPiranhaManager();
             services.AddPiranhaMemoryCache();
-            services.AddSession();
 
-            //
-            // Setup Piranha & Asp.Net Identity with SQLite
-            //
-            //services.AddPiranhaEF(options =>
-            //    options.UseSqlite(Configuration.GetConnectionString("piranha")));
-            //services.AddPiranhaIdentityWithSeed<IdentitySQLiteDb>(options =>
-            //    options.UseSqlite(Configuration.GetConnectionString("piranha")));
+            // Custom services
+            var backofficeSettings = Configuration.GetSection("backoffice");
+
+            // Store backoffice API info
+            string protocol = backofficeSettings["protocol"];
+            string hostname = backofficeSettings["hostname"];
+            string apiKeyHeader = backofficeSettings["apiKeyHeader"];
+            string apiKey = backofficeSettings["apiKey"];
+
+            services.AddHttpClient("RentVisionApi", c =>
+            {
+                c.BaseAddress = new Uri($"{protocol}://{hostname}");
+                c.DefaultRequestHeaders.Add($"{apiKeyHeader}", $"{apiKey}");
+            });
+
+            services.AddSession();
 
             //
             // Setup Piranha & Asp.Net Identity with SQL Server
@@ -123,9 +132,13 @@ namespace RentVision
             App.Modules.Get<Piranha.Manager.Module>().Scripts.Add("~/assets/js/blocks/TwoColumnBlock.js");
             App.Modules.Get<Piranha.Manager.Module>().Scripts.Add("~/assets/js/blocks/TwoColumnBlockGray.js");
 
+            App.Modules.Get<Piranha.Manager.Module>().Scripts.Add("~/assets/js/blocks/OneColumnBlock.js");
+
             // Custom blocks
             App.Blocks.Register<TwoColumnBlock>();
             App.Blocks.Register<TwoColumnBlockGray>();
+
+            App.Blocks.Register<OneColumnBlock>();
 
             // Enums
             //App.Fields.RegisterSelect<SelectFieldOptions.InputTypes>();

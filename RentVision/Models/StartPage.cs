@@ -12,16 +12,16 @@ namespace RentVision.Models
         [Region(Display = RegionDisplayMode.Setting)]
         public Hero Hero { get; set; }
 
-        [Region(ListTitle = "Title")]
+        [Region(Title = "Header", ListTitle = "Title")]
         public IList<HeaderItem> HeaderItems { get; set; }
 
-        [Region(ListTitle = "Title")]
-        public IList<FooterPage> FooterPages { get; set;}
+        [Region(Title = "Footer", ListTitle = "Title")]
+        public IList<FooterItem> FooterItems { get; set;}
 
         public StartPage()
         {
             HeaderItems = new List<HeaderItem>();
-            FooterPages = new List<FooterPage>();
+            FooterItems = new List<FooterItem>();
         }
     }
 }

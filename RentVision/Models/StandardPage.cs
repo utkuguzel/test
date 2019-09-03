@@ -8,9 +8,6 @@ namespace RentVision.Models
     [PageTypeRoute(Title = "Default")]
     public class StandardPage  : Page<StandardPage>
     {
-        /// <summary>
-        /// Gets/sets the page hero.
-        /// </summary>
         [Region(Display = RegionDisplayMode.Setting)]
         public Hero Hero { get; set; }
     }

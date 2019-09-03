@@ -17,12 +17,12 @@
 
         <form method="post" action="@Model.Fields.ButtonLink.Value">
             <label for="email">@Model.Fields.Email.Value</label>
-            <input id="email" type="email" name="email" placeholder="@Model.Fields.Email.Value...">
+            <input id="email" type="email" name="email" placeholder="@Model.Fields.Email.Value..." />
 
             <label for="password">@Model.Fields.Password.Value</label>
-            <input id="password" type="password" name="password" placeholder="@Model.Fields.Password.Value...">
+            <input id="password" type="password" name="password" placeholder="@Model.Fields.Password.Value..." />
 
-            <input id="remember" type="checkbox" name="remember">
+            <input id="remember" type="checkbox" name="remember" checked="checked" value="true" />
             <label for="remember">@Model.Fields.Remember.Value</label>
 
             <button>@Model.Fields.ButtonText.Value</button>
