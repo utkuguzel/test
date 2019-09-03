@@ -7,6 +7,11 @@ using System;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Http;
+using Newtonsoft.Json;
+using System.Text;
+using RentVision.Models.Configuration;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Collections.Generic;
 
 namespace RentVision.Controllers
 {
@@ -24,14 +29,13 @@ namespace RentVision.Controllers
         [Route("/auth/login"), HttpPost]
         public async Task<IActionResult> LoginAsync(string email, string password, bool remember)
         {
-            var request = new HttpRequestMessage(
-                HttpMethod.Post,
-                $"RentVisionAccount/CheckUserCredentials?email={email}&password={password}"
-            );
+            var userDetails = new Dictionary<string, string>()
+            {
+                { "email", email },
+                { "password", password },
+            };
 
-            var client = _clientFactory.CreateClient("RentVisionApi");
-
-            var response = await client.SendAsync(request);
+            var response = await SendApiCallAsync(Configuration.ApiCalls.CheckUserCredentials, userDetails, HttpMethod.Post);
 
             if (response.IsSuccessStatusCode)
             {
@@ -42,7 +46,27 @@ namespace RentVision.Controllers
                 //error
             }
 
-            return new JsonResult( new { httpStatusCode = response.StatusCode, httpStatusMessage = await response.Content.ReadAsStringAsync() } );
+            return new JsonResult(new { httpStatusCode = response.StatusCode, httpStatusMessage = await response.Content.ReadAsStringAsync() });
+        }
+
+        public async Task<HttpResponseMessage> SendApiCallAsync(string callType, Dictionary<string, string> data, HttpMethod callMethod)
+        {
+            var query = QueryHelpers.AddQueryString(
+                $"{Configuration.BackOffice.Protocol}://{Configuration.BackOffice.HostName}/{callType}",
+                data
+            );
+
+            var request = new HttpRequestMessage
+            {
+                Method = callMethod,
+                RequestUri = new Uri(query)
+            };
+
+            var client = _clientFactory.CreateClient("RentVisionApi");
+
+            var response = await client.SendAsync(request);
+
+            return response;
         }
 
         [Route("/auth/register"), HttpPost]

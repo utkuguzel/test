@@ -13,6 +13,7 @@ using RentVision.Models;
 using RentVision.Models.Regions;
 using System;
 using System.IO;
+using RentVision.Models.Configuration;
 
 namespace RentVision
 {
@@ -22,6 +23,7 @@ namespace RentVision
         /// The application config.
         /// </summary>
         public IConfiguration Configuration { get; set; }
+        public static IConfiguration StaticConfig { get; set; }
 
         /// <summary>
         /// Default constructor.
@@ -29,6 +31,13 @@ namespace RentVision
         /// <param name="configuration">The current configuration</param>
         public Startup(IConfiguration configuration) {
             Configuration = configuration;
+            StaticConfig = configuration;
+
+            var backOfficeConfig = Configuration.GetSection("BackOffice").Get<Configuration.BackOffice>();
+            var apiCallsConfig = Configuration.GetSection("ApiCalls").Get<Configuration.ApiCalls>();
+
+            Configuration.GetSection("BackOffice").Bind(backOfficeConfig);
+            Configuration.GetSection("ApiCalls").Bind(apiCallsConfig);
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
