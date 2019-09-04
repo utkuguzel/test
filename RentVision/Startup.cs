@@ -23,7 +23,6 @@ namespace RentVision
         /// The application config.
         /// </summary>
         public IConfiguration Configuration { get; set; }
-        public static IConfiguration StaticConfig { get; set; }
 
         /// <summary>
         /// Default constructor.
@@ -31,8 +30,8 @@ namespace RentVision
         /// <param name="configuration">The current configuration</param>
         public Startup(IConfiguration configuration) {
             Configuration = configuration;
-            StaticConfig = configuration;
 
+            // Map BackOffice and ApiCalls to their corresponding class
             var backOfficeConfig = Configuration.GetSection("BackOffice").Get<Configuration.BackOffice>();
             var apiCallsConfig = Configuration.GetSection("ApiCalls").Get<Configuration.ApiCalls>();
 
@@ -58,19 +57,13 @@ namespace RentVision
             services.AddPiranhaManager();
             services.AddPiranhaMemoryCache();
 
-            // Custom services
-            var backofficeSettings = Configuration.GetSection("backoffice");
-
-            // Store backoffice API info
-            string protocol = backofficeSettings["protocol"];
-            string hostname = backofficeSettings["hostname"];
-            string apiKeyHeader = backofficeSettings["apiKeyHeader"];
-            string apiKey = backofficeSettings["apiKey"];
-
+            // Set API key as a default request header param since we need it for each call
             services.AddHttpClient("RentVisionApi", c =>
             {
-                c.BaseAddress = new Uri($"{protocol}://{hostname}");
-                c.DefaultRequestHeaders.Add($"{apiKeyHeader}", $"{apiKey}");
+                c.DefaultRequestHeaders.Add(
+                    $"{Configuration.GetSection("BackOffice")["apiKeyHeader"]}",
+                    $"{Configuration.GetSection("BackOffice")["apiKey"]}"
+                );
             });
 
             services.AddSession();
@@ -105,7 +98,8 @@ namespace RentVision
                 .AddType(typeof(StartPage))
                 .AddType(typeof(LoginPage))
                 .AddType(typeof(RegisterPage))
-                .AddType(typeof(ProductPage));
+                .AddType(typeof(ProductPage))
+                .AddType(typeof(PlansPage));
 
             pageTypeBuilder.Build()
                 .DeleteOrphans();

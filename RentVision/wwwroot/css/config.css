@@ -285,7 +285,7 @@ header .nav-right .nav-mobile {
   background-color: #C61120;
   margin: 0 auto 50px auto;
 }
-.block .border {
+.border {
   position: absolute;
   width: 120%;
   height: 100px;
@@ -293,12 +293,16 @@ header .nav-right .nav-mobile {
   left: -45px;
   border: none !important;
 }
-.block .border.border-white {
+.border.border-white {
   background: url('/assets/images/block-border-white-double.png') no-repeat center center;
   background-size: cover;
 }
-.block .border.border-grey {
+.border.border-grey {
   background: url('/assets/images/block-border-grey-double.png') no-repeat center center;
+  background-size: cover;
+}
+.border.border-red {
+  background: url('/assets/images/footer-border-overlay.png') no-repeat center center;
   background-size: cover;
 }
 footer {

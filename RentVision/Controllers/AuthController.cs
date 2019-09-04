@@ -37,18 +37,34 @@ namespace RentVision.Controllers
 
             var response = await SendApiCallAsync(Configuration.ApiCalls.CheckUserCredentials, userDetails, HttpMethod.Post);
 
-            if (response.IsSuccessStatusCode)
+            if ( !response.IsSuccessStatusCode )
             {
-                //success
-            }
-            else
-            {
-                //error
+                ViewBag.StatusCode = response.StatusCode;
+                ViewBag.StatusMessage = await response.Content.ReadAsStringAsync();
+
+                // TODO: ViewBag fixen
+
+                return RedirectToAction( "login", "cms" );
             }
 
-            return new JsonResult(new { httpStatusCode = response.StatusCode, httpStatusMessage = await response.Content.ReadAsStringAsync() });
+            // Subdomein ophalen en doorsturen
+
+            return Redirect("https://google.com");
         }
 
+        [Route("/auth/register"), HttpPost]
+        public IActionResult Register()
+        {
+            return new JsonResult(HttpStatusCode.OK);
+        }
+
+        /// <summary>
+        /// Sends an async api call to the rentvision backoffice api and returns an HttpResponseMessage object
+        /// </summary>
+        /// <param name="callType">The type of call that should be called (Mapped to Configuration.BackOffice or ApiCalls)</param>
+        /// <param name="data">A Dictionary containing parameter data</param>
+        /// <param name="callMethod">The HttpMethod that should be used to send data</param>
+        /// <returns>An HttpResponseMessage containing response data from the API</returns>
         public async Task<HttpResponseMessage> SendApiCallAsync(string callType, Dictionary<string, string> data, HttpMethod callMethod)
         {
             var query = QueryHelpers.AddQueryString(
@@ -67,12 +83,6 @@ namespace RentVision.Controllers
             var response = await client.SendAsync(request);
 
             return response;
-        }
-
-        [Route("/auth/register"), HttpPost]
-        public IActionResult Register()
-        {
-            return new JsonResult(HttpStatusCode.OK);
         }
     }
 }

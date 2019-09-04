@@ -15,6 +15,11 @@
             <div class="logo logo-dark"></div>
         </div>
 
+        @if ( !string.IsNullOrWhiteSpace( ViewBag.StatusMessage ))
+        {
+            <p>@ViewBag.StatusMessage</p>
+        }
+
         <form method="post" action="@Model.Fields.ButtonLink.Value">
             <label for="email">@Model.Fields.Email.Value</label>
             <input id="email" type="email" name="email" placeholder="@Model.Fields.Email.Value..." />

@@ -1,0 +1,25 @@
+@model PlansPage
+@inject IApi Api
+@{
+    ViewBag.Title = Model.Title;
+}
+
+@section head {
+    <link rel="stylesheet/less" type="text/css" href="~/css/config.min.css">
+    <link rel="stylesheet/less" type="text/css" href="~/css/components/block.min.css">
+    <link rel="stylesheet/less" type="text/css" href="~/css/components/plans.min.css">
+}
+
+<div class="container-fluid">
+    <partial name="/Views/Shared/Partial/_Menu.cshtml" />
+
+    @await Html.PartialAsync("/Views/Shared/Partial/_Hero.cshtml", Model)
+
+    @await Html.PartialAsync("/Views/Shared/Partial/_Plans.cshtml", Model)
+
+    @Html.DisplayFor(m => m.Blocks)
+
+    @*await Html.PartialAsync("/Views/Shared/Partial/_Modules.cshtml", Model)*@
+
+    <partial name="/Views/Shared/Partial/_Footer.cshtml" />
+</div>

@@ -38,5 +38,9 @@
   {
     "outputFile": "wwwroot/css/components/footer.css",
     "inputFile": "assets/less/components/footer.less"
+  },
+  {
+    "outputFile": "wwwroot/css/components/plans.css",
+    "inputFile": "assets/less/components/plans.less"
   }
 ]

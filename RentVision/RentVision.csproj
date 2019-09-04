@@ -9,6 +9,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.6" />
+    <PackageReference Include="Microsoft.jQuery.Unobtrusive.Ajax" Version="3.2.6" />
     <PackageReference Include="Piranha" Version="7.0.0" />
     <PackageReference Include="Piranha.AspNetCore" Version="7.0.0" />
     <PackageReference Include="Piranha.AspNetCore.Identity.SQLite" Version="7.0.0" />
@@ -25,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="assets\less\components\plans.less" />
     <None Remove="favicon.ico" />
   </ItemGroup>
 
@@ -35,6 +37,7 @@
     <Content Include="assets\less\components\footer.less" />
     <Content Include="assets\less\components\header.less" />
     <Content Include="assets\less\components\hero.less" />
+    <Content Include="assets\less\components\plans.less" />
     <Content Include="assets\less\components\products.less" />
     <Content Include="assets\less\config.less" />
     <Content Include="assets\less\portal.less" />

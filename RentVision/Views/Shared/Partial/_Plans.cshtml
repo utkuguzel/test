@@ -1,0 +1,47 @@
+@model PlansPage
+
+@{ 
+    var plans = Model.Plans;
+}
+
+<!-- START PLANS -->
+<div class="row">
+    <div class="col-lg">
+        <div class="plans">
+            <div class="plans-inner">
+                <div class="row">
+                    @if (plans.Count > 0)
+                    {
+                        @foreach (var plan in plans)
+                        {
+                            <div class="col-lg-4 col-sm-6">
+                                <div class="plan">
+                                    <div class="border border-red"></div>
+                                    <h3 style="text-shadow: none !important;">@plan.Title</h3>
+                                    <i class="fas @plan.Icon.Value"></i>
+
+                                    <h5>@plan.Price</h5>
+                                    <span>@plan.PaymentType</span>
+
+                                    <p><a class="button button-active" href="@plan.PageLink">Todo</a></p>
+                                </div>
+
+                                <div class="features">
+                                    <ul>
+                                        <li><div class="feature"><i class="fas fa-check"></i>Lorem</div></li>
+                                        <li><i class="fas fa-check"></i>Ipsum</li>
+                                        <li><i class="fas fa-check"></i>Dolor</li>
+                                        <li><i class="fas fa-check"></i>Sit</li>
+                                        <li class="inactive"><i class="fas fa-times"></i>Amet</li>
+                                        <li class="inactive"><i class="fas fa-times"></i>Ipsum</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END PLANS -->

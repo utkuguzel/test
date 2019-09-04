@@ -147,5 +147,13 @@ namespace RentVision.Controllers
 
             return View(model);
         }
+
+        [Route("plans")]
+        public async Task<IActionResult> Plans(Guid id, bool draft = false)
+        {
+            var model = await _loader.GetPage<PlansPage>(id, HttpContext.User, draft);
+
+            return View(model);
+        }
     }
 }
