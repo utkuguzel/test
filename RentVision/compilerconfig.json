@@ -46,5 +46,13 @@
   {
     "outputFile": "wwwroot/css/news.css",
     "inputFile": "assets/less/news.less"
+  },
+  {
+    "outputFile": "wwwroot/assets/js/setup.es5.js",
+    "inputFile": "wwwroot/assets/js/setup.js"
+  },
+  {
+    "outputFile": "wwwroot/assets/js/header.es5.js",
+    "inputFile": "wwwroot/assets/js/header.js"
   }
 ]

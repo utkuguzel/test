@@ -27,13 +27,10 @@
             <p>@Model.SetupFields.LoadingText</p>
 
             <p class="timeOutMessage">@Model.SetupFields.TimeOutMessage</p>
-
-            @* Test *@
-            @*<span>@TempData["RedirectUrl"].ToString()</span>*@
         </div>
     </div>
 </div>
 
 @section script {
-    <script type="text/javascript" src="~/assets/js/setup.js"></script>
+    <script type="text/javascript" src="~/assets/js/setup.es5.min.js"></script>
 }
