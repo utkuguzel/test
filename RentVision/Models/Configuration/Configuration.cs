@@ -10,6 +10,7 @@ namespace RentVision.Models.Configuration
         public class BackOffice
         {
             public static string Protocol { get; set; }
+            public static string Domain { get; set; }
             public static string HostName { get; set; }
             public static string ApiKeyHeaderName { get; set; }
             public static string ApiKey { get; set; }

@@ -3,6 +3,16 @@
 
 @{
     ViewBag.Title = Model.Title;
+
+    // Check if there's an error set in tempData and display it
+    string statusMessage = "";
+
+    if ( TempData["StatusMessage"] != null )
+    {
+        statusMessage = TempData["StatusMessage"].ToString();
+    }
+
+    string[] errors = (TempData["Errors"] != null) ? (string[])TempData["Errors"] : null;
 }
 
 @section head {
@@ -15,9 +25,17 @@
             <div class="logo logo-dark"></div>
         </div>
 
-        @if ( !string.IsNullOrWhiteSpace( ViewBag.StatusMessage ))
+        @if ( !string.IsNullOrWhiteSpace(statusMessage) )
         {
-            <p>@ViewBag.StatusMessage</p>
+            <span class="statusMessage">@statusMessage</span>
+        }
+
+        @if ( errors != null && errors.Length > 0 )
+        {
+            foreach ( var error in errors )
+            {
+                <span class="statusMessage">@error</span>
+            }
         }
 
         <form method="post" action="@Model.Fields.ButtonLink.Value">

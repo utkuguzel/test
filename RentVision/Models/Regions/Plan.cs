@@ -1,8 +1,16 @@
 using Piranha.AttributeBuilder;
 using Piranha.Extend.Fields;
+using System.Collections;
 
 namespace RentVision.Models.Regions
 {
+    public enum PlanTypes
+    {
+        Free,
+        Basic,
+        Pro
+    }
+
     public class Plan
     {
         [Field]
@@ -19,5 +27,8 @@ namespace RentVision.Models.Regions
 
         [Field]
         public PageField PageLink { get; set; }
+
+        [Field]
+        public SelectField<PlanTypes> PlanType { get; set; }
     }
 }

@@ -1,0 +1,39 @@
+@model SetupPage
+@inject IApi Api
+
+@{
+    ViewBag.Title = Model.Title;
+
+    string email = (!String.IsNullOrWhiteSpace(TempData["Email"].ToString())) ? TempData["Email"].ToString() : "";
+    string redirectUrl = (!String.IsNullOrWhiteSpace(TempData["RedirectUrl"].ToString())) ? TempData["RedirectUrl"].ToString() : "";
+}
+
+@section head {
+    <link rel="stylesheet/less" type="text/css" href="~/css/config.min.css">
+    <link rel="stylesheet/less" type="text/css" href="~/css/portal.min.css">
+}
+
+<div class="d-flex justify-content-center">
+    <div class="setup" data-email="@email" data-redirect="@redirectUrl">
+        <div class="logo-box">
+            <div class="logo logo-dark"></div>
+        </div>
+
+        <div class="setup-content">
+            <h5>@Model.SetupFields.Title</h5>
+
+            <i class="fas @Model.SetupFields.Icon.Value fa-pulse"></i>
+
+            <p>@Model.SetupFields.LoadingText</p>
+
+            <p class="timeOutMessage">@Model.SetupFields.TimeOutMessage</p>
+
+            @* Test *@
+            @*<span>@TempData["RedirectUrl"].ToString()</span>*@
+        </div>
+    </div>
+</div>
+
+@section script {
+    <script type="text/javascript" src="~/assets/js/setup.js"></script>
+}

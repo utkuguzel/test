@@ -19,17 +19,26 @@ a {
 	}
 }
 
-.logo {
-	width: 200px;
-	height: 30px;
-	margin: 0 auto;
-	background: url('/assets/images/logos/RentVision-02-Light.png') no-repeat center center;
-	background-size: contain;
+.statusMessage {
+    display: block;
+    padding: 5px 0;
+    font-weight: bold;
+    font-size: 0.9em;
+    text-align: center;
+    color: @COLOUR_LAVA;
+}
 
-	&.logo-dark {
-		background: url('/assets/images/logos/RentVision-02-Dark.png') no-repeat center center;
-		background-size: contain;
-	}
+.logo {
+    width: 200px;
+    height: 30px;
+    margin: 0 auto;
+    background: url('/assets/images/logos/RentVision-02-Light.png') no-repeat center center;
+    background-size: contain;
+
+    &.logo-dark {
+        background: url('/assets/images/logos/RentVision-02-Dark.png') no-repeat center center;
+        background-size: contain;
+    }
 }
 
 .d-flex {
@@ -44,7 +53,7 @@ a {
 	}
 }
 
-.form {
+.form, .setup {
 	position: relative;
 	width: 100%;
 	max-width: 600px;
@@ -130,4 +139,26 @@ a {
 			padding: 0 10px 0 0;
 		}
 	}
+}
+
+.setup {
+    padding: 10px 20px 20px 20px !important;
+
+    .setup-content {
+        text-align: center;
+
+        i {
+            font-size: 3em;
+            margin: 20px 0;
+        }
+
+        p {
+            font-size: 0.9em;
+        }
+
+        span {
+            font-size: 0.8em;
+            color: #AAA;
+        }
+    }
 }

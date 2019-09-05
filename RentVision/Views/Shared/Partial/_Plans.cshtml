@@ -1,5 +1,7 @@
 @model PlansPage
 
+@using RentVision.Models.Regions
+
 @{ 
     var plans = Model.Plans;
 }
@@ -23,17 +25,42 @@
                                     <h5>@plan.Price</h5>
                                     <span>@plan.PaymentType</span>
 
-                                    <p><a class="button button-active" href="@plan.PageLink">Todo</a></p>
+                                    <p><a class="button button-active" href="@plan.PageLink.Page.Permalink">Sign up</a></p>
                                 </div>
 
                                 <div class="features">
                                     <ul>
-                                        <li><div class="feature"><i class="fas fa-check"></i>Lorem</div></li>
-                                        <li><i class="fas fa-check"></i>Ipsum</li>
-                                        <li><i class="fas fa-check"></i>Dolor</li>
-                                        <li><i class="fas fa-check"></i>Sit</li>
-                                        <li class="inactive"><i class="fas fa-times"></i>Amet</li>
-                                        <li class="inactive"><i class="fas fa-times"></i>Ipsum</li>
+                                        @{
+                                            foreach (var feature in Model.Features)
+                                            {
+                                                string inactive = "";
+                                                string icon = "";
+
+                                                switch ( plan.PlanType.Value )
+                                                {
+                                                    case PlanTypes.Free:
+                                                        inactive = (feature.PlanFreeEnabled) ? "" : "inactive";
+                                                        icon = (feature.PlanFreeEnabled) ? "fa-check" : "fa-times";
+                                                        break;
+                                                    case PlanTypes.Basic:
+                                                        inactive = (feature.PlanBasicEnabled) ? "" : "inactive";
+                                                        icon = (feature.PlanBasicEnabled) ? "fa-check" : "fa-times";
+                                                        break;
+                                                    case PlanTypes.Pro:
+                                                        inactive = (feature.PlanProEnabled) ? "" : "inactive";
+                                                        icon = (feature.PlanProEnabled) ? "fa-check" : "fa-times";
+                                                        break;
+                                                }
+
+                                                <li class="@inactive">
+                                                    <div class="feature">
+                                                        <i class="fas @icon"></i>
+
+                                                        @feature.Title
+                                                    </div>
+                                                </li>
+                                            }
+                                        }
                                     </ul>
                                 </div>
                             </div>

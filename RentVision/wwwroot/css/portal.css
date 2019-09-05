@@ -15,6 +15,14 @@ a:hover {
   text-decoration: none;
   color: #cd2543;
 }
+.statusMessage {
+  display: block;
+  padding: 5px 0;
+  font-weight: bold;
+  font-size: 0.9em;
+  text-align: center;
+  color: #C61120;
+}
 .logo {
   width: 200px;
   height: 30px;
@@ -36,7 +44,8 @@ a:hover {
 .d-flex.form-register {
   padding: 60px 20px 20px 20px;
 }
-.form {
+.form,
+.setup {
   position: relative;
   width: 100%;
   max-width: 600px;
@@ -47,21 +56,29 @@ a:hover {
   background-size: cover;
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
 }
-.form .d-inline-flex {
+.form .d-inline-flex,
+.setup .d-inline-flex {
   width: 100%;
 }
-.form .logo-box {
+.form .logo-box,
+.setup .logo-box {
   padding: 10px 0 20px 0;
   border-radius: 4px;
 }
-.form .padding {
+.form .padding,
+.setup .padding {
   width: 100%;
 }
 .form input[type="email"],
+.setup input[type="email"],
 .form input[type="password"],
+.setup input[type="password"],
 .form input[type="text"],
+.setup input[type="text"],
 .form button,
-.form select {
+.setup button,
+.form select,
+.setup select {
   display: block;
   width: 100%;
   max-width: 600px;
@@ -71,23 +88,30 @@ a:hover {
   border: 1px solid #ccc;
   border-radius: 3px;
 }
-.form input[name="firstname"] {
+.form input[name="firstname"],
+.setup input[name="firstname"] {
   border-right: none;
 }
-.form input[name="confirmPassword"] {
+.form input[name="confirmPassword"],
+.setup input[name="confirmPassword"] {
   border-left: none;
 }
 .form input[type="text"],
-.form input[type="password"] {
+.setup input[type="text"],
+.form input[type="password"],
+.setup input[type="password"] {
   width: 100%;
 }
-.form input[type="password"] {
+.form input[type="password"],
+.setup input[type="password"] {
   margin: 0 0 10px 0;
 }
-.form label {
+.form label,
+.setup label {
   font-size: 0.8em;
 }
-.form button {
+.form button,
+.setup button {
   margin: 10px 0 10px 0;
   border: 1px solid #DDD;
   border-radius: 4px;
@@ -96,13 +120,33 @@ a:hover {
   background: #c61120;
   background: linear-gradient(328deg, #c61120 0%, #a2142d 100%);
 }
-.form button:hover {
+.form button:hover,
+.setup button:hover {
   background: #e01324;
   background: linear-gradient(328deg, #e01324 0%, #b01530 100%);
 }
-.form a {
+.form a,
+.setup a {
   text-shadow: none;
 }
-.form a i {
+.form a i,
+.setup a i {
   padding: 0 10px 0 0;
+}
+.setup {
+  padding: 10px 20px 20px 20px !important;
+}
+.setup .setup-content {
+  text-align: center;
+}
+.setup .setup-content i {
+  font-size: 3em;
+  margin: 20px 0;
+}
+.setup .setup-content p {
+  font-size: 0.9em;
+}
+.setup .setup-content span {
+  font-size: 0.8em;
+  color: #AAA;
 }

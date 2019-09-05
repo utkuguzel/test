@@ -15,9 +15,13 @@ namespace RentVision.Models
         [Region(ListTitle = "Title")]
         public IList<Plan> Plans { get; set; }
 
+        [Region(ListTitle = "Title")]
+        public IList<PlanFeature> Features { get; set; }
+
         public PlansPage()
         {
             Plans = new List<Plan>();
+            Features = new List<PlanFeature>();
         }
     }
 }

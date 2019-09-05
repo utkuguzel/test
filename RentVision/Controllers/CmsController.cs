@@ -155,5 +155,18 @@ namespace RentVision.Controllers
 
             return View(model);
         }
+
+        [Route("setup")]
+        public async Task<IActionResult> Setup(Guid id, bool draft = false)
+        {
+            var model = await _loader.GetPage<SetupPage>(id, HttpContext.User, draft);
+
+            if ( TempData["Email"] == null || TempData["RedirectUrl"] == null )
+            {
+                return LocalRedirect("/");
+            }
+
+            return View(model);
+        }
     }
 }

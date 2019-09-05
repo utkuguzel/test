@@ -99,7 +99,8 @@ namespace RentVision
                 .AddType(typeof(LoginPage))
                 .AddType(typeof(RegisterPage))
                 .AddType(typeof(ProductPage))
-                .AddType(typeof(PlansPage));
+                .AddType(typeof(PlansPage))
+                .AddType(typeof(SetupPage));
 
             pageTypeBuilder.Build()
                 .DeleteOrphans();
@@ -144,7 +145,7 @@ namespace RentVision
             App.Blocks.Register<OneColumnBlock>();
 
             // Enums
-            //App.Fields.RegisterSelect<SelectFieldOptions.InputTypes>();
+            App.Fields.RegisterSelect<PlanTypes>();
         }
     }
 }

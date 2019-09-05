@@ -12,6 +12,10 @@ using System.Text;
 using RentVision.Models.Configuration;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Collections.Generic;
+using Piranha.AspNetCore.Services;
+using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
+using System.Net.Mail;
 
 namespace RentVision.Controllers
 {
@@ -20,42 +24,183 @@ namespace RentVision.Controllers
         private readonly IApi _api;
         private readonly IHttpClientFactory _clientFactory;
 
-        public AuthController(IApi api, IHttpClientFactory clientFactory)
+        public AuthController(IApi api, IHttpClientFactory clientFactory )
         {
             _api = api;
             _clientFactory = clientFactory;
         }
 
+        [Route("/auth/isUserSiteReady"), HttpPost]
+        public async Task<JsonResult> isUserSiteReadyAsync(string email)
+        {
+            var userSiteReadyResponse = await SendApiCallAsync(
+                Configuration.ApiCalls.UserSiteReady,
+                new Dictionary<string, string>() { { "email", email } },
+                HttpMethod.Get
+            );
+
+            var response = await userSiteReadyResponse.Content.ReadAsStringAsync();
+
+            return new JsonResult( new { userSiteReadyResponse.StatusCode, response } );
+        }
+
         [Route("/auth/login"), HttpPost]
         public async Task<IActionResult> LoginAsync(string email, string password, bool remember)
         {
-            var userDetails = new Dictionary<string, string>()
+            var formErrors = validateForm(Request.Form);
+
+            if (formErrors.Count > 0)
+            {
+                TempData["Errors"] = formErrors.ToArray();
+
+                return RedirectToAction("login", "cms");
+            }
+
+            var urlParameters = new Dictionary<string, string>()
             {
                 { "email", email },
-                { "password", password },
+                { "password", password }
             };
 
-            var response = await SendApiCallAsync(Configuration.ApiCalls.CheckUserCredentials, userDetails, HttpMethod.Post);
+            var userCredentialResponse = await SendApiCallAsync(Configuration.ApiCalls.CheckUserCredentials, urlParameters, HttpMethod.Post);
 
-            if ( !response.IsSuccessStatusCode )
+            TempData["StatusCode"] = userCredentialResponse.StatusCode;
+            TempData["StatusMessage"] = await userCredentialResponse.Content.ReadAsStringAsync();
+
+            if ( !userCredentialResponse.IsSuccessStatusCode )
             {
-                ViewBag.StatusCode = response.StatusCode;
-                ViewBag.StatusMessage = await response.Content.ReadAsStringAsync();
-
-                // TODO: ViewBag fixen
-
                 return RedirectToAction( "login", "cms" );
             }
 
-            // Subdomein ophalen en doorsturen
+            // Remove password from parameters because we don't need it in the next call
+            urlParameters.Remove("password");
 
-            return Redirect("https://google.com");
+            // Subdomein ophalen en doorsturen
+            var subdomainResponse = await SendApiCallAsync(Configuration.ApiCalls.UserSubDomain, urlParameters, HttpMethod.Get);
+            var subdomain = await subdomainResponse.Content.ReadAsStringAsync();
+
+            return Redirect($"{Configuration.BackOffice.Protocol}://{subdomain}.{Configuration.BackOffice.Domain}");
         }
 
         [Route("/auth/register"), HttpPost]
-        public IActionResult Register()
+        public async Task<IActionResult> RegisterAsync( string email, string subdomain, string businessUnitName, string password, string confirmPassword, bool tos )
         {
-            return new JsonResult(HttpStatusCode.OK);
+            var formErrors = validateForm(Request.Form);
+
+            if ( formErrors.Count > 0 )
+            {
+                TempData["Errors"] = formErrors.ToArray();
+
+                return RedirectToAction("register", "cms");
+            }
+
+            var urlParameters = new Dictionary<string, string>()
+            {
+                { "email", email },
+                { "password", password },
+                { "userPlan", "Free" },
+                { "subDomainName", subdomain },
+                { "businessUnitName", businessUnitName }
+            };
+
+             var response = await SendApiCallAsync(Configuration.ApiCalls.CreateAccount, urlParameters, HttpMethod.Post);
+
+            TempData["StatusCode"] = response.StatusCode;
+            TempData["StatusMessage"] = await response.Content.ReadAsStringAsync();
+
+            if ( !response.IsSuccessStatusCode )
+            {
+                return RedirectToAction("register", "cms");
+            }
+
+            return await DisplaySubDomainSetupAsync(email);
+        }
+
+        public List<string> validateForm(IFormCollection form)
+        {
+            Dictionary<string, string> textFields = new Dictionary<string, string>()
+            {
+                { "email", "E-mailaddress" },
+                { "subdomain", "Subdomain" },
+                { "businessUnitName", "Business name" },
+                { "password", "Password" },
+                { "confirmPassword", "Confirm password" }
+            };
+
+            List<string> errors = new List<string>();
+
+            foreach ( var formItem in form)
+            {
+                // Check textFields
+                if ( textFields.ContainsKey(formItem.Key) )
+                {
+                    if ( string.IsNullOrWhiteSpace( Request.Form[formItem.Key] ))
+                    {
+                        errors.Add( textFields[formItem.Key] + " is required.");
+                    }
+                }
+            }
+
+            // Register page checks
+            if (form.Keys.Contains("confirmPassword") )
+            {
+                List<string> registerErrors = checkRegisterPageFields(form);
+
+                errors.AddRange(registerErrors);
+            }
+
+            return errors;
+        }
+
+        public List<string> checkRegisterPageFields(IFormCollection form)
+        {
+            List<string> errors = new List<string>();
+
+            if (!form.Keys.Contains("tos"))
+            {
+                errors.Add("You must agree with our Terms of Service before continuing.");
+            }
+
+            if (form["confirmPassword"] != form["password"])
+            {
+                errors.Add("Passwords do not match.");
+            }
+
+            // Check mail address format
+            if (!string.IsNullOrWhiteSpace(form["email"]))
+            {
+                try
+                {
+                    MailAddress m = new MailAddress(form["email"]);
+                }
+                catch (FormatException)
+                {
+                    errors.Add("Invalid e-mailaddress specified.");
+                }
+            }
+            else
+            {
+                errors.Add("You must specify an e-mailaddress.");
+            }
+
+            return errors;
+        }
+
+        public async Task<IActionResult> DisplaySubDomainSetupAsync( string email )
+        {
+            var subdomainResponse = await SendApiCallAsync(
+                Configuration.ApiCalls.UserSubDomain,
+                new Dictionary<string, string>() { { "email", email}  },
+                HttpMethod.Get
+            );
+
+            var subdomain = await subdomainResponse.Content.ReadAsStringAsync();
+            var redirectUrl = $"{Configuration.BackOffice.Protocol}://{subdomain}.{Configuration.BackOffice.Domain}";
+
+            TempData["RedirectUrl"] = redirectUrl;
+            TempData["Email"] = email;
+
+            return RedirectToAction( "setup", "cms" );
         }
 
         /// <summary>

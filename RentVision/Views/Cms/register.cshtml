@@ -3,6 +3,16 @@
 
 @{
     ViewBag.Title = Model.Title;
+
+    // Check if there's an error set in tempData and display it
+    string statusMessage = "";
+
+    if ( TempData["StatusMessage"] != null )
+    {
+        statusMessage = TempData["StatusMessage"].ToString();
+    }
+
+    string[] errors = (TempData["Errors"] != null) ? (string[])TempData["Errors"] : null;
 }
 
 @section head {
@@ -15,45 +25,42 @@
 			<div class="logo logo-dark"></div>
 		</div>
 
-		<form method="post" action="@Model.Fields.ButtonLink.Value">
-			<label for="type">@Model.Fields.AccountTypeText.Value</label>
+        @if ( !string.IsNullOrWhiteSpace(statusMessage) )
+        {
+            <span class="statusMessage">@statusMessage</span>
+        }
 
-			<select>
-                @{ 
-                    foreach ( var accountType in Model.Types.Where( m => m.Visible ) )
-                    {
-                        <option value="@accountType.Value">@accountType.Title</option>       
-                    }
-                }
-			</select>
+        @if ( errors != null && errors.Length > 0 )
+        {
+            foreach ( var error in errors )
+            {
+                <span class="statusMessage">@error</span>
+            }
+        }
 
-			<div class="d-inline-flex">
-				<div class="padding padding-right">
-					<input id="firstname" type="text" name="firstname" placeholder="@Model.Fields.FirstName.Value...">
-				</div>
-				<div class="padding padding-left">
-					<input id="lastname" type="text" name="lastname" placeholder="@Model.Fields.LastName.Value...">
-				</div>
-			</div>
+        <form method="post" action="@Model.Fields.ButtonLink.Value">
+            <input id="email" type="email" name="email" placeholder="@Model.Fields.Email.Value...">
 
-			<input id="email" type="email" name="email" placeholder="@Model.Fields.Email.Value...">
+            <input id="subdomain" type="text" name="subdomain" placeholder="@Model.Fields.Subdomain.Value...">
 
-			<div class="d-inline-flex">
-				<div class="padding padding-right">
-					<input id="password" type="password" name="password" placeholder="@Model.Fields.Password.Value...">
-				</div>
-				<div class="padding padding-left">
-					<input id="confirmPassword" type="password" name="confirmPassword" placeholder="@Model.Fields.ConfirmPassword.Value...">
-				</div>
-			</div>
+            <input id="businessUnitName" type="text" name="businessUnitName" placeholder="@Model.Fields.BusinessUnitName.Value...">
 
-			<div class="box">
-				<input id="tos" type="checkbox" name="tos">
+            <div class="d-inline-flex">
+                <div class="padding padding-right">
+                    <input id="password" type="password" name="password" placeholder="@Model.Fields.Password.Value...">
+                </div>
+                <div class="padding padding-left">
+                    <input id="confirmPassword" type="password" name="confirmPassword" placeholder="@Model.Fields.ConfirmPassword.Value...">
+                </div>
+            </div>
+
+            <div class="box">
+                <input id="tos" type="checkbox" name="tos" value="true">
                 <label for="tos">@Model.Fields.Tos.Value</label>
-			</div>
+            </div>
 
             <button>@Model.Fields.ButtonText.Value</button>
             <a href="/"><i class="fas fa-arrow-left"></i>@Model.Fields.ReturnButtonText.Value</a>
-		</form>
+        </form>
 	</div>
 </div>
