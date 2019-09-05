@@ -15,7 +15,7 @@ function init() {
 }
 
 function timeOutCheck() {
-    $(".setup .setup-content > .timeOutMessage").slideDown(250);
+    $(".setup-content > .timeOutMessage").slideDown(250);
 }
 
 function isUserSiteReady() {

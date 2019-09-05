@@ -1,0 +1,38 @@
+﻿.main .archive-item {
+  position: relative;
+  padding: 20px 45px;
+  border-bottom: 1px solid #DDD;
+  text-shadow: -1px 0 #f2f5f6;
+  /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#fffcfc+0,f4f4f4+100 */
+  background: #fffcfc;
+  /* Old browsers */
+  background: -moz-linear-gradient(top, #fffcfc 0%, #f4f4f4 100%);
+  /* FF3.6-15 */
+  background: -webkit-linear-gradient(top, #fffcfc 0%, #f4f4f4 100%);
+  /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom, #fffcfc 0%, #f4f4f4 100%);
+  /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffcfc', endColorstr='#f4f4f4', GradientType=0);
+  /* IE6-9 */
+}
+.main .archive-item .hover-border {
+  position: absolute;
+  top: 23px;
+  width: 3px;
+  height: 80%;
+  background: #e67287;
+}
+.main .archive-item .subtitle {
+  font-size: 0.9em;
+  color: #BBB;
+}
+.main .archive-item h2 {
+  font-size: 1.5em;
+}
+.main a {
+  color: #666;
+  text-shadow: none !important;
+}
+.main a:hover {
+  color: #333 !important;
+}

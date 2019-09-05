@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <None Remove="assets\less\components\plans.less" />
+    <None Remove="assets\less\news.less" />
     <None Remove="favicon.ico" />
   </ItemGroup>
 
@@ -40,6 +41,7 @@
     <Content Include="assets\less\components\plans.less" />
     <Content Include="assets\less\components\products.less" />
     <Content Include="assets\less\config.less" />
+    <Content Include="assets\less\news.less" />
     <Content Include="assets\less\portal.less" />
     <Content Include="assets\less\variables.less" />
   </ItemGroup>

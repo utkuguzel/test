@@ -1,57 +1,44 @@
 @model BlogArchive
-
 @{
     ViewBag.Title = Model.Title;
-    ViewBag.HasImage = Model.Hero.PrimaryImage.HasValue;
-
-    string PrimaryImage() {
-        if (Model.Hero.PrimaryImage.HasValue) {
-            return $"style=background-image:url({Url.Content(Model.Hero.PrimaryImage)})";
-        } 
-        return "";
-    }
 }
+@section head {
+    <link rel="stylesheet/less" type="text/css" href="~/css/config.min.css">
+    <link rel="stylesheet/less" type="text/css" href="~/css/components/block.min.css">
+    <link rel="stylesheet/less" type="text/css" href="~/css/news.min.css">
+}
+<div class="container-fluid">
+    <partial name="/Views/Shared/Partial/_Menu.cshtml" />
 
-<header class="page-header" @PrimaryImage()>
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-9">
-                @if (Model.Archive.Category == null) {
-                    <h1>@Model.Title</h1>
-                } else {
-                    <h1>@Model.Archive.Category.Title</h1>
-                }
-                <p class="lead">
-                    @Html.Raw(Model.Hero.Ingress)
-                </p>
-            </div>
-        </div>
-    </div>
-</header>
+    @await Html.PartialAsync("/Views/Shared/Partial/_Hero.cshtml", Model)
 
-<div class="main">
-    <div class="container">
-        @foreach (var post in Model.Archive.Posts) {
-            <div class="row archive-item">
-                <div class="col-sm-12">
-                    <h2><a href="@post.Permalink">@post.Title</a></h2>
-                    <p>
-                        <strong>@post.Published.Value.ToString("yyyy-MM-dd")</strong> in 
-                        <a href="@Model.Permalink/category/@post.Category.Slug">@post.Category.Title</a>
-                    </p>
+    <div class="main">
+        @foreach (var post in Model.Archive.Posts)
+        {
+            <a href="@post.Permalink">
+                <div class="row archive-item">
+                    <div class="hover-border"></div>
+
+                    <div class="col-sm-12">
+                        <h2>@post.Title</h2>
+                        <p class="subtitle">
+                            @post.Published.Value.ToString("yyyy-MM-dd") in @post.Category.Title
+                        </p>
+                    </div>
+
+                    <div class="col-sm-9">
+                        <p>
+                            @post.Regions.Hero.Ingress.Value
+                        </p>
+                    </div>
                 </div>
-                <div class="col-sm-9">
-                    <p>
-                        @post.Regions.Hero.Ingress.Value 
-                    </p>
-                    <p><a href="@post.Permalink">Read more...</a></p>
-                </div>
-                <div class="col-sm-3 d-xs-none d-md-block">
-                    @foreach (var tag in post.Tags) {
-                        <span class="tag"># @tag.Title</span>
-                    }
-                </div>
-            </div>
+            </a>
         }
-    </div>
+        </div>
+
+    <partial name="/Views/Shared/Partial/_Footer.cshtml" />
 </div>
+
+@section script {
+    @*<script type="text/javascript" src="~/assets/js/news.js"></script>*@
+}

@@ -42,5 +42,9 @@
   {
     "outputFile": "wwwroot/css/components/plans.css",
     "inputFile": "assets/less/components/plans.less"
+  },
+  {
+    "outputFile": "wwwroot/css/news.css",
+    "inputFile": "assets/less/news.less"
   }
 ]

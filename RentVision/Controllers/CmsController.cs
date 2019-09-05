@@ -19,6 +19,7 @@ namespace RentVision.Controllers
     {
         private readonly IApi _api;
         private readonly IModelLoader _loader;
+        private bool _DEBUG = false;
 
         /// <summary>
         /// Default constructor.
@@ -161,9 +162,14 @@ namespace RentVision.Controllers
         {
             var model = await _loader.GetPage<SetupPage>(id, HttpContext.User, draft);
 
-            if ( TempData["Email"] == null || TempData["RedirectUrl"] == null )
+            if ( ( TempData["Email"] == null || TempData["RedirectUrl"] == null ) && !_DEBUG )
             {
                 return LocalRedirect("/");
+            }
+            else if ( _DEBUG )
+            {
+                TempData["Email"] = "";
+                TempData["RedirectUrl"] = "";
             }
 
             return View(model);

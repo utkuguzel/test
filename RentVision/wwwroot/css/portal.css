@@ -139,6 +139,9 @@ a:hover {
 .setup .setup-content {
   text-align: center;
 }
+.setup .setup-content .timeOutMessage {
+  font-size: 0.8em;
+}
 .setup .setup-content i {
   font-size: 3em;
   margin: 20px 0;
