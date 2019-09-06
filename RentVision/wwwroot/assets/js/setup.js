@@ -40,13 +40,18 @@ function onSuccessCallBack(data) {
         else {
             console.log("Failed to redirect. Redirect URL not set.");
         }
+    } else if (data.statusCode !== 200 )
+    {
+        $(".setup-content > i").hide();
+        $(".setup-content > .timeOutMessage").hide();
+        $(".setup-content > .loadingText").text("An unknown error occured, please try again. If this problem persists, please contact technical support.");
     }
-
-    console.log(data);
 }
 
 function onErrorCallBack(jqXhr, error, errorStr) {
     console.log(error + ": " + errorStr);
+
+
 }
 
 $(document).ready(init);
