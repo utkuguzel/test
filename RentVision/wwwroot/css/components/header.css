@@ -1,92 +1,426 @@
-﻿header {
-  position: absolute;
-  z-index: 1000;
-  width: inherit;
-  height: 70px;
-  padding: 10px 0;
+﻿#header {
+  display: flex;
+  position: fixed;
+  width: 100%;
+  height: 65px;
+  background-color: hsl(355, 19%, 9%);
+  z-index: 400;
+  box-shadow: 0 1px 3px 0px rgba(0, 0, 0, 0.1);
+  font-weight: 700 !important;
+  font-family: 'Ubuntu';
 }
-header .nav {
+#header #leftmenu {
+  float: left;
+  width: 200px;
   display: inline-block;
+  padding: 11px 10px 5px 40px;
+  text-align: center;
+}
+#header #leftmenu a {
+  line-height: 40px;
+}
+#header #leftmenu p {
+  color: #555;
+  font-size: 1.2em;
+  line-height: 20px;
+}
+#header #leftmenu p span {
+  color: #6FC516;
+}
+#header #middlemenu {
+  position: relative;
+  flex-grow: 1;
+  display: inline-block;
+  vertical-align: top;
+  horizontal-align: left;
   width: auto;
   height: inherit;
-}
-header .nav-left {
-  padding: 0 40px;
-}
-header .nav-right {
-  float: right;
-  padding: 0 50px 0 0;
-}
-header .nav-right ul li {
-  float: left;
-  width: auto;
-  min-width: 200px;
-  font-size: 0.9em;
-  line-height: 70px;
-  color: #FFF;
-  text-align: center;
-  list-style-type: none;
-  cursor: pointer;
-  text-shadow: 0px -1px 0px #000;
-}
-header .nav-right ul li i {
-  color: #FFF;
-  font-size: 0.9em;
-  padding: 0 10px 0 0;
-}
-header .nav-right ul li a {
-  text-decoration: none;
-  color: #FFF;
-}
-header .nav-right ul li a.button {
-  padding: 20px 20px;
-  border: 1px solid #C61120;
+  margin: 0 auto;
+  padding: 10px 0;
   border-radius: 4px;
 }
-header .nav-right ul li a.button:hover {
-  background-color: #dd1324;
-  border: 1px solid #8b1127;
+#header #middlemenu #headerSearchBox {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding-left: 7px;
+  background-color: #F5F5F5;
+  border: 0;
+  color: #555;
+  border: 1px solid #EEE;
+  border-radius: 4px;
 }
-header .nav-right ul li a.button-active {
-  background-color: #C61120;
-  border: 1px solid #A2142D;
+#header #middlemenu #headerSearchBox:focus {
+  outline: none;
+  background-color: #F3F3F3;
 }
-header .nav-right .nav-mobile {
-  display: none;
+#header #middlemenu #headerSearchBox:hover {
+  background-color: #F2F2F2;
 }
-@media all and (max-width: 768px) {
-  header .nav-right .nav-mobile {
-    display: initial;
-    height: inherit;
+#header #middlemenu #headerSearchBox:hover input[name="search"] {
+  background-color: #F2F2F2;
+}
+#header #middlemenu #headerSearchBox #headerSearchFilter {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 1001;
+  width: 50px;
+  height: 100%;
+  text-align: center;
+  line-height: 43px;
+  color: #AAA;
+  cursor: pointer;
+}
+#header #middlemenu #headerSearchBox #headerSearchFilter:hover {
+  color: #5e5e5e;
+}
+#header #middlemenu #headerSearchBox #headerSearchFilter #searchFilter {
+  position: absolute;
+  left: -100px;
+  top: 53px;
+  z-index: 1002;
+  width: 200px;
+  height: auto;
+  background: #FFF;
+  border: 1px solid #DDD;
+  padding: 10px 15px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+#header #middlemenu #headerSearchBox #headerSearchFilter #searchFilter label {
+  color: #444;
+}
+#header #middlemenu #headerSearchBox #headerSearchFilter #searchFilter select {
+  display: block;
+  width: 100%;
+  margin: 0 0 10px 0;
+  padding: 8px 7px;
+  border-radius: 4px;
+  border: 1px solid rgba(100, 100, 100, 0.2);
+  background: #FFF;
+  color: #40556d;
+  font-size: 0.9em;
+}
+#header #middlemenu input[name="search"] {
+  flex: 1;
+  background-color: #F5F5F5;
+  border: none;
+  width: 100%;
+  height: 100%;
+}
+#header #middlemenu input[name="search"]:focus {
+  outline: none;
+}
+@media screen and (max-width: 992px) {
+  #header #middlemenu #headerSearchResults {
+    position: fixed !important;
   }
-  header .nav-right .nav-mobile i {
-    color: #FFF;
-    line-height: 70px;
-    font-size: 2.5em;
-    cursor: pointer;
+}
+#header #middlemenu #headerSearchResults {
+  position: absolute;
+  left: 0;
+  top: 65px;
+  width: 100%;
+  height: auto;
+  max-height: 350px;
+  overflow: auto;
+  overflow-y: auto;
+  border: 1px solid #DDD;
+  background: #FFF;
+  z-index: 1000 !important;
+}
+#header #middlemenu #headerSearchResults ul {
+  list-style-type: none;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+#header #middlemenu #headerSearchResults ul a {
+  text-decoration: none !important;
+  color: #666;
+}
+#header #middlemenu #headerSearchResults ul a:hover {
+  color: #72ab55;
+}
+#header #middlemenu #headerSearchResults ul li {
+  padding: 10px 0;
+  cursor: pointer;
+  border-bottom: 1px solid #DDD !important;
+  height: 81px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+#header #middlemenu #headerSearchResults ul li:hover {
+  background: #F8F8F8;
+}
+#header #middlemenu #headerSearchResults .headerProductImage,
+#header #middlemenu #headerSearchResults .headerProductInfo {
+  display: inline-block;
+  vertical-align: middle;
+}
+#header #middlemenu #headerSearchResults .headerProductImage {
+  padding: 0 0 0 10px;
+  height: 100%;
+}
+#header #middlemenu #headerSearchResults .headerProductInfo {
+  padding-left: 7px;
+}
+#header #middlemenu #headerSearchResults .headerProductInfo h5,
+#header #middlemenu #headerSearchResults .headerProductInfo span,
+#header #middlemenu #headerSearchResults .headerProductInfo p {
+  margin: 0 !important;
+}
+#header #middlemenu #headerSearchResults .headerProductInfo .materialTypeToolTip {
+  background: #72ab55;
+  padding: 2px;
+  border-radius: 4px;
+  color: #FFF;
+  font-size: 0.8em;
+}
+#header #middlemenu #headerSearchResults .headerProductInfo h5 {
+  font-size: 1.2em;
+}
+#header #middlemenu #headerSearchResults .headerProductInfo span {
+  font-size: 0.9em;
+  color: #AAA;
+}
+@media (min-width: 992px) {
+  #header #middlemenu #headerSearchResults .headerProductInfo p {
+    width: auto !important;
+    overflow: hidden !important;
   }
-  header .nav-right #rightmenu {
+}
+@media (min-width: 768px) {
+  #header #middlemenu #headerSearchResults .headerProductInfo p {
+    width: 500px !important;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}
+@media (max-width: 768px) {
+  #header #middlemenu #headerSearchResults .headerProductInfo p {
+    width: 300px !important;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}
+#header #middlemenu #headerSearchResults .headerProductInfo p {
+  font-size: 0.85em;
+  color: #444;
+  overflow: auto;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: auto;
+  max-width: inherit;
+  min-width: 300px;
+}
+#header #rightmenu-mobile {
+  display: inline-block;
+  float: right;
+  width: auto;
+  height: 100%;
+  text-align: right;
+  cursor: pointer;
+}
+#header #rightmenu-mobile i {
+  width: 60px;
+  height: 100%;
+  line-height: 65px;
+  color: #FFF;
+  text-align: center;
+}
+@media screen and (min-width: 992px) {
+  #header #rightmenu-mobile {
     display: none;
   }
-  header .nav-right ul {
-    position: absolute;
-    left: 0;
+}
+#header #rightmenu {
+  display: inline-block;
+  float: right;
+  width: auto;
+  height: inherit;
+  text-align: right;
+}
+@media screen and (max-width: 992px) {
+  #header #rightmenu {
+    display: none;
+    position: fixed;
+    right: 0;
+    top: 65px;
     width: 100%;
-    background: #FFF;
   }
-  header .nav-right ul li {
+}
+#header #rightmenu #menuoptions {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  height: 100%;
+}
+#header #rightmenu #menuoptions a {
+  text-decoration: none !important;
+}
+@media (max-width: 992px) {
+  #header #rightmenu #menuoptions li.headerOption {
+    display: block !important;
+    text-align: center;
+  }
+}
+@media (max-width: 992px) {
+  #header #rightmenu #menuoptions li.headerOption {
+    height: auto !important;
+  }
+}
+#header #rightmenu #menuoptions li.headerOption {
+  position: relative;
+  display: inline-block;
+  width: auto;
+  color: #FFF !important;
+  font-size: 0.9em;
+  font-weight: 300;
+  height: 100%;
+  line-height: 65px;
+  padding: 0 30px;
+  cursor: pointer;
+  background: hsl(355, 19%, 9%);
+}
+#header #rightmenu #menuoptions li.headerOption i.fas {
+  font-size: 0.75em;
+  padding-right: 10px;
+  color: #FFF;
+}
+#header #rightmenu #menuoptions li.headerOption i.fas.fa-angle-up {
+  color: #EEE;
+}
+#header #rightmenu #menuoptions li.headerOption:hover {
+  color: #FFF;
+}
+#header #rightmenu #menuoptions li.headerOption.active {
+  background-color: #6FC516;
+}
+#header #rightmenu #menuoptions li.headerOption .headerHoverBar {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 2px;
+  background: #C61120;
+}
+#header #rightmenu #menuoptions li.headerOption .headerDropdown {
+  display: none;
+  position: absolute;
+  left: 0;
+  background: #FFF;
+  border: 1px solid #DDD;
+  padding: 0 !important;
+  width: 200px;
+  text-align: center;
+  margin-left: -100px;
+}
+#header #rightmenu #menuoptions li.headerOption .headerDropdown li {
+  display: block;
+  list-style-type: none;
+  color: #444;
+  border-bottom: 1px solid #DDD;
+}
+#header #rightmenu #menuoptions li.headerOption .headerDropdown li:hover {
+  color: #222;
+  background: #F5F5F5;
+}
+@media (max-width: 992px) {
+  #header #rightmenu #menuoptions li.headerOption .headerDropdown {
+    position: initial;
+    width: 100%;
+    margin: 0;
+  }
+}
+.btn-primary {
+  border: none;
+  background: #72ab55;
+  color: #FFF;
+  padding: 7px 20px;
+  border: 1px solid #679a4d;
+  border-radius: 3px;
+}
+.btn-primary {
+  background: #7fbd5a;
+  background: -moz-linear-gradient(top, #7fbd5a 0%, #7fbd5a 49%, #70a852 100%);
+  background: -webkit-gradient(left top, left bottom, color-stop(0%, #7fbd5a), color-stop(49%, #7fbd5a), color-stop(100%, #70a852));
+  background: -webkit-linear-gradient(top, #7fbd5a 0%, #7fbd5a 49%, #70a852 100%);
+  background: -o-linear-gradient(top, #7fbd5a 0%, #7fbd5a 49%, #70a852 100%);
+  background: -ms-linear-gradient(top, #7fbd5a 0%, #7fbd5a 49%, #70a852 100%);
+  background: linear-gradient(to bottom, #7fbd5a 0%, #7fbd5a 49%, #70a852 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#7fbd5a', endColorstr='#70a852', GradientType=0);
+}
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+  border: 1px solid #679a4d;
+  background: #70a852;
+  background: -moz-linear-gradient(top, #70a852 0%, #7fbd5a 51%, #7fbd5a 100%);
+  background: -webkit-gradient(left top, left bottom, color-stop(0%, #70a852), color-stop(51%, #7fbd5a), color-stop(100%, #7fbd5a));
+  background: -webkit-linear-gradient(top, #70a852 0%, #7fbd5a 51%, #7fbd5a 100%);
+  background: -o-linear-gradient(top, #70a852 0%, #7fbd5a 51%, #7fbd5a 100%);
+  background: -ms-linear-gradient(top, #70a852 0%, #7fbd5a 51%, #7fbd5a 100%);
+  background: linear-gradient(to bottom, #70a852 0%, #7fbd5a 51%, #7fbd5a 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#70a852', endColorstr='#7fbd5a', GradientType=0);
+}
+#searchFilter {
+  padding: 10px 10px;
+  border-bottom: 1px solid #EEE;
+}
+#searchFilter .filterOption,
+#searchFilter #filterReset {
+  display: inline-block;
+  width: auto;
+}
+#searchFilter #filterReset {
+  margin: 0;
+}
+#searchFilter label {
+  color: #555;
+}
+#searchFilter select {
+  width: auto;
+  padding: 5px;
+  border-radius: 3px;
+  border: 1px solid #DDD;
+  margin: 0 10px;
+}
+#searchFilter #filterReset {
+  border: none;
+  background: #72ab55;
+  color: #FFF;
+  padding: 7px 20px;
+  border: 1px solid #679a4d;
+  border-radius: 3px;
+  background: #7fbd5a;
+  background: -moz-linear-gradient(top, #7fbd5a 0%, #7fbd5a 49%, #70a852 100%);
+  background: -webkit-gradient(left top, left bottom, color-stop(0%, #7fbd5a), color-stop(49%, #7fbd5a), color-stop(100%, #70a852));
+  background: -webkit-linear-gradient(top, #7fbd5a 0%, #7fbd5a 49%, #70a852 100%);
+  background: -o-linear-gradient(top, #7fbd5a 0%, #7fbd5a 49%, #70a852 100%);
+  background: -ms-linear-gradient(top, #7fbd5a 0%, #7fbd5a 49%, #70a852 100%);
+  background: linear-gradient(to bottom, #7fbd5a 0%, #7fbd5a 49%, #70a852 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#7fbd5a', endColorstr='#70a852', GradientType=0);
+}
+@media (max-width: 992px) {
+  #searchFilter select {
+    width: 100% !important;
+  }
+  #searchFilter .filterOption {
     display: block !important;
     width: 100% !important;
   }
-  header .nav-right ul li a {
+  #searchFilter #filterReset {
     display: block !important;
-    width: 100% !important;
-    height: 100px !important;
-    background: #C61120 !important;
-    border-radius: 0px !important;
-    border-bottom: 1px solid #A2142D !important;
+    width: 40% !important;
+    margin: 10px 0 0 10px !important;
   }
-  header .nav-right ul li a:hover {
-    background: #dd1324 !important;
+  #searchFilter label:nth-child(2) {
+    margin-top: 10px !important;
   }
 }

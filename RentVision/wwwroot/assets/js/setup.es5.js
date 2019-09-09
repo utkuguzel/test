@@ -1,19 +1,19 @@
 ﻿"use strict";
 
 var email;
-var redirectUrl;
 var businessUnitName;
+
+console.log("SCRIPT");
 
 function init() {
     email = $(".setup").data("email");
-    redirectUrl = $(".setup").data("redirect");
 
     $(".timeOutMessage").hide();
 
-    if (email !== undefined) {
-        isUserSiteReady();
-        setTimeout(timeOutCheck, 60000);
-    }
+    isUserSiteReady();
+    setTimeout(timeOutCheck, 60000);
+
+    console.log(email);
 }
 
 function timeOutCheck() {
@@ -21,6 +21,8 @@ function timeOutCheck() {
 }
 
 function isUserSiteReady() {
+    console.log("isUserSiteReady");
+
     $.ajax({
         method: "POST",
         url: "/auth/isUserSiteReady",
@@ -36,14 +38,31 @@ function isUserSiteReady() {
 function onSuccessCallBack(data) {
 
     if (data.response === "true" && data.statusCode === 200) {
-        if (redirectUrl !== undefined) {
-            window.location.href = redirectUrl;
-        } else {
-            console.log("Failed to redirect. Redirect URL not set.");
-        }
+        console.log("onSuccessCallBack");
+
+        $.ajax({
+            method: "POST",
+            url: "/auth/getUserKey",
+            dataType: "json",
+            data: { email: email },
+            success: onUserKeySuccessCallBack,
+            error: onUserKeyErrorCallBack
+        });
+    } else if (data.statusCode !== 200) {
+        $(".setup-content > i").hide();
+        $(".setup-content > .timeOutMessage").hide();
+        $(".setup-content > .loadingText").text("An unknown error occured, please try again. If this problem persists, please contact technical support.");
     }
 
     console.log(data);
+}
+
+function onUserKeySuccessCallBack(data) {
+    console.log(data);
+}
+
+function onUserKeyErrorCallBack(jqXhr, error, errorStr) {
+    console.log(error + ": " + errorStr);
 }
 
 function onErrorCallBack(jqXhr, error, errorStr) {

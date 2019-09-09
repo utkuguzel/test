@@ -162,14 +162,13 @@ namespace RentVision.Controllers
         {
             var model = await _loader.GetPage<SetupPage>(id, HttpContext.User, draft);
 
-            if ( ( TempData["Email"] == null || TempData["RedirectUrl"] == null ) && !_DEBUG )
+            if ( ( TempData["Email"] == null ) && !_DEBUG )
             {
                 return LocalRedirect("/");
             }
             else if ( _DEBUG )
             {
                 TempData["Email"] = "";
-                TempData["RedirectUrl"] = "";
             }
 
             return View(model);

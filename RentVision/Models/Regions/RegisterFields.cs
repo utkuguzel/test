@@ -33,5 +33,22 @@ namespace RentVision.Models.Regions
 
         [Field(Title = "Return to website", Options = FieldOption.HalfWidth)]
         public StringField ReturnButtonText { get; set; }
+
+        // Password requirement strings
+
+        [Field(Options = FieldOption.HalfWidth)]
+        public StringField minLengthRequirement { get; set; }
+
+        [Field(Options = FieldOption.HalfWidth)]
+        public StringField numberRequirement { get; set; }
+
+        [Field(Options = FieldOption.HalfWidth)]
+        public StringField upperCaseRequirement { get; set; }
+
+        [Field(Options = FieldOption.HalfWidth)]
+        public StringField specialCharRequirement { get; set; }
+
+        [Field(Options = FieldOption.HalfWidth)]
+        public StringField passwordMatchRequirement { get; set; }
     }
 }

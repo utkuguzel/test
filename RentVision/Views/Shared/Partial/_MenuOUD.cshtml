@@ -1,0 +1,37 @@
+@{
+    var sitemap = WebApp.Site.Sitemap;
+    var homePageResult = await WebApp.Api.Pages.GetStartpageAsync<StartPage>();
+    var headerItems = homePageResult.HeaderItems.ToList();
+}
+
+<!-- START HEADER -->
+<div class="row">
+    <div class="col-sm-12">
+        <header>
+            <div class="nav nav-left">
+                <a href="~/"><div class="logo"></div></a>
+            </div>
+            <div class="nav nav-right">
+                <div id="rightmenu-mobile" class="nav-mobile">
+                    <i class="fas fa-bars"></i>
+                </div>
+
+                <div id="rightmenu">
+                    <ul class="menuoptions">
+                        @{ 
+                            foreach ( var headerItem in headerItems )
+                            {
+                                string buttonState = headerItem.ButtonActive ? "button-active" : "button-inactive";
+                                string buttonIcon = headerItem.Icon.Value;
+                                string buttonPermalink = headerItem.PageLink.Page.Permalink;
+
+                                <li><a class="button @buttonState" href="@buttonPermalink"><i class="fas @buttonIcon"></i>@headerItem.Title</a></li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        </header>
+    </div>
+</div>
+<!-- END HEADER -->

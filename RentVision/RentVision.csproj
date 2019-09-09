@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="assets\less\components\headerOUD.less" />
     <None Remove="assets\less\components\plans.less" />
     <None Remove="assets\less\news.less" />
     <None Remove="favicon.ico" />
@@ -36,6 +37,7 @@
     <Content Include="assets\less\colours.less" />
     <Content Include="assets\less\components\block.less" />
     <Content Include="assets\less\components\footer.less" />
+    <Content Include="assets\less\components\headerOUD.less" />
     <Content Include="assets\less\components\header.less" />
     <Content Include="assets\less\components\hero.less" />
     <Content Include="assets\less\components\plans.less" />
@@ -68,6 +70,6 @@
     <None Include="wwwroot\assets\images\logos\RentVision-02-Dark.png" />
     <None Include="wwwroot\assets\images\logos\RentVision-02-Light.png" />
     <None Include="wwwroot\assets\images\logos\rentvision-icon.png" />
-    <None Include="wwwroot\assets\js\header.js" />
+    <None Include="wwwroot\assets\js\headerOUD.js" />
   </ItemGroup>
 </Project>

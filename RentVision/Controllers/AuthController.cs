@@ -16,6 +16,8 @@ using Piranha.AspNetCore.Services;
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Mail;
+using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace RentVision.Controllers
 {
@@ -35,7 +37,7 @@ namespace RentVision.Controllers
         {
             var userSiteReadyResponse = await SendApiCallAsync(
                 Configuration.ApiCalls.UserSiteReady,
-                new Dictionary<string, string>() { { "email", email } },
+                new Dictionary<string, string>() { { "email", email.ToLower() } },
                 HttpMethod.Get
             );
 
@@ -58,11 +60,10 @@ namespace RentVision.Controllers
 
             var urlParameters = new Dictionary<string, string>()
             {
-                { "email", email },
-                { "password", password }
+                { "email", email.ToLower() }
             };
 
-            var userCredentialResponse = await SendApiCallAsync(Configuration.ApiCalls.CheckUserCredentials, urlParameters, HttpMethod.Post);
+            var userCredentialResponse = await SendApiCallAsync(Configuration.ApiCalls.CheckUserCredentials, urlParameters, HttpMethod.Post, password );
 
             TempData["StatusCode"] = userCredentialResponse.StatusCode;
             TempData["StatusMessage"] = await userCredentialResponse.Content.ReadAsStringAsync();
@@ -71,9 +72,6 @@ namespace RentVision.Controllers
             {
                 return RedirectToAction( "login", "cms" );
             }
-
-            // Remove password from parameters because we don't need it in the next call
-            urlParameters.Remove("password");
 
             // Subdomein ophalen en doorsturen
             var subdomainResponse = await SendApiCallAsync(Configuration.ApiCalls.UserSubDomain, urlParameters, HttpMethod.Get);
@@ -96,14 +94,13 @@ namespace RentVision.Controllers
 
             var urlParameters = new Dictionary<string, string>()
             {
-                { "email", email },
-                { "password", password },
+                { "email", email.ToLower() },
                 { "userPlan", "Free" },
-                { "subDomainName", subdomain },
+                { "subDomainName", subdomain.ToLower() },
                 { "businessUnitName", businessUnitName }
             };
 
-             var response = await SendApiCallAsync(Configuration.ApiCalls.CreateAccount, urlParameters, HttpMethod.Post);
+             var response = await SendApiCallAsync(Configuration.ApiCalls.CreateAccount, urlParameters, HttpMethod.Post, password );
 
             TempData["StatusCode"] = response.StatusCode;
             TempData["StatusMessage"] = await response.Content.ReadAsStringAsync();
@@ -113,7 +110,7 @@ namespace RentVision.Controllers
                 return RedirectToAction("register", "cms");
             }
 
-            return await DisplaySubDomainSetupAsync(email);
+            return DisplaySubDomainSetup(email, password);
         }
 
         public List<string> validateForm(IFormCollection form)
@@ -167,40 +164,63 @@ namespace RentVision.Controllers
             }
 
             // Check mail address format
-            if (!string.IsNullOrWhiteSpace(form["email"]))
+            bool isValidEmailAddress = VerifyEmailAddress(form["email"]);
+
+            if (!isValidEmailAddress)
             {
-                try
-                {
-                    MailAddress m = new MailAddress(form["email"]);
-                }
-                catch (FormatException)
-                {
-                    errors.Add("Invalid e-mailaddress specified.");
-                }
-            }
-            else
-            {
-                errors.Add("You must specify an e-mailaddress.");
+                errors.Add("Invalid e-mailaddress specified.");
             }
 
             return errors;
         }
 
-        public async Task<IActionResult> DisplaySubDomainSetupAsync( string email )
+        public bool VerifyEmailAddress(string email)
+        {
+            var pattern = @"^(?!\.)(""([^""\r\\]|\\[""\r\\])*""|([-a-z0-9!#$%&'*+/=?^_`{|}~]|(?<!\.)\.)*)(?<!\.)@[a-z0-9][\w\.-]*[a-z0-9]\.[a-z][a-z\.]*[a-z]$";
+            var match = Regex.Match(email, pattern);
+
+            if (match.Success)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public IActionResult DisplaySubDomainSetup(string email, string password)
+        {
+            TempData["Email"] = email;
+            TempData["Password"] = password;
+
+            return RedirectToAction("setup", "cms");
+        }
+
+        [Route("/auth/getUserKey"), HttpPost]
+        public async Task<JsonResult> GetUserKey( string email )
         {
             var subdomainResponse = await SendApiCallAsync(
                 Configuration.ApiCalls.UserSubDomain,
-                new Dictionary<string, string>() { { "email", email}  },
+                new Dictionary<string, string>() { { "email", email } },
                 HttpMethod.Get
             );
 
             var subdomain = await subdomainResponse.Content.ReadAsStringAsync();
             var redirectUrl = $"{Configuration.BackOffice.Protocol}://{subdomain}.{Configuration.BackOffice.Domain}";
 
-            TempData["RedirectUrl"] = redirectUrl;
-            TempData["Email"] = email;
+            // TODO: API CALL GetLoginKey AANROEPEN (subDomainName, email, password)
+            var userKeyResponse = await SendApiCallAsync("GetLoginKey",
+                new Dictionary<string, string>() {
+                    { "subDomainName", subdomain },
+                    { "email", email }
+                },
+                HttpMethod.Post,
+                (string)TempData["password"]
+            );
 
-            return RedirectToAction( "setup", "cms" );
+            string userKey = await userKeyResponse.Content.ReadAsStringAsync();
+            string realRedirectUrl = redirectUrl + "/login?externLoginKey=" + userKey;
+
+            return new JsonResult( new { statusCode = HttpStatusCode.OK, realRedirectUrl } );
         }
 
         /// <summary>
@@ -210,7 +230,7 @@ namespace RentVision.Controllers
         /// <param name="data">A Dictionary containing parameter data</param>
         /// <param name="callMethod">The HttpMethod that should be used to send data</param>
         /// <returns>An HttpResponseMessage containing response data from the API</returns>
-        public async Task<HttpResponseMessage> SendApiCallAsync(string callType, Dictionary<string, string> data, HttpMethod callMethod)
+        public async Task<HttpResponseMessage> SendApiCallAsync(string callType, Dictionary<string, string> data, HttpMethod callMethod, string password = null )
         {
             var query = QueryHelpers.AddQueryString(
                 $"{Configuration.BackOffice.Protocol}://{Configuration.BackOffice.HostName}/{callType}",
@@ -222,6 +242,11 @@ namespace RentVision.Controllers
                 Method = callMethod,
                 RequestUri = new Uri(query)
             };
+
+            if ( password != null )
+            {
+                request.Headers.Add("X-Password", password);
+            }
 
             var client = _clientFactory.CreateClient("RentVisionApi");
 

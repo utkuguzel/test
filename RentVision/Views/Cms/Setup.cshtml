@@ -5,7 +5,6 @@
     ViewBag.Title = Model.Title;
 
     string email = (!String.IsNullOrWhiteSpace(TempData["Email"].ToString())) ? TempData["Email"].ToString() : "";
-    string redirectUrl = (!String.IsNullOrWhiteSpace(TempData["RedirectUrl"].ToString())) ? TempData["RedirectUrl"].ToString() : "";
 }
 
 @section head {
@@ -14,7 +13,7 @@
 }
 
 <div class="d-flex justify-content-center">
-    <div class="setup" data-email="@email" data-redirect="@redirectUrl">
+    <div class="setup" data-email="@email">
         <div class="logo-box">
             <div class="logo logo-dark"></div>
         </div>
@@ -32,5 +31,5 @@
 </div>
 
 @section script {
-    <script type="text/javascript" src="~/assets/js/setup.es5.min.js"></script>
+    <script type="text/javascript" src="~/assets/js/setup.js"></script>
 }

@@ -153,3 +153,35 @@ a:hover {
   font-size: 0.8em;
   color: #AAA;
 }
+.passwordRequirements {
+  display: block;
+  margin: 10px 0;
+  padding: 10px 20px;
+  background: rgba(198, 17, 32, 0.2);
+  font-size: 0.9em;
+  border: 1px solid rgba(198, 17, 32, 0.2);
+  border-radius: 2px;
+}
+.passwordRequirements span {
+  display: block;
+  margin: 0 0 5px 0;
+}
+.passwordRequirements ul {
+  margin: 0;
+}
+.passwordRequirements ul li i {
+  color: #A2142D;
+  padding: 0 5px 0 0;
+}
+.passwordRequirements ul li i.fa-check {
+  color: #6ec13c;
+}
+button[disabled] {
+  background: #DDD;
+  color: #555;
+}
+button[disabled]:hover {
+  background: #DDD;
+  color: #555;
+  cursor: not-allowed;
+}

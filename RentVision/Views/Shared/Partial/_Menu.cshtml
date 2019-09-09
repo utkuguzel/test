@@ -5,33 +5,53 @@
 }
 
 <!-- START HEADER -->
-<div class="row">
-    <div class="col-sm-12">
-        <header>
-            <div class="nav nav-left">
-                <a href="~/"><div class="logo"></div></a>
-            </div>
-            <div class="nav nav-right">
-                <div id="rightmenu-mobile" class="nav-mobile">
-                    <i class="fas fa-bars"></i>
-                </div>
+<div id="header">
+    <div id="leftmenu">
+        <a href="/">
+            <img alt="logo" src="~/assets/images/logos/RentVision-02-Light.png">
+        </a>
+    </div>
 
-                <div id="rightmenu">
-                    <ul class="menuoptions">
-                        @{ 
-                            foreach ( var headerItem in headerItems )
-                            {
-                                string buttonState = headerItem.ButtonActive ? "button-active" : "button-inactive";
-                                string buttonIcon = headerItem.Icon.Value;
-                                string buttonPermalink = headerItem.PageLink.Page.Permalink;
+    <div id="middlemenu">
+    </div>
 
-                                <li><a class="button @buttonState" href="@buttonPermalink"><i class="fas @buttonIcon"></i>@headerItem.Title</a></li>
-                            }
+    <div id="rightmenu-mobile">
+        <i class="fa fa-bars fa-2x"></i>
+    </div>
+
+    <div id="rightmenu">
+        <ul id="menuoptions">
+            @*<li class="headerOption home">
+                <div class="headerHoverBar"></div>
+                <i class="fa fa-angle-down"></i>
+                Home
+                <ul class="headerDropdown">
+                    @{ 
+                        foreach ( var headerItem in headerItems )
+                        {
+                            <a href="@headerItem.PageLink.Page.Permalink">
+                                <li>
+                                    <div class="headerHoverBar"></div>
+                                    @headerItem.Title
+                                </li>
+                            </a>
                         }
-                    </ul>
-                </div>
-            </div>
-        </header>
+                    }
+                </ul>
+            </li>*@
+
+            @{ 
+                foreach ( var headerItem in headerItems )
+                {
+                    <a href="@headerItem.PageLink.Page.Permalink">
+                        <li class="headerOption home">
+                            <div class="headerHoverBar"></div>
+                            <i class="fas @headerItem.Icon.Value"></i>@headerItem.Title
+                        </li>
+                    </a>
+                }
+            }
+        </ul>
     </div>
 </div>
 <!-- END HEADER -->

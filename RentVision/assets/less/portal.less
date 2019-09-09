@@ -166,3 +166,44 @@ a {
         }
     }
 }
+
+.passwordRequirements {
+    display: block;
+    margin: 10px 0;
+    padding: 10px 20px;
+    background: rgba(198,17,32, 0.2);
+    font-size: 0.9em;
+    border: 1px solid rgba(198,17,32, 0.2);
+    border-radius: 2px;
+
+    span {
+        display: block;
+        margin: 0 0 5px 0;
+    }
+
+    ul {
+        margin: 0;
+
+        li {
+            i {
+                color: @COLOUR_VIVIDBURGUNDY;
+                padding: 0 5px 0 0;
+
+                &.fa-check {
+                    color: rgb(110, 193, 60);
+                }
+            }
+        }
+    }
+}
+
+button[disabled] {
+    background: #DDD;
+    color: #555;
+
+    &:hover {
+        background: #DDD;
+        color: #555;
+        cursor: not-allowed;
+    }
+}

@@ -54,13 +54,29 @@
                 </div>
             </div>
 
+            <div class="passwordRequirements">
+                <span><strong>A password must require the following:</strong></span>
+
+                <ul class="requirements">
+                    <li class="minLengthRequirement"><i class="fas fa-times"></i>Password must have a length of min. 8 characters</li>
+                    <li class="numberRequirement"><i class="fas fa-times"></i>Password must contain at least one number (0-9)</li>
+                    <li class="upperCaseRequirement"><i class="fas fa-times"></i>Password must contain at least one uppercase character (A-Z)</li>
+                    <li class="specialCharRequirement"><i class="fas fa-times"></i>Password must contain at least one special character (!@@#$%^&)</li>
+                    <li class="passwordMatchRequirement"><i class="fas fa-times"></i>Passwords must match</li>
+                </ul>
+                </div>
+
             <div class="box">
                 <input id="tos" type="checkbox" name="tos" value="true">
                 <label for="tos">@Model.Fields.Tos.Value</label>
             </div>
 
-            <button>@Model.Fields.ButtonText.Value</button>
+            <button disabled>@Model.Fields.ButtonText.Value</button>
             <a href="/"><i class="fas fa-arrow-left"></i>@Model.Fields.ReturnButtonText.Value</a>
         </form>
 	</div>
 </div>
+
+@section script {
+    <script type="text/javascript" src="~/assets/js/register.js"></script>
+}
