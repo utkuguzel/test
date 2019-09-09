@@ -2,7 +2,6 @@
 
 var email;
 var businessUnitName;
-var timer;
 
 console.log("SCRIPT");
 
@@ -33,14 +32,13 @@ function isUserSiteReady() {
         error: onErrorCallBack
     });
 
-    timer = setTimeout(isUserSiteReady, 1000);
+    setTimeout(isUserSiteReady, 1000);
 }
 
-function onSuccessCallBack(response) {
+function onSuccessCallBack(data) {
 
-    if (response.response === "true" && response.statusCode === 200) {
+    if (data.response === "true" && data.statusCode === 200) {
         console.log("onSuccessCallBack");
-        clearTimeout(timer);
 
         $.ajax({
             method: "POST",
@@ -50,25 +48,20 @@ function onSuccessCallBack(response) {
             success: onUserKeySuccessCallBack,
             error: onUserKeyErrorCallBack
         });
-    } else if (response.statusCode !== 200) {
+    } else if (data.statusCode !== 200) {
         $(".setup-content > i").hide();
         $(".setup-content > .timeOutMessage").hide();
         $(".setup-content > .loadingText").text("An unknown error occured, please try again. If this problem persists, please contact technical support.");
     }
 
-    console.log(response);
+    console.log(data);
 }
 
 function onUserKeySuccessCallBack(data) {
-    console.log("REDIRECT");
     console.log(data);
-
-    window.location.href = data.realRedirectUrl;
 }
 
 function onUserKeyErrorCallBack(jqXhr, error, errorStr) {
-    console.log("REDIRECT ERROR");
-
     console.log(error + ": " + errorStr);
 }
 

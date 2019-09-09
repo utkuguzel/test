@@ -3,11 +3,13 @@
   position: fixed;
   width: 100%;
   height: 65px;
-  background-color: hsl(355, 19%, 9%);
+  background-color: #222;
   z-index: 400;
   box-shadow: 0 1px 3px 0px rgba(0, 0, 0, 0.1);
   font-weight: 700 !important;
   font-family: 'Ubuntu';
+  background: #171717;
+  background: linear-gradient(90deg, #171717 0%, #262626 100%) !important;
 }
 #header #leftmenu {
   float: left;
@@ -267,6 +269,8 @@
   #header #rightmenu #menuoptions li.headerOption {
     display: block !important;
     text-align: center;
+    background: #171717;
+    background: linear-gradient(90deg, #171717 0%, #262626 100%) !important;
   }
 }
 @media (max-width: 992px) {
@@ -285,7 +289,8 @@
   line-height: 65px;
   padding: 0 30px;
   cursor: pointer;
-  background: hsl(355, 19%, 9%);
+  background: #222;
+  border-left: 1px solid rgba(0, 0, 0, 0.2);
 }
 #header #rightmenu #menuoptions li.headerOption i.fas {
   font-size: 0.75em;

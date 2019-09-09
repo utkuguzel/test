@@ -26,10 +26,7 @@
     @RenderSection("head", required: false)
 </head>
 <body>
-    @if ( !string.IsNullOrWhiteSpace(ViewBag.Culture))
-    {
-        <h3>@ViewBag.Culture</h3>
-    }
+    <div id="loader" style="position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;background:#FFF;"></div>
 
     @RenderBody()
     
@@ -43,6 +40,7 @@
 
     <!-- Custom scripts -->
     <script src="~/assets/js/header.js"></script>
+    <script src="~/assets/js/loader.js"></script>
 
     @RenderSection("script", required: false)
 </body>
