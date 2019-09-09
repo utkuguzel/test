@@ -18,6 +18,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 using System.Linq;
+using RentVision.Helpers;
 
 namespace RentVision.Controllers
 {
@@ -49,7 +50,7 @@ namespace RentVision.Controllers
         [Route("/auth/login"), HttpPost]
         public async Task<IActionResult> LoginAsync(string email, string password, bool remember)
         {
-            var formErrors = validateForm(Request.Form);
+            var formErrors = AuthHelper.validateForm(Request.Form);
 
             if (formErrors.Count > 0)
             {
@@ -83,7 +84,7 @@ namespace RentVision.Controllers
         [Route("/auth/register"), HttpPost]
         public async Task<IActionResult> RegisterAsync( string email, string subdomain, string businessUnitName, string password, string confirmPassword, bool tos )
         {
-            var formErrors = validateForm(Request.Form);
+            var formErrors = AuthHelper.validateForm(Request.Form);
 
             if ( formErrors.Count > 0 )
             {
@@ -111,80 +112,6 @@ namespace RentVision.Controllers
             }
 
             return DisplaySubDomainSetup(email, password);
-        }
-
-        public List<string> validateForm(IFormCollection form)
-        {
-            Dictionary<string, string> textFields = new Dictionary<string, string>()
-            {
-                { "email", "E-mailaddress" },
-                { "subdomain", "Subdomain" },
-                { "businessUnitName", "Business name" },
-                { "password", "Password" },
-                { "confirmPassword", "Confirm password" }
-            };
-
-            List<string> errors = new List<string>();
-
-            foreach ( var formItem in form)
-            {
-                // Check textFields
-                if ( textFields.ContainsKey(formItem.Key) )
-                {
-                    if ( string.IsNullOrWhiteSpace( Request.Form[formItem.Key] ))
-                    {
-                        errors.Add( textFields[formItem.Key] + " is required.");
-                    }
-                }
-            }
-
-            // Register page checks
-            if (form.Keys.Contains("confirmPassword") )
-            {
-                List<string> registerErrors = checkRegisterPageFields(form);
-
-                errors.AddRange(registerErrors);
-            }
-
-            return errors;
-        }
-
-        public List<string> checkRegisterPageFields(IFormCollection form)
-        {
-            List<string> errors = new List<string>();
-
-            if (!form.Keys.Contains("tos"))
-            {
-                errors.Add("You must agree with our Terms of Service before continuing.");
-            }
-
-            if (form["confirmPassword"] != form["password"])
-            {
-                errors.Add("Passwords do not match.");
-            }
-
-            // Check mail address format
-            bool isValidEmailAddress = VerifyEmailAddress(form["email"]);
-
-            if (!isValidEmailAddress)
-            {
-                errors.Add("Invalid e-mailaddress specified.");
-            }
-
-            return errors;
-        }
-
-        public bool VerifyEmailAddress(string email)
-        {
-            var pattern = @"^(?!\.)(""([^""\r\\]|\\[""\r\\])*""|([-a-z0-9!#$%&'*+/=?^_`{|}~]|(?<!\.)\.)*)(?<!\.)@[a-z0-9][\w\.-]*[a-z0-9]\.[a-z][a-z\.]*[a-z]$";
-            var match = Regex.Match(email, pattern);
-
-            if (match.Success)
-            {
-                return true;
-            }
-
-            return false;
         }
 
         public IActionResult DisplaySubDomainSetup(string email, string password)
