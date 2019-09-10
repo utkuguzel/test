@@ -39,9 +39,11 @@ namespace RentVision.Controllers
         [Route("/auth/login"), HttpPost]
         public async Task<IActionResult> LoginAsync(string email, string password, bool remember)
         {
+            string refererUrl = Request.Headers["Referer"].ToString();
+
             if (email == null)
             {
-                return RedirectToAction("login", "cms");
+                return Redirect(refererUrl);
             }
 
             email = email.ToLower();
@@ -53,7 +55,7 @@ namespace RentVision.Controllers
             {
                 TempData["Errors"] = formErrors.ToArray();
 
-                return RedirectToAction("login", "cms");
+                return Redirect(refererUrl);
             }
 
             var urlParameters = new Dictionary<string, string>()
@@ -77,7 +79,7 @@ namespace RentVision.Controllers
                     TempData["StatusMessage"] = localizedBackOfficeMessage;
                 }
 
-                return RedirectToAction( "login", "cms" );
+                return Redirect(refererUrl);
             }
 
             // Subdomein ophalen en doorsturen
@@ -90,9 +92,11 @@ namespace RentVision.Controllers
         [Route("/auth/register"), HttpPost]
         public async Task<IActionResult> RegisterAsync( string email, string subdomain, string businessUnitName, string password, string confirmPassword, bool tos )
         {
+            string refererUrl = Request.Headers["Referer"].ToString();
+
             if ( email == null || subdomain == null )
             {
-                return RedirectToAction("register", "cms");
+                return Redirect(refererUrl);
             }
 
             email = email.ToLower();
@@ -105,7 +109,7 @@ namespace RentVision.Controllers
             {
                 TempData["Errors"] = formErrors.ToArray();
 
-                return RedirectToAction("register", "cms");
+                return Redirect(refererUrl);
             }
 
             var urlParameters = new Dictionary<string, string>()
@@ -132,7 +136,7 @@ namespace RentVision.Controllers
                     TempData["StatusMessage"] = localizedBackOfficeMessage;
                 }
 
-                return RedirectToAction("register", "cms");
+                return Redirect(refererUrl);
             }
 
             return DisplaySubDomainSetup(email, password);

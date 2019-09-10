@@ -31,10 +31,10 @@ namespace RentVision.Helpers
                 SetUserCulture(Request, Context, culture);
             }
 
-            return Context.Session.GetString("language");
+            //return Context.Session.GetString("language");
 
             // Used for testing purposes
-            //return "nl";
+            return "nl";
         }
 
         /// <summary>
