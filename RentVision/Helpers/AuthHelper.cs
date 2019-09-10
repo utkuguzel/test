@@ -9,6 +9,16 @@ namespace RentVision.Helpers
 {
     public class AuthHelper
     {
+        private static Dictionary<string, string> backOfficeMessages = new Dictionary<string, string>()
+        {
+            { "ERROR_ACCOUNT_NOT_FOUND", "account was not found" },
+            { "ERROR_EMAIL_EXISTING", "email already exists" },
+            { "ERROR_REGISTER_PASSWORD_STRENGTH", "password was not strong enough" },
+            { "ERROR_LOGIN_PASSWORd_INCORRECT", "password did not match" },
+            { "ERROR_LOGIN_EMAIL_INCORRECT", "email not found" },
+        };
+
+
         public static List<string> validateForm(IFormCollection form, string userCulture)
         {
             var localizedStringSection = Startup.Config.GetSection("LocalizedStrings");
@@ -84,6 +94,21 @@ namespace RentVision.Helpers
             }
 
             return false;
+        }
+
+        public static string GetBackOfficeStringLocalized(string userCulture, string backOfficeMessage)
+        {
+            var localizedStringSection = Startup.Config.GetSection("LocalizedStrings");
+
+            foreach (KeyValuePair<string, string> messageDict in backOfficeMessages)
+            {
+                if (backOfficeMessage.ToLower().Replace(".", "") == messageDict.Value)
+                {
+                    return Startup.Config.GetSection("LocalizedStrings")[$"{userCulture}:{messageDict.Key}"];
+                }
+            }
+
+            return null;
         }
     }
 }

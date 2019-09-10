@@ -70,7 +70,7 @@ namespace RentVision.Controllers
             if ( !userCredentialResponse.IsSuccessStatusCode )
             {
                 // Get localized back-end error message and display it to the visitor
-                string localizedBackOfficeMessage = GetBackOfficeStringLocalized(userCulture, userCredentialString);
+                string localizedBackOfficeMessage = AuthHelper.GetBackOfficeStringLocalized(userCulture, userCredentialString);
 
                 if (localizedBackOfficeMessage != null)
                 {
@@ -125,7 +125,7 @@ namespace RentVision.Controllers
             if ( !response.IsSuccessStatusCode )
             {
                 // Get localized back-end error message and display it to the visitor
-                string localizedBackOfficeMessage = GetBackOfficeStringLocalized(userCulture, userCredentialString);
+                string localizedBackOfficeMessage = AuthHelper.GetBackOfficeStringLocalized(userCulture, userCredentialString);
 
                 if ( localizedBackOfficeMessage != null )
                 {
@@ -136,30 +136,6 @@ namespace RentVision.Controllers
             }
 
             return DisplaySubDomainSetup(email, password);
-        }
-
-        Dictionary<string, string> backOfficeMessages = new Dictionary<string, string>()
-        {
-            { "ERROR_ACCOUNT_NOT_FOUND", "account was not found" },
-            { "ERROR_EMAIL_EXISTING", "email already exists" },
-            { "ERROR_REGISTER_PASSWORD_STRENGTH", "password was not strong enough" },
-            { "ERROR_LOGIN_PASSWORd_INCORRECT", "password did not match" },
-            { "ERROR_LOGIN_EMAIL_INCORRECT", "email not found" },
-        };
-
-        public string GetBackOfficeStringLocalized(string userCulture, string backOfficeMessage)
-        {
-            var localizedStringSection = Startup.Config.GetSection("LocalizedStrings");
-
-           foreach( KeyValuePair<string, string> messageDict in backOfficeMessages )
-            {
-                if ( backOfficeMessage.ToLower().Replace(".", "") == messageDict.Value )
-                {
-                    return Startup.Config.GetSection("LocalizedStrings")[$"{userCulture}:{messageDict.Key}"];
-                }
-            }
-
-            return null;
         }
 
         public IActionResult DisplaySubDomainSetup(string email, string password)
