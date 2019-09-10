@@ -18,7 +18,6 @@ namespace RentVision.Helpers
             { "ERROR_LOGIN_EMAIL_INCORRECT", "email not found" },
         };
 
-
         public static List<string> validateForm(IFormCollection form, string userCulture)
         {
             var localizedStringSection = Startup.Config.GetSection("LocalizedStrings");
@@ -88,12 +87,7 @@ namespace RentVision.Helpers
             var pattern = @"^(?!\.)(""([^""\r\\]|\\[""\r\\])*""|([-a-z0-9!#$%&'*+/=?^_`{|}~]|(?<!\.)\.)*)(?<!\.)@[a-z0-9][\w\.-]*[a-z0-9]\.[a-z][a-z\.]*[a-z]$";
             var match = Regex.Match(email, pattern);
 
-            if (match.Success)
-            {
-                return true;
-            }
-
-            return false;
+            return match.Success;
         }
 
         public static string GetBackOfficeStringLocalized(string userCulture, string backOfficeMessage)
