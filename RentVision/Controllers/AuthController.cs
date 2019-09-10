@@ -65,12 +65,17 @@ namespace RentVision.Controllers
             string userCredentialString = await userCredentialResponse.Content.ReadAsStringAsync();
 
             TempData["StatusCode"] = userCredentialResponse.StatusCode;
-            TempData["StatusMessage"] = await userCredentialResponse.Content.ReadAsStringAsync();
+            TempData["StatusMessage"] = userCredentialString;
 
             if ( !userCredentialResponse.IsSuccessStatusCode )
             {
-                // Get proper back-end error message
-                // And display it to the visitor
+                // Get localized back-end error message and display it to the visitor
+                string localizedBackOfficeMessage = GetBackOfficeStringLocalized(userCulture, userCredentialString);
+
+                if (localizedBackOfficeMessage != null)
+                {
+                    TempData["StatusMessage"] = localizedBackOfficeMessage;
+                }
 
                 return RedirectToAction( "login", "cms" );
             }
@@ -111,20 +116,50 @@ namespace RentVision.Controllers
                 { "businessUnitName", businessUnitName }
             };
 
-             var response = await SendApiCallAsync(Configuration.ApiCalls.CreateAccount, urlParameters, HttpMethod.Post, password );
+            var response = await SendApiCallAsync(Configuration.ApiCalls.CreateAccount, urlParameters, HttpMethod.Post, password );
+            string userCredentialString = await response.Content.ReadAsStringAsync();
 
             TempData["StatusCode"] = response.StatusCode;
-            TempData["StatusMessage"] = await response.Content.ReadAsStringAsync();
+            TempData["StatusMessage"] = userCredentialString;
 
             if ( !response.IsSuccessStatusCode )
             {
-                // Get proper back-end error message
-                // And display it to the visitor
+                // Get localized back-end error message and display it to the visitor
+                string localizedBackOfficeMessage = GetBackOfficeStringLocalized(userCulture, userCredentialString);
+
+                if ( localizedBackOfficeMessage != null )
+                {
+                    TempData["StatusMessage"] = localizedBackOfficeMessage;
+                }
 
                 return RedirectToAction("register", "cms");
             }
 
             return DisplaySubDomainSetup(email, password);
+        }
+
+        Dictionary<string, string> backOfficeMessages = new Dictionary<string, string>()
+        {
+            { "ERROR_ACCOUNT_NOT_FOUND", "account was not found" },
+            { "ERROR_EMAIL_EXISTING", "email already exists" },
+            { "ERROR_REGISTER_PASSWORD_STRENGTH", "password was not strong enough" },
+            { "ERROR_LOGIN_PASSWORd_INCORRECT", "password did not match" },
+            { "ERROR_LOGIN_EMAIL_INCORRECT", "email not found" },
+        };
+
+        public string GetBackOfficeStringLocalized(string userCulture, string backOfficeMessage)
+        {
+            var localizedStringSection = Startup.Config.GetSection("LocalizedStrings");
+
+           foreach( KeyValuePair<string, string> messageDict in backOfficeMessages )
+            {
+                if ( backOfficeMessage.ToLower().Replace(".", "") == messageDict.Value )
+                {
+                    return Startup.Config.GetSection("LocalizedStrings")[$"{userCulture}:{messageDict.Key}"];
+                }
+            }
+
+            return null;
         }
 
         public IActionResult DisplaySubDomainSetup(string email, string password)
