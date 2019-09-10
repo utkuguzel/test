@@ -62,12 +62,16 @@ namespace RentVision.Controllers
             };
 
             var userCredentialResponse = await SendApiCallAsync(Configuration.ApiCalls.CheckUserCredentials, urlParameters, HttpMethod.Post, password );
+            string userCredentialString = await userCredentialResponse.Content.ReadAsStringAsync();
 
             TempData["StatusCode"] = userCredentialResponse.StatusCode;
             TempData["StatusMessage"] = await userCredentialResponse.Content.ReadAsStringAsync();
 
             if ( !userCredentialResponse.IsSuccessStatusCode )
             {
+                // Get proper back-end error message
+                // And display it to the visitor
+
                 return RedirectToAction( "login", "cms" );
             }
 
@@ -114,6 +118,9 @@ namespace RentVision.Controllers
 
             if ( !response.IsSuccessStatusCode )
             {
+                // Get proper back-end error message
+                // And display it to the visitor
+
                 return RedirectToAction("register", "cms");
             }
 
