@@ -39,6 +39,11 @@ namespace RentVision.Controllers
         [Route("/auth/login"), HttpPost]
         public async Task<IActionResult> LoginAsync(string email, string password, bool remember)
         {
+            if (email == null)
+            {
+                return RedirectToAction("login", "cms");
+            }
+
             email = email.ToLower();
 
             string userCulture = CultureHelper.GetUserCulture(Request, HttpContext);
@@ -76,6 +81,11 @@ namespace RentVision.Controllers
         [Route("/auth/register"), HttpPost]
         public async Task<IActionResult> RegisterAsync( string email, string subdomain, string businessUnitName, string password, string confirmPassword, bool tos )
         {
+            if ( email == null || subdomain == null )
+            {
+                return RedirectToAction("register", "cms");
+            }
+
             email = email.ToLower();
             subdomain = subdomain.ToLower();
 
@@ -121,21 +131,24 @@ namespace RentVision.Controllers
         [Route("/auth/getUserKey"), HttpPost]
         public async Task<JsonResult> GetUserKey( string email )
         {
+            var getUserKeyParameters = new Dictionary<string, string>() {
+                    { "email", email }
+                };
+
             var subdomainResponse = await SendApiCallAsync(
                 Configuration.ApiCalls.UserSubDomain,
-                new Dictionary<string, string>() { { "email", email } },
+                getUserKeyParameters,
                 HttpMethod.Get
             );
 
             var subdomain = await subdomainResponse.Content.ReadAsStringAsync();
             var redirectUrl = $"{Configuration.BackOffice.Protocol}://{subdomain}.{Configuration.BackOffice.Domain}";
 
-            // TODO: API CALL GetLoginKey AANROEPEN (subDomainName, email, password)
-            var userKeyResponse = await SendApiCallAsync("GetLoginKey",
-                new Dictionary<string, string>() {
-                    { "subDomainName", subdomain },
-                    { "email", email }
-                },
+            // Add subDomainName to the list of parameters because we need it in the next call
+            getUserKeyParameters.Add("subDomainName", subdomain);
+
+            var userKeyResponse = await SendApiCallAsync(Configuration.ApiCalls.GetLoginKey,
+                getUserKeyParameters,
                 HttpMethod.Post,
                 (string)TempData["password"]
             );

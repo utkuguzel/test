@@ -13,8 +13,7 @@
     box-shadow: 0 1px 3px 0px rgba(0, 0, 0, 0.1);
     font-weight: 700 !important;
     font-family: 'Ubuntu';
-    .gradient();
-
+    //.gradient();
     #leftmenu {
         float: left;
         width: 200px;
@@ -303,21 +302,18 @@
 
             @media (max-width:992px) {
                 li.headerOption {
+                    float: none !important;
                     display: block !important;
+                    height: auto !important;
                     text-align: center;
 
                     .gradient();
                 }
             }
 
-            @media (max-width:992px) {
-                li.headerOption {
-                    height: auto !important;
-                }
-            }
-
             li.headerOption {
                 position: relative;
+                float: left;
                 display: inline-block;
                 width: auto;
                 color: #FFF !important;
@@ -343,6 +339,7 @@
 
                 &:hover {
                     color: #FFF;
+                    background-color: darken(#222, 1%);
                 }
 
                 &.active {

@@ -26,6 +26,7 @@ namespace RentVision.Models.Configuration
             public static string UserSiteReady { get; set; }
             public static string UserSubDomain { get; set; }
             public static string DeleteAccount { get; set; }
+            public static string GetLoginKey { get; set; }
         }
     }
 }

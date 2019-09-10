@@ -8,8 +8,6 @@
   box-shadow: 0 1px 3px 0px rgba(0, 0, 0, 0.1);
   font-weight: 700 !important;
   font-family: 'Ubuntu';
-  background: #171717;
-  background: linear-gradient(90deg, #171717 0%, #262626 100%) !important;
 }
 #header #leftmenu {
   float: left;
@@ -267,19 +265,17 @@
 }
 @media (max-width: 992px) {
   #header #rightmenu #menuoptions li.headerOption {
+    float: none !important;
     display: block !important;
+    height: auto !important;
     text-align: center;
     background: #171717;
     background: linear-gradient(90deg, #171717 0%, #262626 100%) !important;
   }
 }
-@media (max-width: 992px) {
-  #header #rightmenu #menuoptions li.headerOption {
-    height: auto !important;
-  }
-}
 #header #rightmenu #menuoptions li.headerOption {
   position: relative;
+  float: left;
   display: inline-block;
   width: auto;
   color: #FFF !important;
@@ -302,6 +298,7 @@
 }
 #header #rightmenu #menuoptions li.headerOption:hover {
   color: #FFF;
+  background-color: #1f1f1f;
 }
 #header #rightmenu #menuoptions li.headerOption.active {
   background-color: #6FC516;
