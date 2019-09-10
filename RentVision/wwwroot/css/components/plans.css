@@ -97,6 +97,9 @@
 .plans .plans-inner .features ul li.inactive {
   color: #BBB;
 }
+.plans .plans-inner .features ul li.inactive i {
+  color: #BBB !important;
+}
 .plans .plans-inner .features ul li i {
   padding: 0 10px 0 0;
   font-size: 0.9em;
