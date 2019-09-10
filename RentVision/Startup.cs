@@ -23,6 +23,7 @@ namespace RentVision
         /// The application config.
         /// </summary>
         public IConfiguration Configuration { get; set; }
+        public static IConfiguration Config { get; set; }
 
         /// <summary>
         /// Default constructor.
@@ -30,6 +31,7 @@ namespace RentVision
         /// <param name="configuration">The current configuration</param>
         public Startup(IConfiguration configuration) {
             Configuration = configuration;
+            Config = configuration;
 
             // Map BackOffice and ApiCalls to their corresponding class
             var backOfficeConfig = Configuration.GetSection("BackOffice").Get<Configuration.BackOffice>();

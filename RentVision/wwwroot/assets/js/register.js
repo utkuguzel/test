@@ -6,7 +6,6 @@ function init() {
 }
 
 function onInputChanged(e) {
-    var element = e.target;
     var password = $("#password").val();
     var succes = true;
 

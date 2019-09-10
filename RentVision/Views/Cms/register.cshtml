@@ -55,14 +55,14 @@
             </div>
 
             <div class="passwordRequirements">
-                <span><strong>A password must require the following:</strong></span>
+                <span><strong>@Model.Fields.PasswordRequirementText</strong></span>
 
                 <ul class="requirements">
-                    <li class="minLengthRequirement"><i class="fas fa-times"></i>Password must have a length of min. 8 characters</li>
-                    <li class="numberRequirement"><i class="fas fa-times"></i>Password must contain at least one number (0-9)</li>
-                    <li class="upperCaseRequirement"><i class="fas fa-times"></i>Password must contain at least one uppercase character (A-Z)</li>
-                    <li class="specialCharRequirement"><i class="fas fa-times"></i>Password must contain at least one special character (!@@#$%^&)</li>
-                    <li class="passwordMatchRequirement"><i class="fas fa-times"></i>Passwords must match</li>
+                    <li class="minLengthRequirement"><i class="fas fa-times"></i>@Model.Fields.minLengthRequirement</li>
+                    <li class="numberRequirement"><i class="fas fa-times"></i>@Model.Fields.numberRequirement</li>
+                    <li class="upperCaseRequirement"><i class="fas fa-times"></i>@Model.Fields.upperCaseRequirement</li>
+                    <li class="specialCharRequirement"><i class="fas fa-times"></i>@Model.Fields.specialCharRequirement</li>
+                    <li class="passwordMatchRequirement"><i class="fas fa-times"></i>@Model.Fields.passwordMatchRequirement</li>
                 </ul>
                 </div>
 

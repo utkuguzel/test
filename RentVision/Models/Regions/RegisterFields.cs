@@ -37,6 +37,9 @@ namespace RentVision.Models.Regions
         // Password requirement strings
 
         [Field(Options = FieldOption.HalfWidth)]
+        public StringField PasswordRequirementText { get; set; }
+
+        [Field(Options = FieldOption.HalfWidth)]
         public StringField minLengthRequirement { get; set; }
 
         [Field(Options = FieldOption.HalfWidth)]

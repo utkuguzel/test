@@ -1,23 +1,12 @@
-using RentVision.Models;
-using RentVision.Models.Regions;
 using Microsoft.AspNetCore.Mvc;
 using Piranha;
-using Piranha.Extend.Blocks;
 using System;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Http;
-using Newtonsoft.Json;
-using System.Text;
 using RentVision.Models.Configuration;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Collections.Generic;
-using Piranha.AspNetCore.Services;
-using Microsoft.AspNetCore.Http;
-using System.ComponentModel.DataAnnotations;
-using System.Net.Mail;
-using System.Text.RegularExpressions;
-using System.Linq;
 using RentVision.Helpers;
 
 namespace RentVision.Controllers
@@ -38,7 +27,7 @@ namespace RentVision.Controllers
         {
             var userSiteReadyResponse = await SendApiCallAsync(
                 Configuration.ApiCalls.UserSiteReady,
-                new Dictionary<string, string>() { { "email", email.ToLower() } },
+                new Dictionary<string, string>() { { "email", email } },
                 HttpMethod.Get
             );
 
@@ -50,7 +39,10 @@ namespace RentVision.Controllers
         [Route("/auth/login"), HttpPost]
         public async Task<IActionResult> LoginAsync(string email, string password, bool remember)
         {
-            var formErrors = AuthHelper.validateForm(Request.Form);
+            email = email.ToLower();
+
+            string userCulture = CultureHelper.GetUserCulture(Request, HttpContext);
+            var formErrors = AuthHelper.validateForm(Request.Form, userCulture);
 
             if (formErrors.Count > 0)
             {
@@ -61,7 +53,7 @@ namespace RentVision.Controllers
 
             var urlParameters = new Dictionary<string, string>()
             {
-                { "email", email.ToLower() }
+                { "email", email }
             };
 
             var userCredentialResponse = await SendApiCallAsync(Configuration.ApiCalls.CheckUserCredentials, urlParameters, HttpMethod.Post, password );
@@ -84,7 +76,11 @@ namespace RentVision.Controllers
         [Route("/auth/register"), HttpPost]
         public async Task<IActionResult> RegisterAsync( string email, string subdomain, string businessUnitName, string password, string confirmPassword, bool tos )
         {
-            var formErrors = AuthHelper.validateForm(Request.Form);
+            email = email.ToLower();
+            subdomain = subdomain.ToLower();
+
+            string userCulture = CultureHelper.GetUserCulture(Request, HttpContext);
+            var formErrors = AuthHelper.validateForm(Request.Form, userCulture);
 
             if ( formErrors.Count > 0 )
             {
@@ -95,9 +91,9 @@ namespace RentVision.Controllers
 
             var urlParameters = new Dictionary<string, string>()
             {
-                { "email", email.ToLower() },
+                { "email", email },
                 { "userPlan", "Free" },
-                { "subDomainName", subdomain.ToLower() },
+                { "subDomainName", subdomain },
                 { "businessUnitName", businessUnitName }
             };
 

@@ -9,15 +9,17 @@ namespace RentVision.Helpers
 {
     public class AuthHelper
     {
-        public static List<string> validateForm(IFormCollection form)
+        public static List<string> validateForm(IFormCollection form, string userCulture)
         {
+            var localizedStringSection = Startup.Config.GetSection("LocalizedStrings");
+
             Dictionary<string, string> textFields = new Dictionary<string, string>()
             {
-                { "email", "E-mailaddress" },
-                { "subdomain", "Subdomain" },
-                { "businessUnitName", "Business name" },
-                { "password", "Password" },
-                { "confirmPassword", "Confirm password" }
+                { "email", localizedStringSection[$"{userCulture}:FIELD_EMAIL"] },
+                { "subdomain", localizedStringSection[$"{userCulture}:FIELD_SUBDOMAIN"] },
+                { "businessUnitName", localizedStringSection[$"{userCulture}:FIELD_BUSINESS_NAME"] },
+                { "password", localizedStringSection[$"{userCulture}:FIELD_PASSWORD"] },
+                { "confirmPassword", localizedStringSection[$"{userCulture}:FIELD_PASSWORD_CONFIRM"] }
             };
 
             List<string> errors = new List<string>();
@@ -29,7 +31,7 @@ namespace RentVision.Helpers
                 {
                     if (string.IsNullOrWhiteSpace(form[formItem.Key]))
                     {
-                        errors.Add(textFields[formItem.Key] + " is required.");
+                        errors.Add($"{textFields[formItem.Key]} {localizedStringSection[$"{userCulture}:ERROR_FIELD_REQUIRED"]}");
                     }
                 }
             }
@@ -37,7 +39,7 @@ namespace RentVision.Helpers
             // Register page checks
             if (form.Keys.Contains("confirmPassword"))
             {
-                List<string> registerErrors = checkRegisterPageFields(form);
+                List<string> registerErrors = checkRegisterPageFields(form, userCulture);
 
                 errors.AddRange(registerErrors);
             }
@@ -45,18 +47,19 @@ namespace RentVision.Helpers
             return errors;
         }
 
-        public static List<string> checkRegisterPageFields(IFormCollection form)
+        public static List<string> checkRegisterPageFields(IFormCollection form, string userCulture)
         {
             List<string> errors = new List<string>();
+            var localizedStringSection = Startup.Config.GetSection("LocalizedStrings");
 
             if (!form.Keys.Contains("tos"))
             {
-                errors.Add("You must agree with our Terms of Service before continuing.");
+                errors.Add(localizedStringSection[$"{userCulture}:ERROR_TERMS_OF_SERVICE"]);
             }
 
             if (form["confirmPassword"] != form["password"])
             {
-                errors.Add("Passwords do not match.");
+                errors.Add(localizedStringSection[$"{userCulture}:ERROR_REGISTER_PASSWORD_MATCH"]);
             }
 
             // Check mail address format
@@ -64,7 +67,7 @@ namespace RentVision.Helpers
 
             if (!isValidEmailAddress)
             {
-                errors.Add("Invalid e-mailaddress specified.");
+                errors.Add(localizedStringSection[$"{userCulture}:ERROR_REGISTER_INVALID_EMAIL"]);
             }
 
             return errors;
