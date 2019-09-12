@@ -176,7 +176,7 @@ namespace RentVision.Controllers
             );
 
             string userKey = await userKeyResponse.Content.ReadAsStringAsync();
-            string realRedirectUrl = redirectUrl + "/login?externLoginKey=" + userKey;
+            string realRedirectUrl = redirectUrl + "/externLogin?externLoginKey=" + userKey;
 
             return new JsonResult( new { statusCode = HttpStatusCode.OK, realRedirectUrl } );
         }
