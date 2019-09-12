@@ -10,7 +10,7 @@
     var site = sites.SingleOrDefault(m => m.Culture == userCulture);
 
     // Get current start page
-    var pageResult = await WebApp.Api.Pages.GetAllAsync<PageBase>(); // Returns all pages from the active site instead of all pages
+    var pageResult = await WebApp.Api.Pages.GetAllAsync<StartPage>(siteId: site.Id);
     var siteStartPage = pageResult.SingleOrDefault(m => m.Route == "/start" && m.SiteId == site.Id);
 
     StartPage startPage = await WebApp.Api.Pages.GetByIdAsync<StartPage>(siteStartPage.Id);
@@ -55,7 +55,7 @@
             @{ 
                 foreach ( var headerItem in startPage.HeaderItems )
                 {
-                    <a href="@headerItem.PageLinkFixed">
+                    <a href="@headerItem.PageLinkFixed.Value">
                         <li class="headerOption home">
                             <div class="headerHoverBar"></div>
                             <i class="fas @headerItem.Icon.Value"></i>@headerItem.Title
