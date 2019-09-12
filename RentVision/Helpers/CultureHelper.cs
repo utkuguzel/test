@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace RentVision.Helpers
 {
@@ -13,6 +10,12 @@ namespace RentVision.Helpers
         private static List<string> excludedCultures = new List<string>()
         {
             "en"
+        };
+
+        // List of supported cultures
+        private static List<string> supportedCultures = new List<string>()
+        {
+            "nl"
         };
 
         /// <summary>
@@ -31,10 +34,10 @@ namespace RentVision.Helpers
                 SetUserCulture(Request, Context, culture);
             }
 
-            //return Context.Session.GetString("language");
+            return Context.Session.GetString("language");
 
             // Used for testing purposes
-            return "nl";
+            //return "nl";
         }
 
         /// <summary>
@@ -71,7 +74,7 @@ namespace RentVision.Helpers
             var path = Request.Path.Value;
             var culturizedPath = $"~/{culture}{path.Replace("/start", "")}";
 
-            if (culturizedPath == Context.Session.GetString("redirectPath") )
+            if (culturizedPath == Context.Session.GetString("redirectPath") || !supportedCultures.Contains(culture))
             {
                 return null;
             }
