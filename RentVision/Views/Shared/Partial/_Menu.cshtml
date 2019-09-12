@@ -1,7 +1,19 @@
+@using RentVision.Helpers
+
 @{
+    string userCulture = CultureHelper.userCulture;
+
     var sitemap = WebApp.Site.Sitemap;
-    var homePageResult = await WebApp.Api.Pages.GetStartpageAsync<StartPage>();
-    var headerItems = homePageResult.HeaderItems.ToList();
+
+    // Get current siteId based on users' culture
+    var sites = await WebApp.Api.Sites.GetAllAsync();
+    var site = sites.SingleOrDefault(m => m.Culture == userCulture);
+
+    // Get current start page
+    var pageResult = await WebApp.Api.Pages.GetAllAsync<PageBase>(); // Returns all pages from the active site instead of all pages
+    var siteStartPage = pageResult.SingleOrDefault(m => m.Route == "/start" && m.SiteId == site.Id);
+
+    StartPage startPage = await WebApp.Api.Pages.GetByIdAsync<StartPage>(siteStartPage.Id);
 }
 
 <!-- START HEADER -->
@@ -41,9 +53,9 @@
             </li>*@
 
             @{ 
-                foreach ( var headerItem in headerItems )
+                foreach ( var headerItem in startPage.HeaderItems )
                 {
-                    <a href="@headerItem.PageLink.Page.Permalink">
+                    <a href="@headerItem.PageLinkFixed">
                         <li class="headerOption home">
                             <div class="headerHoverBar"></div>
                             <i class="fas @headerItem.Icon.Value"></i>@headerItem.Title

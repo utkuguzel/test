@@ -6,6 +6,8 @@ namespace RentVision.Helpers
 {
     public class CultureHelper
     {
+        public static string userCulture { get; set; }
+
         // Exclude default culture(s)
         private static List<string> excludedCultures = new List<string>()
         {
@@ -27,11 +29,13 @@ namespace RentVision.Helpers
         public static string GetUserCulture( HttpRequest Request, HttpContext Context )
         {
             var rqf = Request.HttpContext.Features.Get<IRequestCultureFeature>();
-            var culture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
+            //var culture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
+            var culture = "nl";
 
             if (string.IsNullOrWhiteSpace(Context.Session.GetString("language")))
             {
                 SetUserCulture(Request, Context, culture);
+                userCulture = culture;
             }
 
             return Context.Session.GetString("language");
@@ -50,6 +54,7 @@ namespace RentVision.Helpers
         public static bool SetUserCulture( HttpRequest Request, HttpContext Context, string Culture = "en" )
         {
             Context.Session.SetString("language", Culture);
+            userCulture = Culture;
 
             if ( string.IsNullOrWhiteSpace(Context.Session.GetString("language") ) )
             {

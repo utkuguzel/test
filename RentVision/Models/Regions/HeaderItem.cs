@@ -12,13 +12,17 @@ namespace RentVision.Models.Regions
         [Field]
         public StringField Title { get; set; }
 
+        [Field]
+        public StringField PageLinkFixed { get; set; }
+
         [Field(Title = "Page link")]
         public PageField PageLink { get; set; }
 
         [Field(Title = "Is button active?")]
         public CheckBoxField ButtonActive { get; set; }
 
-        public HeaderItem() {
+        public HeaderItem()
+        {
             PageLink = new PageField();
         }
     }

@@ -156,6 +156,7 @@ namespace RentVision.Controllers
         {
             var model = await _loader.GetPage<SetupPage>(id, HttpContext.User, draft);
 
+            // Set temporary debug data if _DEBUG is enabled
             if ( ( TempData["Email"] == null ) && !_DEBUG )
             {
                 return LocalRedirect("/");
