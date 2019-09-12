@@ -23,24 +23,28 @@
     }
 
     <!-- Custom styles -->
+    <link rel="stylesheet" href="~/assets/css/hero.css">
+
     @RenderSection("head", required: false)
 </head>
 <body>
     <div id="loader" style="position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;background:#FFF;"></div>
 
     @RenderBody()
-    
+
     <!-- Scripts -->
     <script src="~/assets/js/less.min.js"></script>
 
     <!-- Bootstrap -->
     <script type="text/javascript" src="~/assets/js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="~/assets/js/jquery.color-2.1.2.min.js"></script>
     <script type="text/javascript" src="~/assets/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="~/assets/js/popper.min.js"></script>
 
     <!-- Custom scripts -->
     <script src="~/assets/js/header.js"></script>
     <script src="~/assets/js/loader.js"></script>
+    <script src="~/assets/js/hero.js"></script>
 
     @RenderSection("script", required: false)
 </body>

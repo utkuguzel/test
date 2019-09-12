@@ -94,5 +94,42 @@
     });
 }
 
+var animating = false;
+
+$("body").scroll(function (e) {
+    var top = this.scrollTop;
+    //console.log(top);
+
+    if (top > 70 && !animating) {
+        $("#header").stop().animate({
+            backgroundColor: "#222222",
+            boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)"
+        }, 250);
+
+
+        $(".headerOption").stop().animate({
+            background: "#222222",
+            borderLeft: "1px solid rgba(0, 0, 0, 0.2)"
+        }, 100, function () { animating = false });
+
+        animating = true;
+    }
+    else if (top <= 70 && !animating)
+    {
+        $("#header").stop().animate({
+            backgroundColor: "rgba(0, 0, 0, 0)",
+            boxShadow: "initial"
+        }, 100);
+
+
+        $(".headerOption").stop().animate({
+            background: "rgba(0, 0, 0, 0)",
+            borderLeft: "initial"
+        }, 100, function () { animating = false });
+
+        animating = true;
+    }
+});
+
 // Events
 $(document).ready(init);

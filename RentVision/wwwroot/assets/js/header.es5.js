@@ -93,6 +93,20 @@ function init() {
     });
 }
 
+$("body").scroll(function (e) {
+    var top = this.scrollTop;
+
+    //console.log(top);
+
+    if (top > 70) {
+        $("#header").css("background-color", "#222222").css("box-shadow", "0 1px 3px 0px rgba(0, 0, 0, 0.1)");
+        $(".headerOption").css("background", "#222222").css("border-left", "1px solid rgba(0, 0, 0, 0.2)");
+    } else {
+        $("#header").css("background-color", "initial").css("box-shadow", "initial");
+        $(".headerOption").css("background", "initial").css("border-left", "initial");
+    }
+});
+
 // Events
 $(document).ready(init);
 

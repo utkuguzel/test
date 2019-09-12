@@ -71,5 +71,7 @@
     <None Include="wwwroot\assets\images\logos\RentVision-02-Light.png" />
     <None Include="wwwroot\assets\images\logos\rentvision-icon.png" />
     <None Include="wwwroot\assets\js\headerOUD.js" />
+    <None Include="wwwroot\assets\js\hero.js" />
+    <None Include="wwwroot\assets\js\jquery.color-2.1.2.min.js" />
   </ItemGroup>
 </Project>
