@@ -22,13 +22,13 @@
   box-shadow: 0px 5px 4px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
   text-align: center;
-  background: url('/assets/images/block-overlay.jpg') no-repeat;
+  background: url('/assets/images/module-template.svg') no-repeat;
   background-size: cover;
   cursor: pointer;
   transition: box-shadow 0.1s, background 0.1s, color 0.1s;
 }
 .products .products-inner .product:hover {
-  background: url('/assets/images/block-overlay-hover.jpg') no-repeat;
+  background: url('/assets/images/module-template.svg') no-repeat;
   background-size: cover;
   box-shadow: 0px 5px 4px rgba(0, 0, 0, 0.3);
 }
