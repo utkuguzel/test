@@ -12,6 +12,12 @@ namespace RentVision.Models.Regions
         public ImageField PrimaryImage { get; set; }
 
         /// <summary>
+        /// Gets/sets the optional primary image.
+        /// </summary>
+        [Field(Title = "Secondary image")]
+        public ImageField SecondaryImage { get; set; }
+
+        /// <summary>
         /// Gets/sets the optional title.
         /// </summary>
         [Field]

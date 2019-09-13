@@ -563,6 +563,26 @@ img {
   background-color: #ECECF0;
   padding-bottom: 75px;
 }
+.block.block-call-to-action {
+  min-height: 150px !important;
+  padding: 20px 0 90px 0;
+  background: #4b6cb7 !important;
+  color: #FFF !important;
+  webkit-box-shadow: inset 0px 0px 30px -5px rgba(0, 0, 0, 0.53);
+  moz-box-shadow: inset 0px 0px 30px -5px rgba(0, 0, 0, 0.53);
+  box-shadow: inset 0px 0px 30px -5px rgba(0, 0, 0, 0.53);
+  background: url('/assets/images/overlay-call-to-action.jpg') no-repeat center center;
+  background-size: cover;
+}
+.block.block-call-to-action a {
+  margin: 0 auto;
+  background: #7ab55b;
+  background: linear-gradient(180deg, #7ab55b 0%, #6b9e4f 100%);
+}
+.block.block-call-to-action a:hover {
+  background: #97c57e;
+  background: linear-gradient(0deg, #7ab55b 0%, #6b9e4f 100%);
+}
 .block ul {
   list-style-type: none;
   padding: 0 0 20px 20px;

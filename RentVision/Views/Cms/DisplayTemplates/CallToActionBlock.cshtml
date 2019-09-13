@@ -1,0 +1,17 @@
+@model CallToActionBlock
+
+<div class="row">
+    <div class="col-md">
+        <div class="block block-call-to-action">
+            <h3>@Model.Title</h3>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="block-content">
+                        @Html.Raw(Model.Column)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

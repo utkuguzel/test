@@ -21,6 +21,29 @@
         padding-bottom: 75px;
     }
 
+    &.block-call-to-action {
+        min-height: 150px !important;
+        padding: 20px 0 90px 0;
+        background: @COLOUR_PRIMARY !important;
+        color: #FFF !important;
+        webkit-box-shadow: inset 0px 0px 30px -5px rgba(0,0,0,0.53);
+        moz-box-shadow: inset 0px 0px 30px -5px rgba(0,0,0,0.53);
+        box-shadow: inset 0px 0px 30px -5px rgba(0,0,0,0.53);
+        background: url('/assets/images/overlay-call-to-action.jpg') no-repeat center center;
+        background-size: cover;
+
+        a {
+            margin: 0 auto;
+            background: rgb(122,181,91);
+            background: linear-gradient(180deg, rgba(122,181,91,1) 0%, rgba(107,158,79,1) 100%);
+
+            &:hover {
+                background: lighten(rgb(122,181,91), 10%);
+                background: linear-gradient(0deg, rgba(122,181,91,1) 0%, rgba(107,158,79,1) 100%);
+            }
+        }
+    }
+
     ul {
         list-style-type: none;
         padding: 0 0 20px 20px;

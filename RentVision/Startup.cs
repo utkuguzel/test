@@ -139,15 +139,14 @@ namespace RentVision
             App.Modules.Get<Piranha.Manager.Module>().Scripts.Add("~/assets/js/blocks/TwoColumnBlockGray.js");
 
             App.Modules.Get<Piranha.Manager.Module>().Scripts.Add("~/assets/js/blocks/OneColumnBlock.js");
+            App.Modules.Get<Piranha.Manager.Module>().Scripts.Add("~/assets/js/blocks/CallToActionBlock.js");
 
             // Custom blocks
             App.Blocks.Register<TwoColumnBlock>();
             App.Blocks.Register<TwoColumnBlockGray>();
 
             App.Blocks.Register<OneColumnBlock>();
-
-            // Enums
-            //App.Fields.RegisterSelect<UserPlanTypes>();
+            App.Blocks.Register<CallToActionBlock>(); // Optional
         }
     }
 }

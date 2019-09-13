@@ -10,15 +10,15 @@
 <!-- START HERO -->
 <section class="cd-hero js-cd-hero">
     <ul class="cd-hero__slider">
-        <li class="cd-hero__slide cd-hero__slide--selected js-cd-slide">
+        <li class="cd-hero__slide cd-hero__slide--selected js-cd-slide" @PrimaryImage()>
             <div class="cd-hero__content cd-hero__content--half-width">
-                <h2>Slide title here</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. In consequatur cumque natus!</p>
+                <h2>@Model.Hero.Title</h2>
+                <p>@Model.Hero.Ingress</p>
                 @*<a href="#0" class="cd-hero__btn">Start</a>
                 <a href="#0" class="cd-hero__btn cd-hero__btn--secondary">Learn More</a>*@
             </div>
             <div class="cd-hero__content cd-hero__content--half-width cd-hero__content--img">
-                <img src="http://twinvision.nl/content/twinvision/slide-1.png" alt="tech 1">
+                <img src="@Url.Content(Model.Hero.SecondaryImage)" alt="tech 1">
             </div>
         </li>
     </ul>
