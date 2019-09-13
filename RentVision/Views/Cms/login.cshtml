@@ -40,10 +40,18 @@
 
         <form method="post" action="@Model.Fields.ButtonLink.Value">
             <label for="email">@Model.Fields.Email.Value</label>
-            <input id="email" type="email" name="email" placeholder="@Model.Fields.Email.Value..." />
+
+            <div class="input-icons">
+                <i class="material-icons">email</i>
+                <input id="email" type="email" name="email" placeholder="@Model.Fields.Email.Value..." />
+            </div> 
 
             <label for="password">@Model.Fields.Password.Value</label>
-            <input id="password" type="password" name="password" placeholder="@Model.Fields.Password.Value..." />
+
+            <div class="input-icons">
+                <i class="material-icons">lock</i>
+                <input id="password" type="password" name="password" placeholder="@Model.Fields.Password.Value..." />
+            </div> 
 
             <input id="remember" type="checkbox" name="remember" checked="checked" value="true" />
             <label for="remember">@Model.Fields.Remember.Value</label>

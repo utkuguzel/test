@@ -12,12 +12,12 @@ a {
 }
 a:hover {
   text-decoration: none;
-  color: #cd2543;
+  color: #2276D9;
 }
 .logo {
   width: 200px;
   height: 70px;
-  background: url('/assets/images/logos/RentVision-02-Light.png') no-repeat center center;
+  background: url('/assets/images/logos/RentVision-03-Light.svg') no-repeat center center;
   background-size: contain;
 }
 .logo.logo-dark {
@@ -303,8 +303,7 @@ img {
     display: block !important;
     height: auto !important;
     text-align: center;
-    background: #171717;
-    background: linear-gradient(90deg, #171717 0%, #262626 100%) !important;
+    background: #222;
   }
 }
 #header #rightmenu #menuoptions li.headerOption {
@@ -330,7 +329,6 @@ img {
 }
 #header #rightmenu #menuoptions li.headerOption:hover {
   color: #FFF;
-  background-color: #1f1f1f;
 }
 #header #rightmenu #menuoptions li.headerOption.active {
   background-color: #6FC516;
@@ -342,7 +340,7 @@ img {
   top: 0;
   width: 100%;
   height: 2px;
-  background: #C61120;
+  background: #4b6cb7;
 }
 #header #rightmenu #menuoptions li.headerOption .headerDropdown {
   display: none;
@@ -532,14 +530,14 @@ img {
   box-shadow: 0px 5px 4px rgba(0, 0, 0, 0.3);
 }
 .products .products-inner .product:hover i {
-  color: #C61120;
+  color: #4b6cb7;
 }
 .products .products-inner .product h3 {
   font-size: 1em;
 }
 .products .products-inner .product h3 i {
   display: block;
-  color: #A2142D;
+  color: #4b6cb7;
   font-size: 4em;
   padding: 0 0 10px 0;
 }
@@ -571,19 +569,19 @@ img {
 }
 .block ul li {
   position: relative;
+  padding: 10px 0 0 0;
+  font-size: 0.9em;
+  color: hsl(222, 47%, 14%);
 }
 .block ul li:before {
-  content: '';
-  display: block;
+  font-weight: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  content: "✓";
   position: absolute;
-  top: 10px;
-  left: -18px;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #C61120;
-  -webkit-box-shadow: 0 0 10px #C61120;
-  box-shadow: 0 0 10px #C61120;
+  left: -25px;
+  font-weight: 600;
+  color: #7ab55b;
 }
 .block a {
   display: block !important;
@@ -593,15 +591,25 @@ img {
   color: #FFF;
   padding: 10px 20px;
   margin-bottom: 20px !important;
-  border: 1px solid #A2142D;
+  border: 1px solid #4b6cb7;
   border-radius: 4px;
-  background-color: #C61120;
+  background: #4b6cb7;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to bottom, #4b6cb7, #3a5ca1);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to bottom, #4b6cb7, #3a5ca1);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 .block a i {
   padding-left: 5px;
 }
 .block a:hover {
-  background-color: #ec1e2f !important;
+  background: #4b6cb7;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to top, #4b6cb7, #3a5ca1);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to top, #4b6cb7, #3a5ca1);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 .block h3 {
   display: block;
@@ -614,8 +622,8 @@ img {
 }
 .block h4 i {
   padding-right: 20px;
-  color: #C61120;
-  text-shadow: 0px 0px 7px #C61120;
+  color: #4b6cb7;
+  text-shadow: 0px 0px 7px #4b6cb7;
 }
 .block p {
   font-size: 0.9em !important;
@@ -624,7 +632,7 @@ img {
   display: block;
   width: 200px;
   height: 2px;
-  background-color: #C61120;
+  background-color: #4b6cb7;
   margin: 0 auto 50px auto;
 }
 .border {

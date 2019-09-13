@@ -12,7 +12,6 @@
     z-index: 400;
     font-weight: 700 !important;
     font-family: 'Ubuntu';
-    //.gradient();
 
     #leftmenu {
         float: left;
@@ -306,8 +305,7 @@
                     display: block !important;
                     height: auto !important;
                     text-align: center;
-
-                    .gradient();
+                    background: #222;
                 }
             }
 
@@ -325,7 +323,6 @@
                 padding: 0 30px;
                 cursor: pointer;
                 //background: @COLOUR_HEADER;
-
                 i.fas {
                     font-size: 0.75em;
                     padding-right: 10px;
@@ -338,7 +335,7 @@
 
                 &:hover {
                     color: #FFF;
-                    background-color: darken(#222, 1%);
+                    //background-color: darken(#222, 1%);
                 }
 
                 &.active {
@@ -352,7 +349,7 @@
                     top: 0;
                     width: 100%;
                     height: 2px;
-                    background: #C61120;
+                    background: #4b6cb7;
                 }
 
                 .headerDropdown {
@@ -474,9 +471,4 @@
             margin-top: 10px !important;
         }
     }
-}
-
-.gradient() {
-    background: rgb(23,23,23);
-    background: linear-gradient(90deg, rgba(23,23,23,1) 0%, rgba(38,38,38,1) 100%) !important;
 }

@@ -12,12 +12,12 @@ a {
 }
 a:hover {
   text-decoration: none;
-  color: #cd2543;
+  color: #2276D9;
 }
 .logo {
   width: 200px;
   height: 70px;
-  background: url('/assets/images/logos/RentVision-02-Light.png') no-repeat center center;
+  background: url('/assets/images/logos/RentVision-03-Light.svg') no-repeat center center;
   background-size: contain;
 }
 .logo.logo-dark {

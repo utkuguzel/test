@@ -3,6 +3,12 @@
   padding: 20px 45px;
   border-bottom: 1px solid #DDD;
   text-shadow: -1px 0 #f2f5f6;
+  background: #4b6cb7;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to bottom, #4b6cb7, #3a5ca1);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to bottom, #4b6cb7, #3a5ca1);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#fffcfc+0,f4f4f4+100 */
   background: #fffcfc;
   /* Old browsers */
@@ -20,7 +26,7 @@
   top: 23px;
   width: 3px;
   height: 80%;
-  background: #e67287;
+  background: #77acea;
 }
 .main .archive-item .subtitle {
   font-size: 0.9em;

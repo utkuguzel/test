@@ -1,7 +1,5 @@
 @model PlansPage
 
-@using RentVision.Models.Regions
-
 @{ 
     var plans = Model.Plans;
 }
@@ -18,9 +16,9 @@
                         {
                             <div class="col-lg-4 col-sm-6">
                                 <div class="plan">
-                                    <div class="border border-red"></div>
+                                    @*<div class="border border-red"></div>*@
                                     <h3 style="text-shadow: none !important;">@plan.Title</h3>
-                                    <i class="fas @plan.Icon.Value"></i>
+                                    <i class="material-icons-outlined">@plan.Icon.Value</i>
 
                                     <h5>@plan.Price</h5>
                                     <span>/ @plan.PaymentType</span>
@@ -36,29 +34,32 @@
                                                 string inactive = "";
                                                 string icon = "";
 
-                                                switch ( plan.PlanType.Value )
+                                                if (plan.UserPlanType != null)
                                                 {
-                                                    case PlanTypes.Free:
-                                                        inactive = (feature.PlanFreeEnabled) ? "" : "inactive";
-                                                        icon = (feature.PlanFreeEnabled) ? "fa-check" : "fa-times";
-                                                        break;
-                                                    case PlanTypes.Basic:
-                                                        inactive = (feature.PlanBasicEnabled) ? "" : "inactive";
-                                                        icon = (feature.PlanBasicEnabled) ? "fa-check" : "fa-times";
-                                                        break;
-                                                    case PlanTypes.Pro:
-                                                        inactive = (feature.PlanProEnabled) ? "" : "inactive";
-                                                        icon = (feature.PlanProEnabled) ? "fa-check" : "fa-times";
-                                                        break;
+                                                    switch (plan.UserPlanType.Value)
+                                                    {
+                                                        case "Free":
+                                                            inactive = (feature.PlanFreeEnabled) ? "" : "inactive";
+                                                            icon = (feature.PlanFreeEnabled) ? "fa-check" : "fa-times";
+                                                            break;
+                                                        case "Basic":
+                                                            inactive = (feature.PlanBasicEnabled) ? "" : "inactive";
+                                                            icon = (feature.PlanBasicEnabled) ? "fa-check" : "fa-times";
+                                                            break;
+                                                        case "Pro":
+                                                            inactive = (feature.PlanProEnabled) ? "" : "inactive";
+                                                            icon = (feature.PlanProEnabled) ? "fa-check" : "fa-times";
+                                                            break;
+                                                    }
+
+                                                    <li class="@inactive">
+                                                        <div class="feature">
+                                                            <i class="material-icons-outlined">@feature.Icon.Value</i>
+
+                                                            @feature.Title
+                                                        </div>
+                                                    </li>
                                                 }
-
-                                                <li class="@inactive">
-                                                    <div class="feature">
-                                                        <i class="fas @icon"></i>
-
-                                                        @feature.Title
-                                                    </div>
-                                                </li>
                                             }
                                         }
                                     </ul>

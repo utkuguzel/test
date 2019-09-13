@@ -1,4 +1,4 @@
-@import "../colours.less";
+﻿@import "../colours.less";
 
 .block {
     position: relative;
@@ -27,19 +27,19 @@
 
         li {
             position: relative;
+            padding: 10px 0 0 0;
+            font-size: 0.9em;
+            color: hsla(222, 47%, 14%, 1);
 
             &:before {
-                content: '';
-                display: block;
+                font-weight: normal;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                content: "✓";
                 position: absolute;
-                top: 10px;
-                left: -18px;
-                width: 6px;
-                height: 6px;
-                border-radius: 50%;
-                background: @COLOUR_LAVA;
-                -webkit-box-shadow: 0 0 10px @COLOUR_LAVA;
-                box-shadow: 0 0 10px @COLOUR_LAVA;
+                left: -25px;
+                font-weight: 600;
+                color: #7ab55b;
             }
         }
     }
@@ -54,14 +54,14 @@
         margin-bottom: 20px !important;
         border: 1px solid @COLOUR_VIVIDBURGUNDY;
         border-radius: 4px;
-        background-color: @COLOUR_LAVA;
+        .gradient();
 
         i {
-            padding-left: 5px; 
+            padding-left: 5px;
         }
 
         &:hover {
-            background-color: lighten(@COLOUR_LAVA, 10%) !important;
+            .gradient-hover();
         }
     }
 

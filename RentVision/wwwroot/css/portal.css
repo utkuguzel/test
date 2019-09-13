@@ -3,7 +3,7 @@ html {
   width: 100%;
   height: 100%;
   overflow-x: hidden;
-  background: url('/assets/images/background.jpg') no-repeat center center;
+  background: url('/assets/images/background-portal.jpg') no-repeat center center;
   background-size: cover;
   font-family: 'Ubuntu', sans-serif;
 }
@@ -13,7 +13,7 @@ a {
 }
 a:hover {
   text-decoration: none;
-  color: #cd2543;
+  color: #2276D9;
 }
 .statusMessage {
   display: block;
@@ -21,17 +21,17 @@ a:hover {
   font-weight: bold;
   font-size: 0.9em;
   text-align: center;
-  color: #C61120;
+  color: rgba(255, 111, 111, 0.8);
 }
 .logo {
   width: 200px;
   height: 30px;
   margin: 0 auto;
-  background: url('/assets/images/logos/RentVision-02-Light.png') no-repeat center center;
+  background: url('/assets/images/logos/RentVision-03-Light.svg') no-repeat center center;
   background-size: contain;
 }
 .logo.logo-dark {
-  background: url('/assets/images/logos/RentVision-02-Dark.png') no-repeat center center;
+  background: url('/assets/images/logos/RentVision-03-Light.svg') no-repeat center center;
   background-size: contain;
 }
 .d-flex {
@@ -44,26 +44,53 @@ a:hover {
 .d-flex.form-register {
   padding: 60px 20px 20px 20px;
 }
+form {
+  padding: 20px 20px 40px 20px;
+}
+.logo-box {
+  padding: 10px 0 10px 0;
+  background: #222;
+}
 .form,
 .setup {
   position: relative;
   width: 100%;
   max-width: 600px;
   height: auto;
-  padding: 10px 20px 40px 20px;
   border-radius: 4px;
-  background: url('/assets/images/form-overlay.jpg') no-repeat center center;
-  background-size: cover;
+  border-bottom: 3px solid #4b6cb7;
+  background: #FFF;
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+}
+.form .input-icons i,
+.setup .input-icons i {
+  position: absolute;
+  color: #436692;
+  padding: 0 10px;
+  line-height: 50px;
+  font-size: 1em;
+}
+.form .input-icons,
+.setup .input-icons {
+  width: 100%;
+  margin-bottom: 10px;
+}
+.form .icon,
+.setup .icon {
+  padding: 10px;
+  color: green;
+  min-width: 50px;
+  text-align: center;
+}
+.form .input-field,
+.setup .input-field {
+  width: 100%;
+  padding: 10px;
+  text-align: center;
 }
 .form .d-inline-flex,
 .setup .d-inline-flex {
   width: 100%;
-}
-.form .logo-box,
-.setup .logo-box {
-  padding: 10px 0 20px 0;
-  border-radius: 4px;
 }
 .form .padding,
 .setup .padding {
@@ -84,7 +111,7 @@ a:hover {
   max-width: 600px;
   height: 50px;
   margin: 0 0 20px 0;
-  padding: 0 0 0 7px;
+  padding: 0 0 0 30px;
   border: 1px solid #ccc;
   border-radius: 3px;
 }
@@ -117,13 +144,21 @@ a:hover {
   border-radius: 4px;
   transition: background 0.5s !important;
   color: #FFF;
-  background: #c61120;
-  background: linear-gradient(328deg, #c61120 0%, #a2142d 100%);
+  background: #4b6cb7;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to bottom, #4b6cb7, #3a5ca1);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to bottom, #4b6cb7, #3a5ca1);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 .form button:hover,
 .setup button:hover {
-  background: #e01324;
-  background: linear-gradient(328deg, #e01324 0%, #b01530 100%);
+  background: #4b6cb7;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to top, #4b6cb7, #3a5ca1);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to top, #4b6cb7, #3a5ca1);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 .form a,
 .setup a {
@@ -172,7 +207,7 @@ a:hover {
   margin: 0;
 }
 .passwordRequirements ul li i {
-  color: #A2142D;
+  color: rgba(200, 111, 111, 0.8);
   padding: 0 5px 0 0;
 }
 .passwordRequirements ul li i.fa-check {

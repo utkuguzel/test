@@ -6,6 +6,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using RentVision.Helpers;
+using RentVision.Models.Regions;
 
 namespace RentVision.Controllers
 {

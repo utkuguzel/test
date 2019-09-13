@@ -39,18 +39,33 @@
         }
 
         <form method="post" action="@Model.Fields.ButtonLink.Value">
-            <input id="email" type="email" name="email" placeholder="@Model.Fields.Email.Value...">
+            <div class="input-icons"> 
+                <i class="material-icons">email</i> 
+                <input id="email" type="email" name="email" placeholder="@Model.Fields.Email.Value...">
+            </div> 
 
-            <input id="subdomain" type="text" name="subdomain" placeholder="@Model.Fields.Subdomain.Value...">
+            <div class="input-icons">
+                <i class="material-icons">dns</i>
+                <input id="subdomain" type="text" name="subdomain" placeholder="@Model.Fields.Subdomain.Value...">
+            </div>
 
-            <input id="businessUnitName" type="text" name="businessUnitName" placeholder="@Model.Fields.BusinessUnitName.Value...">
+            <div class="input-icons">
+                <i class="material-icons">business</i>
+                <input id="businessUnitName" type="text" name="businessUnitName" placeholder="@Model.Fields.BusinessUnitName.Value...">
+            </div>
 
             <div class="d-inline-flex">
                 <div class="padding padding-right">
-                    <input id="password" type="password" name="password" placeholder="@Model.Fields.Password.Value...">
+                    <div class="input-icons">
+                        <i class="material-icons">lock</i>
+                        <input id="password" type="password" name="password" placeholder="@Model.Fields.Password.Value...">
+                    </div>
                 </div>
                 <div class="padding padding-left">
-                    <input id="confirmPassword" type="password" name="confirmPassword" placeholder="@Model.Fields.ConfirmPassword.Value...">
+                    <div class="input-icons">
+                        <i class="material-icons">lock</i>
+                        <input id="confirmPassword" type="password" name="confirmPassword" placeholder="@Model.Fields.ConfirmPassword.Value...">
+                    </div>
                 </div>
             </div>
 

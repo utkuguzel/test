@@ -1,5 +1,7 @@
-@COLOUR_LAVA: #C61120;
-@COLOUR_VIVIDBURGUNDY: #A2142D;
+@COLOUR_PRIMARY: #4b6cb7;
+
+@COLOUR_LAVA: @COLOUR_PRIMARY;
+@COLOUR_VIVIDBURGUNDY: @COLOUR_PRIMARY;
 @COLOUR_DARKMEDIUMGRAY: #A9A9B9;
 @COLOUR_LAVENDERGRAY: #C8C8D3;
 @COLOUR_ISABELLINE: #ECECF0;
@@ -8,4 +10,19 @@
 
 @COLOUR_GRADIENT: linear-gradient(to bottom, #c61120, #bd1024, #b41128, #ab122b, #a2142d);
 @COLOUR_HOVER: lighten(@COLOUR_LAVA, 5%);
-@COLOUR_HOVER_LINK: #cd2543;
+@COLOUR_HOVER_LINK: #2276D9;
+
+@COLOUR_GRADIENT_TOP: @COLOUR_PRIMARY;
+@COLOUR_GRADIENT_BOTTOM: #3a5ca1;
+
+.gradient() {
+    background: @COLOUR_GRADIENT_TOP; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to bottom, @COLOUR_GRADIENT_TOP, @COLOUR_GRADIENT_BOTTOM); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to bottom, @COLOUR_GRADIENT_TOP, @COLOUR_GRADIENT_BOTTOM); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.gradient-hover() {
+    background: @COLOUR_GRADIENT_TOP; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to top, @COLOUR_GRADIENT_TOP, @COLOUR_GRADIENT_BOTTOM); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to top, @COLOUR_GRADIENT_TOP, @COLOUR_GRADIENT_BOTTOM); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}

@@ -4,7 +4,7 @@ using System.Collections;
 
 namespace RentVision.Models.Regions
 {
-    public enum PlanTypes
+    public enum UserPlanTypes
     {
         Free,
         Basic,
@@ -29,6 +29,6 @@ namespace RentVision.Models.Regions
         public PageField PageLink { get; set; }
 
         [Field]
-        public SelectField<PlanTypes> PlanType { get; set; }
+        public StringField UserPlanType { get; set; }
     }
 }

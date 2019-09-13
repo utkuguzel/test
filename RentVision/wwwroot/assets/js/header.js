@@ -104,13 +104,13 @@ $("body").scroll(function (e) {
         $("#header").stop().animate({
             backgroundColor: "#222222",
             boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)"
-        }, 250);
+        }, 250, function () { animating = false; });
 
 
         $(".headerOption").stop().animate({
             background: "#222222",
             borderLeft: "1px solid rgba(0, 0, 0, 0.2)"
-        }, 100, function () { animating = false });
+        }, 100);
 
         animating = true;
     }
@@ -125,7 +125,7 @@ $("body").scroll(function (e) {
         $(".headerOption").stop().animate({
             background: "rgba(0, 0, 0, 0)",
             borderLeft: "initial"
-        }, 100, function () { animating = false });
+        }, 100, function () { animating = false; });
 
         animating = true;
     }

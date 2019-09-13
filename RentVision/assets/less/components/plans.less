@@ -4,7 +4,7 @@
     position: relative;
     width: auto;
     height: auto;
-    min-height: 250px;
+    min-height: 700px;
     background: #FFF;
 
     @media all and (max-width: 768px) {
@@ -19,7 +19,7 @@
         width: 100%;
         padding: 0 45px;
         z-index: 5;
-        top: -100px;
+        top: -120px;
 
         .plan {
             width: auto;
@@ -32,14 +32,15 @@
             box-shadow: 0px 5px 4px rgba(0,0,0,0.1);
             border-radius: 4px;
             text-align: center;
-            background: url('/assets/images/plan-overlay.jpg') no-repeat;
-            background-size: cover;
+            border-top: 3px solid @COLOUR_LAVA;
+            //background: url('/assets/images/plan-overlay.jpg') no-repeat;
+            //background-size: cover;
             cursor: pointer;
             transition: box-shadow 0.1s, background 0.1s, color 0.1s;
 
             &:hover {
-                background: url('/assets/images/plan-overlay.jpg') no-repeat;
-                background-size: cover;
+                //background: url('/assets/images/plan-overlay.jpg') no-repeat;
+                //background-size: cover;
                 box-shadow: 0px 5px 4px rgba(0,0,0,0.3);
 
                 i {
@@ -87,14 +88,14 @@
                 color: #FFF;
                 border: 1px solid @COLOUR_VIVIDBURGUNDY;
                 border-radius: 4px;
-                background-color: @COLOUR_LAVA;
+                .gradient();
 
                 i {
                     padding-left: 5px;
                 }
 
                 &:hover {
-                    background-color: lighten(@COLOUR_LAVA, 10%) !important;
+                    .gradient-hover();
                 }
             }
         }

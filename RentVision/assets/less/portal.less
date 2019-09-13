@@ -1,12 +1,12 @@
 @import "colours.less";
 
 body, html {
-	width: 100%;
-	height: 100%;
-	overflow-x: hidden;
-	background: url('/assets/images/background.jpg') no-repeat center center;
-	background-size: cover;
-	font-family: 'Ubuntu', sans-serif;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    background: url('/assets/images/background-portal.jpg') no-repeat center center;
+    background-size: cover;
+    font-family: 'Ubuntu', sans-serif;
 }
 
 a {
@@ -25,18 +25,18 @@ a {
     font-weight: bold;
     font-size: 0.9em;
     text-align: center;
-    color: @COLOUR_LAVA;
+    color: rgba(255, 111, 111, 0.8);
 }
 
 .logo {
     width: 200px;
     height: 30px;
     margin: 0 auto;
-    background: url('/assets/images/logos/RentVision-02-Light.png') no-repeat center center;
+    background: url('/assets/images/logos/RentVision-03-Light.svg') no-repeat center center;
     background-size: contain;
 
     &.logo-dark {
-        background: url('/assets/images/logos/RentVision-02-Dark.png') no-repeat center center;
+        background: url('/assets/images/logos/RentVision-03-Light.svg') no-repeat center center;
         background-size: contain;
     }
 }
@@ -53,92 +53,121 @@ a {
 	}
 }
 
+form {
+    padding: 20px 20px 40px 20px;
+}
+
+.logo-box {
+    padding: 10px 0 10px 0;
+    background: #222;
+}
+
 .form, .setup {
-	position: relative;
-	width: 100%;
-	max-width: 600px;
-	height: auto;
-	padding: 10px 20px 40px 20px;
-	border-radius: 4px;
-	background: url('/assets/images/form-overlay.jpg') no-repeat center center;
-	background-size: cover;
-	box-shadow: 1px 1px 4px rgba( 0, 0, 0, 0.6 );
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    border-radius: 4px;
+    border-bottom: 3px solid @COLOUR_PRIMARY;
+    background: #FFF;
+    //background: url('/assets/images/form-overlay.jpg') no-repeat center center;
+    //background-size: cover;
+    box-shadow: 1px 1px 4px rgba( 0, 0, 0, 0.6 );
 
-	.d-inline-flex {
-		width: 100%;
-	}
+    .input-icons i {
+        position: absolute;
+        color: #436692;
+        padding: 0 10px;
+        line-height: 50px;
+        font-size: 1em;
+    }
 
-	.logo-box {
-		padding: 10px 0 20px 0;
-		border-radius: 4px;
-	}
+    .input-icons {
+        width: 100%;
+        margin-bottom: 10px;
+    }
 
-	.padding {
-		width: 100%;
+    .icon {
+        padding: 10px;
+        color: green;
+        min-width: 50px;
+        text-align: center;
+    }
 
-		&.padding-right {
-			//padding-right: 5px;
-		}
+    .input-field {
+        width: 100%;
+        padding: 10px;
+        text-align: center;
+    }
 
-		&.padding-left {
-			//padding-left: 5px;
-		}
-	}
+    .d-inline-flex {
+        width: 100%;
+    }
 
-	input[type="email"], input[type="password"], input[type="text"], button, select {
-		display: block;
-		width: 100%;
-		max-width: 600px;
-		height: 50px;
-		margin: 0 0 20px 0;
-		padding: 0 0 0 7px;
-		border: 1px solid #ccc;
-		border-radius: 3px;
-	}
+    .padding {
+        width: 100%;
 
-	input[name="firstname"] {
-		border-right: none;
-	}
+        &.padding-right {
+            //padding-right: 5px;
+        }
 
-	input[name="confirmPassword"] {
-		border-left: none;
-	}
+        &.padding-left {
+            //padding-left: 5px;
+        }
+    }
 
-	input[type="text"], input[type="password"] {
-		width: 100%;
-	}
+    input[type="email"], input[type="password"], input[type="text"], button, select {
+        display: block;
+        width: 100%;
+        max-width: 600px;
+        height: 50px;
+        margin: 0 0 20px 0;
+        padding: 0 0 0 30px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+    }
 
-	input[type="password"] {
-		margin: 0 0 10px 0;
-	}
+    input[name="firstname"] {
+        border-right: none;
+    }
 
-	label {
-		//display: block;
-		font-size: 0.8em;
-	}
+    input[name="confirmPassword"] {
+        border-left: none;
+    }
 
-	button {
-		margin: 10px 0 10px 0;
-		border: 1px solid #DDD;
-		border-radius: 4px;
-		transition: background 0.5s !important;
-		color: #FFF;
-		background: rgb(198,17,32);
-		background: linear-gradient(328deg, rgba(198,17,32,1) 0%, rgba(162,20,45,1) 100%);
+    input[type="text"], input[type="password"] {
+        width: 100%;
+    }
 
-		&:hover {
-			background: rgb(224,19,36);
-			background: linear-gradient(328deg, rgba(224,19,36,1) 0%, rgba(176,21,48,1) 100%);
-		}
-	}
+    input[type="password"] {
+        margin: 0 0 10px 0;
+    }
 
-	a {
-		text-shadow: none;
+    label {
+        //display: block;
+        font-size: 0.8em;
+    }
 
-		i {
-			padding: 0 10px 0 0;
-		}
-	}
+    button {
+        margin: 10px 0 10px 0;
+        border: 1px solid #DDD;
+        border-radius: 4px;
+        transition: background 0.5s !important;
+        color: #FFF;
+        .gradient();
+
+        &:hover {
+            .gradient-hover();
+        }
+    }
+
+    a {
+        text-shadow: none;
+
+        i {
+            padding: 0 10px 0 0;
+        }
+    }
 }
 
 .setup {
@@ -188,7 +217,7 @@ a {
 
         li {
             i {
-                color: @COLOUR_VIVIDBURGUNDY;
+                color: rgba(200, 111, 111, 0.8);
                 padding: 0 5px 0 0;
 
                 &.fa-check {

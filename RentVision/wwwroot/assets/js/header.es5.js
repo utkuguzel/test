@@ -93,17 +93,40 @@ function init() {
     });
 }
 
+var animating = false;
+
 $("body").scroll(function (e) {
     var top = this.scrollTop;
-
     //console.log(top);
 
-    if (top > 70) {
-        $("#header").css("background-color", "#222222").css("box-shadow", "0 1px 3px 0px rgba(0, 0, 0, 0.1)");
-        $(".headerOption").css("background", "#222222").css("border-left", "1px solid rgba(0, 0, 0, 0.2)");
-    } else {
-        $("#header").css("background-color", "initial").css("box-shadow", "initial");
-        $(".headerOption").css("background", "initial").css("border-left", "initial");
+    if (top > 70 && !animating) {
+        $("#header").stop().animate({
+            backgroundColor: "#222222",
+            boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)"
+        }, 250, function () {
+            animating = false;
+        });
+
+        $(".headerOption").stop().animate({
+            background: "#222222",
+            borderLeft: "1px solid rgba(0, 0, 0, 0.2)"
+        }, 100);
+
+        animating = true;
+    } else if (top <= 70 && !animating) {
+        $("#header").stop().animate({
+            backgroundColor: "rgba(0, 0, 0, 0)",
+            boxShadow: "initial"
+        }, 100);
+
+        $(".headerOption").stop().animate({
+            background: "rgba(0, 0, 0, 0)",
+            borderLeft: "initial"
+        }, 100, function () {
+            animating = false;
+        });
+
+        animating = true;
     }
 });
 

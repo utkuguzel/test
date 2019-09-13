@@ -33,14 +33,14 @@
   box-shadow: 0px 5px 4px rgba(0, 0, 0, 0.3);
 }
 .products .products-inner .product:hover i {
-  color: #C61120;
+  color: #4b6cb7;
 }
 .products .products-inner .product h3 {
   font-size: 1em;
 }
 .products .products-inner .product h3 i {
   display: block;
-  color: #A2142D;
+  color: #4b6cb7;
   font-size: 4em;
   padding: 0 0 10px 0;
 }
