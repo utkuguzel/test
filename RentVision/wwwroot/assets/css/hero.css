@@ -7,6 +7,18 @@
     transform: translateX(100%);
 }
 
+/*.dots {
+    content: "";
+    background: url('/assets/images/tex2.png') repeat, rgba(0, 0, 0,0.1);
+    opacity: 0.1;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: 2;
+}*/
+
 .cd-hero__slide.cd-hero__slide--selected {
     /* this is the visible slide */
     transform: translateX(0);
