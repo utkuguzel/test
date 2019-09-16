@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using RentVision.Helpers;
 using RentVision.Models.Regions;
+using System.Net;
+using Newtonsoft.Json;
+using Twinvision.Piranha.RentVision.Helpers;
+using System.Net.Http;
+using RentVision.Models.Configuration;
+using System.Collections.Generic;
 
 namespace RentVision.Controllers
 {
@@ -14,16 +20,20 @@ namespace RentVision.Controllers
     {
         private readonly IApi _api;
         private readonly IModelLoader _loader;
+        private readonly IHttpClientFactory _clientFactory;
+        private readonly ApiHelper _apiHelper;
         private bool _DEBUG = false;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="api">The current api</param>
-        public CmsController(IApi api, IModelLoader loader)
+        public CmsController(IApi api, IModelLoader loader, IHttpClientFactory clientFactory)
         {
             _api = api;
             _loader = loader;
+            _clientFactory = clientFactory;
+            _apiHelper = new ApiHelper(_api, _clientFactory);
         }
 
         /// <summary>
@@ -148,6 +158,9 @@ namespace RentVision.Controllers
         public async Task<IActionResult> Plans(Guid id, bool draft = false)
         {
             var model = await _loader.GetPage<PlansPage>(id, HttpContext.User, draft);
+            List<UserPlan> userPlans = await _apiHelper.GetUserPlansAsync();
+
+            model.UserPlans = userPlans;
 
             return View(model);
         }

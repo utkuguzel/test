@@ -8,6 +8,7 @@ using RentVision.Models.Configuration;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Collections.Generic;
 using RentVision.Helpers;
+using Twinvision.Piranha.RentVision.Helpers;
 
 namespace RentVision.Controllers
 {
@@ -15,17 +16,19 @@ namespace RentVision.Controllers
     {
         private readonly IApi _api;
         private readonly IHttpClientFactory _clientFactory;
+        private ApiHelper _apiHelper;
 
         public AuthController(IApi api, IHttpClientFactory clientFactory )
         {
             _api = api;
             _clientFactory = clientFactory;
+            _apiHelper = new ApiHelper( _api, _clientFactory );
         }
 
         [Route("/auth/isUserSiteReady"), HttpPost]
         public async Task<JsonResult> isUserSiteReadyAsync(string email)
         {
-            var userSiteReadyResponse = await SendApiCallAsync(
+            var userSiteReadyResponse = await _apiHelper.SendApiCallAsync(
                 Configuration.ApiCalls.UserSiteReady,
                 new Dictionary<string, string>() { { "email", email } },
                 HttpMethod.Get
@@ -63,7 +66,9 @@ namespace RentVision.Controllers
                 { "email", email }
             };
 
-            var userCredentialResponse = await SendApiCallAsync(Configuration.ApiCalls.CheckUserCredentials, urlParameters, HttpMethod.Post, password );
+            // Check if user credentials match user input
+
+            var userCredentialResponse = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.CheckUserCredentials, urlParameters, HttpMethod.Post, password );
             string userCredentialString = await userCredentialResponse.Content.ReadAsStringAsync();
 
             TempData["StatusCode"] = userCredentialResponse.StatusCode;
@@ -82,8 +87,8 @@ namespace RentVision.Controllers
                 return Redirect(refererUrl);
             }
 
-            // Subdomein ophalen en doorsturen
-            var subdomainResponse = await SendApiCallAsync(Configuration.ApiCalls.UserSubDomain, urlParameters, HttpMethod.Get);
+            // Fetch customer subdomain and redirect
+            var subdomainResponse = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.UserSubDomain, urlParameters, HttpMethod.Get);
             var subdomain = await subdomainResponse.Content.ReadAsStringAsync();
 
             return Redirect($"{Configuration.BackOffice.Protocol}://{subdomain}.{Configuration.BackOffice.Domain}");
@@ -120,7 +125,9 @@ namespace RentVision.Controllers
                 { "businessUnitName", businessUnitName }
             };
 
-            var response = await SendApiCallAsync(Configuration.ApiCalls.CreateAccount, urlParameters, HttpMethod.Post, password );
+            // Attempt to create an account if everything is ok
+
+            var response = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.CreateAccount, urlParameters, HttpMethod.Post, password );
             string userCredentialString = await response.Content.ReadAsStringAsync();
 
             TempData["StatusCode"] = response.StatusCode;
@@ -157,7 +164,7 @@ namespace RentVision.Controllers
                     { "email", email }
                 };
 
-            var subdomainResponse = await SendApiCallAsync(
+            var subdomainResponse = await _apiHelper.SendApiCallAsync(
                 Configuration.ApiCalls.UserSubDomain,
                 getUserKeyParameters,
                 HttpMethod.Get
@@ -169,7 +176,7 @@ namespace RentVision.Controllers
             // Add subDomainName to the list of parameters because we need it in the next call
             getUserKeyParameters.Add("subDomainName", subdomain);
 
-            var userKeyResponse = await SendApiCallAsync(Configuration.ApiCalls.GetLoginKey,
+            var userKeyResponse = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.GetLoginKey,
                 getUserKeyParameters,
                 HttpMethod.Post,
                 (string)TempData["password"]
@@ -179,38 +186,6 @@ namespace RentVision.Controllers
             string realRedirectUrl = redirectUrl + "/externLogin?externLoginKey=" + userKey;
 
             return new JsonResult( new { statusCode = HttpStatusCode.OK, realRedirectUrl } );
-        }
-
-        /// <summary>
-        /// Sends an async api call to the rentvision backoffice api and returns an HttpResponseMessage object
-        /// </summary>
-        /// <param name="callType">The type of call that should be called (Mapped to Configuration.BackOffice or ApiCalls)</param>
-        /// <param name="data">A Dictionary containing parameter data</param>
-        /// <param name="callMethod">The HttpMethod that should be used to send data</param>
-        /// <returns>An HttpResponseMessage containing response data from the API</returns>
-        public async Task<HttpResponseMessage> SendApiCallAsync(string callType, Dictionary<string, string> data, HttpMethod callMethod, string password = null )
-        {
-            var query = QueryHelpers.AddQueryString(
-                $"{Configuration.BackOffice.Protocol}://{Configuration.BackOffice.HostName}/{callType}",
-                data
-            );
-
-            var request = new HttpRequestMessage
-            {
-                Method = callMethod,
-                RequestUri = new Uri(query)
-            };
-
-            if ( password != null )
-            {
-                request.Headers.Add("X-Password", password);
-            }
-
-            var client = _clientFactory.CreateClient("RentVisionApi");
-
-            var response = await client.SendAsync(request);
-
-            return response;
         }
     }
 }

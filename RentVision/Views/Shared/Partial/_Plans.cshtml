@@ -2,6 +2,12 @@
 
 @{ 
     var plans = Model.Plans;
+    var userPlans = Model.UserPlans;
+
+    foreach ( var userPlan in userPlans )
+    {
+        <p>@userPlan.Name</p>
+    }
 }
 
 <!-- START PLANS -->
