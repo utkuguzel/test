@@ -30,8 +30,8 @@ namespace RentVision.Controllers
         {
             var userSiteReadyResponse = await _apiHelper.SendApiCallAsync(
                 Configuration.ApiCalls.UserSiteReady,
-                new Dictionary<string, string>() { { "email", email } },
-                HttpMethod.Get
+                HttpMethod.Get,
+                new Dictionary<string, string>() { { "email", email } }
             );
 
             var response = await userSiteReadyResponse.Content.ReadAsStringAsync();
@@ -68,7 +68,7 @@ namespace RentVision.Controllers
 
             // Check if user credentials match user input
 
-            var userCredentialResponse = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.CheckUserCredentials, urlParameters, HttpMethod.Post, password );
+            var userCredentialResponse = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.CheckUserCredentials, HttpMethod.Post, urlParameters, password );
             string userCredentialString = await userCredentialResponse.Content.ReadAsStringAsync();
 
             TempData["StatusCode"] = userCredentialResponse.StatusCode;
@@ -88,7 +88,7 @@ namespace RentVision.Controllers
             }
 
             // Fetch customer subdomain and redirect
-            var subdomainResponse = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.UserSubDomain, urlParameters, HttpMethod.Get);
+            var subdomainResponse = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.UserSubDomain, HttpMethod.Get, urlParameters);
             var subdomain = await subdomainResponse.Content.ReadAsStringAsync();
 
             return Redirect($"{Configuration.BackOffice.Protocol}://{subdomain}.{Configuration.BackOffice.Domain}");
@@ -127,7 +127,7 @@ namespace RentVision.Controllers
 
             // Attempt to create an account if everything is ok
 
-            var response = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.CreateAccount, urlParameters, HttpMethod.Post, password );
+            var response = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.CreateAccount, HttpMethod.Post, urlParameters, password );
             string userCredentialString = await response.Content.ReadAsStringAsync();
 
             TempData["StatusCode"] = response.StatusCode;
@@ -166,8 +166,8 @@ namespace RentVision.Controllers
 
             var subdomainResponse = await _apiHelper.SendApiCallAsync(
                 Configuration.ApiCalls.UserSubDomain,
-                getUserKeyParameters,
-                HttpMethod.Get
+                HttpMethod.Get,
+                getUserKeyParameters
             );
 
             var subdomain = await subdomainResponse.Content.ReadAsStringAsync();
@@ -177,8 +177,8 @@ namespace RentVision.Controllers
             getUserKeyParameters.Add("subDomainName", subdomain);
 
             var userKeyResponse = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.GetLoginKey,
-                getUserKeyParameters,
                 HttpMethod.Post,
+                getUserKeyParameters,
                 (string)TempData["password"]
             );
 

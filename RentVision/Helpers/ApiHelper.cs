@@ -30,7 +30,7 @@ namespace Twinvision.Piranha.RentVision.Helpers
         /// <param name="data">A Dictionary containing parameter data</param>
         /// <param name="callMethod">The HttpMethod that should be used to send data</param>
         /// <returns>An HttpResponseMessage containing response data from the API</returns>
-        public async Task<HttpResponseMessage> SendApiCallAsync(string callType, Dictionary<string, string> data, HttpMethod callMethod, string password = null)
+        public async Task<HttpResponseMessage> SendApiCallAsync(string callType, HttpMethod callMethod, Dictionary<string, string> data = null, string password = null)
         {
             data = data ?? new Dictionary<string, string>();
 
@@ -59,7 +59,7 @@ namespace Twinvision.Piranha.RentVision.Helpers
 
         public async Task<List<UserPlan>> GetUserPlansAsync()
         {
-            var response = await SendApiCallAsync(Configuration.ApiCalls.UserPlans, null, HttpMethod.Get);
+            var response = await SendApiCallAsync(Configuration.ApiCalls.UserPlans, HttpMethod.Get);
             var responseData = await response.Content.ReadAsStringAsync();
 
             List<UserPlan> userPlans = JsonConvert.DeserializeObject<List<UserPlan>>(responseData);
