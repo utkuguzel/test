@@ -1,4 +1,21 @@
-﻿.plans {
+﻿.filterBox {
+  padding: 0 0 20px 0;
+}
+.filterBox h5 {
+  font-size: 1.5em;
+  text-align: center;
+  color: #FFF;
+  text-shadow: 1px 1px 1px #000;
+}
+.filterBox .planFilter {
+  width: 100%;
+  min-width: 300px;
+  height: 40px;
+  padding: 0 0 0 7px;
+  border-radius: 3px;
+  border: 1px solid #AAA;
+}
+.plans {
   position: relative;
   width: auto;
   height: auto;
@@ -16,7 +33,7 @@
   width: 100%;
   padding: 0 45px;
   z-index: 5;
-  top: -120px;
+  top: -200px;
 }
 .plans .plans-inner .plan {
   width: auto;

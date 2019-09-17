@@ -19,9 +19,7 @@ function onUserPlansFilter()
     var filteredPlans = getUserPlansByInterval(payInterval);
 
     if (filteredPlans !== undefined)
-    {
         updateUserPlans(payInterval);
-    }
 }
 
 function updateUserPlans(interval)
@@ -38,7 +36,7 @@ function updateUserPlans(interval)
 
             if (plan !== undefined)
             {
-                var price = (plan.price <= 0) ? "Free" : plan.price;
+                var price = (plan.price <= 0) ? "Free!" : "€ " + plan.price;
 
                 $(v).find(".title").text(plan.name);
                 $(v).find(".price").text(price);
@@ -69,7 +67,7 @@ function getUserPlanByNameInterval(name, interval)
         if (v.name.split(" ")[0] === name && v.payInterval === interval)
         {
             planFound = v;
-            return false;
+            return false; // Break out of the loop since we only expect 1 result
         }
     });
 
