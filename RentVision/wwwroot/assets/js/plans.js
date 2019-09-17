@@ -26,6 +26,7 @@ function updateUserPlans(interval)
 {
     var userPlans = $(".plan");
 
+    // Get for each plan type that's displayed on the page their corresponding plan data (if it exists) and display it.
     $.each(userPlans, function (i, v)
     {
         var userPlanType = $(v).data("plan");
@@ -64,7 +65,9 @@ function getUserPlanByNameInterval(name, interval)
 
     $.each(plans, function (i, v)
     {
-        if (v.name.split(" ")[0] === name && v.payInterval === interval)
+        var planName = v.name.split(" ")[0]; // Remove extra words such as 'Monthly' & 'Annually'
+
+        if (planName === name && v.payInterval === interval)
         {
             planFound = v;
             return false; // Break out of the loop since we only expect 1 result
