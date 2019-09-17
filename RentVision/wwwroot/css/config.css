@@ -456,6 +456,18 @@ img {
     margin-top: 10px !important;
   }
 }
+.cd-hero__content p {
+  font-family: 'Open Sans' !important;
+}
+.cd-hero__content h2 {
+  font-weight: 500 !important;
+}
+.cd-hero__content h2,
+.cd-hero__content p {
+  text-shadow: 1px 1px 1px #000 !important;
+  margin: 0 !important;
+  line-height: 130% !important;
+}
 .hero {
   position: relative;
   width: inherit;
@@ -565,7 +577,7 @@ img {
 }
 .block.block-call-to-action {
   min-height: 150px !important;
-  padding: 20px 0 90px 0;
+  padding: 20px 0 30px 0;
   background: #4b6cb7 !important;
   color: #FFF !important;
   webkit-box-shadow: inset 0px 0px 30px -5px rgba(0, 0, 0, 0.53);
@@ -575,6 +587,7 @@ img {
   background-size: cover;
 }
 .block.block-call-to-action a {
+  max-width: 300px !important;
   margin: 0 auto;
   background: #7ab55b;
   background: linear-gradient(180deg, #7ab55b 0%, #6b9e4f 100%);

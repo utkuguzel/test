@@ -1,4 +1,16 @@
-﻿.hero {
+﻿.cd-hero__content p {
+  font-family: 'Open Sans' !important;
+}
+.cd-hero__content h2 {
+  font-weight: 500 !important;
+}
+.cd-hero__content h2,
+.cd-hero__content p {
+  text-shadow: 1px 1px 1px #000 !important;
+  margin: 0 !important;
+  line-height: 130% !important;
+}
+.hero {
   position: relative;
   width: inherit;
   height: 500px;
