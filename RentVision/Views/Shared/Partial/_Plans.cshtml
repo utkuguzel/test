@@ -11,27 +11,26 @@
         <div class="plans">
             <div class="plans-inner">
                 <div class="row">
-                    @if (userPlans.Count > 0)
+                    <div class="col-sm-12">
+                        <div class="filterBox">
+                            <select class="planFilter">
+                                <option value="2" selected>Monthly</option>
+                                <option value="1">Yearly</option>
+                            </select>
+                        </div>
+                    </div>
+                    @if (plans.Count > 0)
                     {
-                        foreach (var plan in userPlans)
+                        foreach (var plan in plans)
                         {
-                            string payInterval = "";
-
-                            switch ( plan.payInterval )
-                            {
-                                case 1: payInterval = "Yearly"; break;
-                                case 2: payInterval = "Monthly"; break;
-                                default: payInterval = "Not set"; break;
-                            }
-
                             <div class="col-lg-4 col-sm-6">
-                                <div class="plan">
+                                <div class="plan" data-plan="@plan.UserPlanType.Value">
                                     @*<div class="border border-red"></div>*@
-                                    <h3 style="text-shadow: none !important;">@plan.Name</h3>
-                                    <i class="material-icons-outlined">home</i>
+                                    <h3 class="title" style="text-shadow: none !important;">@plan.Title</h3>
+                                    <i class="material-icons-outlined">@plan.Icon.Value</i>
 
-                                    <h5>@plan.Price</h5>
-                                    <span>/ @payInterval</span>
+                                    <h5 class="price">@plan.Price</h5>
+                                    @*<span class="paymentInterval">@plan.PaymentType</span>*@
 
                                     <p><a class="button button-active" href="/register">Sign up</a></p>
                                 </div>
@@ -44,7 +43,7 @@
                                                 string inactive = "";
                                                 string icon = "fa-check";
 
-                                                switch (plan.Name)
+                                                switch (plan.UserPlanType)
                                                 {
                                                     case "Free":
                                                         inactive = (feature.PlanFreeEnabled) ? "" : "inactive";
@@ -62,7 +61,7 @@
 
                                                 <li class="@inactive">
                                                     <div class="feature">
-                                                        <i class="material-icons-outlined">@feature.Icon.Value</i>
+                                                        <i class="fas @icon"></i>
 
                                                         @feature.Title
                                                     </div>

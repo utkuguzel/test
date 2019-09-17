@@ -158,8 +158,8 @@ namespace RentVision.Controllers
         public async Task<IActionResult> Plans(Guid id, bool draft = false)
         {
             var model = await _loader.GetPage<PlansPage>(id, HttpContext.User, draft);
-            List<UserPlan> userPlans = await _apiHelper.GetUserPlansAsync();
 
+            List<UserPlan> userPlans = await _apiHelper.GetUserPlansAsync();
             model.UserPlans = userPlans;
 
             return View(model);
@@ -181,6 +181,14 @@ namespace RentVision.Controllers
             }
 
             return View(model);
+        }
+
+        [Route("/api/getUserPlans")]
+        public async Task<JsonResult> GetUserPlansAsync()
+        {
+            List<UserPlan> userPlans = await _apiHelper.GetUserPlansAsync();
+
+            return new JsonResult(userPlans);
         }
     }
 }
