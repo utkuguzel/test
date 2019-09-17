@@ -43,7 +43,9 @@ namespace RentVision
 
             // Initialize Mollie keys in customerController
             var mollieSettings = Configuration.GetSection("MollieSettings");
-            var customerController = new CustomerController( mollieSettings["mollieKeyLive"], mollieSettings["mollieKeyTest"] );
+
+            CustomerController.MollieKeyLive = mollieSettings["mollieKeyLive"];
+            CustomerController.MollieKeyTest = mollieSettings["mollieKeyTest"];
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.

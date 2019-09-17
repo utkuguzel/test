@@ -23,18 +23,12 @@ namespace Twinvision.Piranha.RentVision.Controllers
         public Guid UserId { get; set; }
     }
 
-    [Route("customer/[controller]")]
+    [Route("[controller]")]
     [ApiController]
-    public class CustomerController : ControllerBase
+    public class CustomerController : Controller
     {
-        private static string _mollieKeyLive { get; set; }
-        private static string _mollieKeyTest { get; set; }
-
-        public CustomerController( string mollieKeyLive, string mollieKeyTest )
-        {
-            _mollieKeyLive = mollieKeyLive;
-            _mollieKeyTest = mollieKeyTest;
-        }
+        public static string MollieKeyLive { get; set; }
+        public static string MollieKeyTest { get; set; }
 
         // Test siiiiiiii
         [Route("list"), HttpGet]
@@ -53,7 +47,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
                 Locale = Locale.nl_NL
             };
 
-            ICustomerClient customerClient = new CustomerClient(_mollieKeyTest);
+            ICustomerClient customerClient = new CustomerClient(MollieKeyTest);
             CustomerResponse customerResponse = await customerClient.CreateCustomerAsync(customerRequest);
 
             return new JsonResult(HttpStatusCode.OK);
@@ -82,7 +76,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
             paymentRequest.SetMetadata(metadataRequest);
 
             // When we retrieve the payment response, we can convert our metadata back to our custom class
-            IPaymentClient paymentClient = new PaymentClient(_mollieKeyTest);
+            IPaymentClient paymentClient = new PaymentClient(MollieKeyTest);
             PaymentResponse result = await paymentClient.CreatePaymentAsync(paymentRequest);
 
             UrlLink checkoutLink = result.Links.Checkout;
