@@ -41,6 +41,8 @@ function updateUserPlans(interval)
 
                 $(v).find(".title").text(plan.name);
                 $(v).find(".price").text(price);
+
+                $(v).find(".button").attr("href", "/register?userPlan=" + plan.name.split(" ")[0] + "&payInterval=" + plan.payInterval);
             }
         }
     });

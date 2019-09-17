@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.WebUtilities;
 using System.Collections.Generic;
 using RentVision.Helpers;
 using Twinvision.Piranha.RentVision.Helpers;
+using Twinvision.Piranha.RentVision.Controllers;
+using RentVision.Models;
 
 namespace RentVision.Controllers
 {
@@ -95,7 +97,7 @@ namespace RentVision.Controllers
         }
 
         [Route("/auth/register"), HttpPost]
-        public async Task<IActionResult> RegisterAsync( string email, string subdomain, string businessUnitName, string password, string confirmPassword, bool tos )
+        public async Task<IActionResult> RegisterAsync( string userPlan, string payInterval, string email, string subdomain, string businessUnitName, string password, string confirmPassword, bool tos )
         {
             string refererUrl = Request.Headers["Referer"].ToString();
 
@@ -146,7 +148,28 @@ namespace RentVision.Controllers
                 return Redirect(refererUrl);
             }
 
-            return DisplaySubDomainSetup(email, password);
+
+            // Handle Mollie
+
+            // Always create a customer and return its ID, incase they want to upgrade later on...
+            var customerCreationResponse = await CustomerController.CreateCustomerAsync(email, businessUnitName);
+
+            if ( userPlan.ToLower() != "free" )
+            {
+                int interval = Convert.ToInt32(payInterval);
+                var userPlanResponse = await _apiHelper.GetUserPlansAsync();
+                UserPlan plan = userPlanResponse.Find(m => m.Name.IndexOf(userPlan) != -1 && m.payInterval == interval);
+
+                var checkoutUrl = await new CustomerController().CreatePaymentRequest(plan);
+
+                if ( checkoutUrl != null )
+                {
+                    return Redirect(checkoutUrl);
+                }
+            }
+
+            //return DisplaySubDomainSetup(email, password);
+            return new JsonResult(HttpStatusCode.OK);
         }
 
         public IActionResult DisplaySubDomainSetup(string email, string password)

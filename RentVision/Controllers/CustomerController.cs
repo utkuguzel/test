@@ -14,31 +14,23 @@ using Mollie.Api.Models.Url;
 using System.Net;
 using Mollie.Api.Models.Customer;
 using Mollie.Api.Models.Payment;
+using Twinvision.Piranha.RentVision.Helpers;
+using RentVision.Models;
 
 namespace Twinvision.Piranha.RentVision.Controllers
 {
     public class UserPlanMetaData
     {
-        public Guid UserPlanId { get; set; }
-        public Guid UserId { get; set; }
+        public UserPlan plan { get; set; }
     }
 
     [Route("[controller]")]
-    [ApiController]
     public class CustomerController : Controller
     {
         public static string MollieKeyLive { get; set; }
         public static string MollieKeyTest { get; set; }
 
-        // Test siiiiiiii
-        [Route("list"), HttpGet]
-        public IActionResult List()
-        {
-            return new JsonResult(HttpStatusCode.OK);
-        }
-
-        [Route("createCustomer"), HttpPost]
-        public async Task<IActionResult> CreateCustomerAsync(string email, string businessUnitName)
+        public static async Task<JsonResult> CreateCustomerAsync(string email, string businessUnitName)
         {
             CustomerRequest customerRequest = new CustomerRequest()
             {
@@ -50,25 +42,22 @@ namespace Twinvision.Piranha.RentVision.Controllers
             ICustomerClient customerClient = new CustomerClient(MollieKeyTest);
             CustomerResponse customerResponse = await customerClient.CreateCustomerAsync(customerRequest);
 
-            return new JsonResult(HttpStatusCode.OK);
+            return new JsonResult(customerResponse.Id);
         }
 
-        [Route("createPaymentRequest"), HttpPost]
-        public async Task<IActionResult> CreatePaymentRequest(Guid userPlanId)
+        public async Task<string> CreatePaymentRequest(UserPlan plan)
         {
-            // TODO(Jesse): Fetch userPlan data here (name, price)
-            // Also: add a webhook to check on payment status
+            // TODO(Jesse): Add a webhook to check on payment status
 
             UserPlanMetaData metadataRequest = new UserPlanMetaData()
             {
-                UserPlanId = userPlanId,
-                UserId = Guid.NewGuid()
+                plan = plan
             };
 
             PaymentRequest paymentRequest = new PaymentRequest()
             {
-                Amount = new Amount(Currency.EUR, "100.00"),
-                Description = "{description}",
+                Amount = new Amount(Currency.EUR, plan.Price.ToString()),
+                Description = $"{plan.Name}",
                 RedirectUrl = "http://google.com"
             };
 
@@ -81,7 +70,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
 
             UrlLink checkoutLink = result.Links.Checkout;
 
-            return Redirect(checkoutLink.Href);
+            return checkoutLink.Href;
         }
     }
 }

@@ -131,9 +131,13 @@ namespace RentVision.Controllers
         /// <param name="id">The unique page id</param>
         /// <param name="draft">If a draft is requested</param>
         [Route("register")]
-        public async Task<IActionResult> Register(Guid id, bool draft = false)
+        public async Task<IActionResult> Register(Guid id, bool draft = false, string userPlan = "Free", string payInterval = "2")
         {
             var model = await _loader.GetPage<RegisterPage>(id, HttpContext.User, draft);
+
+            TempData["UserPlan"] = userPlan;
+            TempData["PayInterval"] = payInterval;
+            TempData["StatusMessage"] = "";
 
             // Return user to proper culture page
             string cultureUrl = CultureHelper.GetProperCultureUrl(Request, HttpContext);

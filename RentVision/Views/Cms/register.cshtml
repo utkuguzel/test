@@ -5,12 +5,9 @@
     ViewBag.Title = Model.Title;
 
     // Check if there's an error set in tempData and display it
-    string statusMessage = "";
-
-    if ( TempData["StatusMessage"] != null )
-    {
-        statusMessage = TempData["StatusMessage"].ToString();
-    }
+    string statusMessage = TempData["StatusMessage"].ToString() ?? "";
+    string userPlan = TempData["UserPlan"].ToString() ?? "";
+    string payInterval = TempData["PayInterval"].ToString() ?? "";
 
     string[] errors = (TempData["Errors"] != null) ? (string[])TempData["Errors"] : null;
 }
@@ -39,6 +36,9 @@
         }
 
         <form method="post" action="@Model.Fields.ButtonLink.Value">
+            <input type="hidden" name="userPlan" value="@userPlan" />
+            <input type="hidden" name="payInterval" value="@payInterval" />
+
             <div class="input-icons"> 
                 <i class="material-icons">email</i> 
                 <input id="email" type="email" name="email" placeholder="@Model.Fields.Email.Value...">
