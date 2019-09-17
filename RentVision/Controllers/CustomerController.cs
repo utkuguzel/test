@@ -35,6 +35,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
         public async Task<IActionResult> CreatePaymentRequest(Guid userPlanId)
         {
             // TODO(Jesse): Fetch userPlan data here (name, price)
+            // Also: add a webhook to check on payment status
 
             UserPlanMetaData metadataRequest = new UserPlanMetaData()
             {
@@ -59,10 +60,6 @@ namespace Twinvision.Piranha.RentVision.Controllers
             UrlLink checkoutLink = result.Links.Checkout;
 
             return Redirect(checkoutLink.Href);
-
-            //UserPlanMetaData metadataResponse = result.GetMetadata<UserPlanMetaData>();
-
-            //return new JsonResult(result);
         }
     }
 }
