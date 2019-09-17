@@ -194,5 +194,13 @@ namespace RentVision.Controllers
 
             return new JsonResult(userPlans);
         }
+
+        //[Route("/api/killAllSites")]
+        //public async Task<JsonResult> KillAllSites()
+        //{
+        //    var response = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.KillAllSites, HttpMethod.Post);
+
+        //    return new JsonResult(response);
+        //}
     }
 }

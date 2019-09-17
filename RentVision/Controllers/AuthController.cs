@@ -160,16 +160,19 @@ namespace RentVision.Controllers
                 var userPlanResponse = await _apiHelper.GetUserPlansAsync();
                 UserPlan plan = userPlanResponse.Find(m => m.Name.IndexOf(userPlan) != -1 && m.payInterval == interval);
 
-                var checkoutUrl = await new CustomerController().CreatePaymentRequest(plan);
-
-                if ( checkoutUrl != null )
+                if ( plan != null )
                 {
-                    return Redirect(checkoutUrl);
+                    var checkoutUrl = await new CustomerController().CreatePaymentRequest(plan);
+
+                    if (checkoutUrl != null)
+                    {
+                        return Redirect(checkoutUrl);
+                    }
                 }
             }
 
-            //return DisplaySubDomainSetup(email, password);
-            return new JsonResult(HttpStatusCode.OK);
+            return DisplaySubDomainSetup(email, password);
+            //return new JsonResult(HttpStatusCode.OK);
         }
 
         public IActionResult DisplaySubDomainSetup(string email, string password)
