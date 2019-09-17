@@ -12,22 +12,50 @@ using Mollie.Api.Client.Abstract;
 using Mollie.Api.Models.Payment.Response;
 using Mollie.Api.Models.Url;
 using System.Net;
+using Mollie.Api.Models.Customer;
+using Mollie.Api.Models.Payment;
 
 namespace Twinvision.Piranha.RentVision.Controllers
 {
+    public class UserPlanMetaData
+    {
+        public Guid UserPlanId { get; set; }
+        public Guid UserId { get; set; }
+    }
+
     [Route("customer/[controller]")]
     [ApiController]
     public class CustomerController : ControllerBase
     {
-        public class UserPlanMetaData
+        private static string _mollieKeyLive { get; set; }
+        private static string _mollieKeyTest { get; set; }
+
+        public CustomerController( string mollieKeyLive, string mollieKeyTest )
         {
-            public Guid UserPlanId { get; set; }
-            public Guid UserId { get; set; }
+            _mollieKeyLive = mollieKeyLive;
+            _mollieKeyTest = mollieKeyTest;
+        }
+
+        // Test siiiiiiii
+        [Route("list"), HttpGet]
+        public IActionResult List()
+        {
+            return new JsonResult(HttpStatusCode.OK);
         }
 
         [Route("createCustomer"), HttpPost]
-        public IActionResult CreateCustomer()
+        public async Task<IActionResult> CreateCustomerAsync(string email, string businessUnitName)
         {
+            CustomerRequest customerRequest = new CustomerRequest()
+            {
+                Email = $"{email}",
+                Name = $"{businessUnitName}",
+                Locale = Locale.nl_NL
+            };
+
+            ICustomerClient customerClient = new CustomerClient(_mollieKeyTest);
+            CustomerResponse customerResponse = await customerClient.CreateCustomerAsync(customerRequest);
+
             return new JsonResult(HttpStatusCode.OK);
         }
 
@@ -54,7 +82,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
             paymentRequest.SetMetadata(metadataRequest);
 
             // When we retrieve the payment response, we can convert our metadata back to our custom class
-            IPaymentClient paymentClient = new PaymentClient("test_m6hyMf2rFV8UKDDJQwJSzuUVbF5ybr");
+            IPaymentClient paymentClient = new PaymentClient(_mollieKeyTest);
             PaymentResponse result = await paymentClient.CreatePaymentAsync(paymentRequest);
 
             UrlLink checkoutLink = result.Links.Checkout;

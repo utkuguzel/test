@@ -14,6 +14,7 @@ using RentVision.Models.Regions;
 using System;
 using System.IO;
 using RentVision.Models.Configuration;
+using Twinvision.Piranha.RentVision.Controllers;
 
 namespace RentVision
 {
@@ -39,6 +40,10 @@ namespace RentVision
 
             Configuration.GetSection("BackOffice").Bind(backOfficeConfig);
             Configuration.GetSection("ApiCalls").Bind(apiCallsConfig);
+
+            // Initialize Mollie keys in customerController
+            var mollieSettings = Configuration.GetSection("MollieSettings");
+            var customerController = new CustomerController( mollieSettings["mollieKeyLive"], mollieSettings["mollieKeyTest"] );
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
