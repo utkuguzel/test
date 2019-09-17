@@ -159,8 +159,8 @@ namespace RentVision.Controllers
         {
             var model = await _loader.GetPage<PlansPage>(id, HttpContext.User, draft);
 
-            List<UserPlan> userPlans = await _apiHelper.GetUserPlansAsync();
-            model.UserPlans = userPlans;
+            //List<UserPlan> userPlans = await _apiHelper.GetUserPlansAsync();
+            //model.UserPlans = userPlans;
 
             return View(model);
         }
