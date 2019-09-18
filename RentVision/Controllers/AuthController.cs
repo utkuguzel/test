@@ -162,7 +162,7 @@ namespace RentVision.Controllers
 
                 if ( plan != null )
                 {
-                    var checkoutUrl = await new CustomerController().CreatePaymentRequest(plan);
+                    var checkoutUrl = await new CustomerController().CreatePaymentRequest(plan, email, customerCreationResponse.Value.ToString());
 
                     if (checkoutUrl != null)
                     {

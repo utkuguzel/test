@@ -21,7 +21,9 @@ namespace Twinvision.Piranha.RentVision.Controllers
 {
     public class UserPlanMetaData
     {
-        public UserPlan plan { get; set; }
+        public string CustomerId { get; set; }
+        public string Email { get; set; }
+        public UserPlan Plan { get; set; }
     }
 
     [Route("[controller]")]
@@ -45,20 +47,24 @@ namespace Twinvision.Piranha.RentVision.Controllers
             return new JsonResult(customerResponse.Id);
         }
 
-        public async Task<string> CreatePaymentRequest(UserPlan plan)
+        public async Task<string> CreatePaymentRequest(UserPlan plan, string email, string customerId)
         {
             // TODO(Jesse): Add a webhook to check on payment status
 
             UserPlanMetaData metadataRequest = new UserPlanMetaData()
             {
-                plan = plan
+                CustomerId = customerId,
+                Email = email,
+                Plan = plan
             };
 
             PaymentRequest paymentRequest = new PaymentRequest()
             {
+                CustomerId = $"{customerId}",
+                SequenceType = SequenceType.First,
                 Amount = new Amount(Currency.EUR, plan.Price.ToString()),
-                Description = $"{plan.Name}",
-                RedirectUrl = "http://google.com"
+                Description = $"RentVision - {plan.Name}",
+                RedirectUrl = $"http://localhost:53352/customer/paid/{customerId}"
             };
 
             // Set the metadata
@@ -71,6 +77,17 @@ namespace Twinvision.Piranha.RentVision.Controllers
             UrlLink checkoutLink = result.Links.Checkout;
 
             return checkoutLink.Href;
+        }
+
+        [HttpGet("paid/{customerId}")]
+        public JsonResult Paid(string customerId)
+        {
+            //TODO: Mandate aanmaken
+
+            //ICustomerClient customerClient = new CustomerClient("{yourApiKey}");
+            //CustomerResponse customerResponse = await customerClient.GetCustomerAsync(customerId);
+
+            return new JsonResult(HttpStatusCode.OK);
         }
     }
 }
