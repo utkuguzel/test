@@ -36,8 +36,9 @@ function isUserSiteReady() {
 
 function onSuccessCallBack(response) {
   
-    if (response.response === "true" && response.statusCode === 200) {
-        console.log("onSuccessCallBack");
+    if (response.response === "true" && response.statusCode === 200)
+    {
+        //console.log("onSuccessCallBack");
         clearTimeout(timer);
 
         $.ajax({
@@ -56,19 +57,23 @@ function onSuccessCallBack(response) {
         $(".setup-content > .timeOutMessage").hide();
         $(".setup-content > .loadingText").text("An unknown error occured, please try again. If this problem persists, please contact technical support.");
     }
+    else if (response.response === "false")
+    {
+        console.log("Nope");
+    }
 
-    console.log(response);
+    //console.log(response);
 }
 
 function onUserKeySuccessCallBack(data) {
-    console.log("REDIRECT");
+    //console.log("REDIRECT");
     console.log(data);
 
     window.location.href = data.realRedirectUrl;
 }
 
 function onUserKeyErrorCallBack(jqXhr, error, errorStr) {
-    console.log("REDIRECT ERROR");
+    //console.log("REDIRECT ERROR");
 
     console.log(error + ": " + errorStr);
 }

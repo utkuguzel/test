@@ -16,6 +16,9 @@ using Mollie.Api.Models.Customer;
 using Mollie.Api.Models.Payment;
 using Twinvision.Piranha.RentVision.Helpers;
 using RentVision.Models;
+using Mollie.Api.Models.Mandate;
+using Mollie.Api.Models.List;
+using Mollie.Api.Models.Subscription;
 
 namespace Twinvision.Piranha.RentVision.Controllers
 {
@@ -47,10 +50,8 @@ namespace Twinvision.Piranha.RentVision.Controllers
             return new JsonResult(customerResponse.Id);
         }
 
-        public async Task<string> CreatePaymentRequest(UserPlan plan, string email, string customerId)
+        public async Task<string> CreatePaymentRequest(UserPlan plan, string email, string customerId, HttpContext context)
         {
-            // TODO(Jesse): Add a webhook to check on payment status
-
             UserPlanMetaData metadataRequest = new UserPlanMetaData()
             {
                 CustomerId = customerId,
@@ -62,9 +63,9 @@ namespace Twinvision.Piranha.RentVision.Controllers
             {
                 CustomerId = $"{customerId}",
                 SequenceType = SequenceType.First,
-                Amount = new Amount(Currency.EUR, plan.Price.ToString()),
+                Amount = new Amount(Currency.EUR, "0.01"),
                 Description = $"RentVision - {plan.Name}",
-                RedirectUrl = $"http://localhost:53352/customer/paid/{customerId}"
+                RedirectUrl = $"http://localhost:53352/customer/paid"
             };
 
             // Set the metadata
@@ -74,18 +75,77 @@ namespace Twinvision.Piranha.RentVision.Controllers
             IPaymentClient paymentClient = new PaymentClient(MollieKeyTest);
             PaymentResponse result = await paymentClient.CreatePaymentAsync(paymentRequest);
 
+            context.Session.SetString("paymentId", result.Id.ToString());
+           
             UrlLink checkoutLink = result.Links.Checkout;
 
             return checkoutLink.Href;
         }
 
-        [HttpGet("paid/{customerId}")]
-        public JsonResult Paid(string customerId)
+        [HttpGet("paid/{paymentId?}")]
+        public async Task<JsonResult> PaidAsync(string paymentId = null)
         {
-            //TODO: Mandate aanmaken
+            paymentId = ( paymentId != null ) ? paymentId : HttpContext.Session.GetString("paymentId");
 
-            //ICustomerClient customerClient = new CustomerClient("{yourApiKey}");
-            //CustomerResponse customerResponse = await customerClient.GetCustomerAsync(customerId);
+            if ( paymentId != null )
+            {
+                IPaymentClient paymentClient = new PaymentClient(MollieKeyTest);
+                PaymentResponse result = await paymentClient.GetPaymentAsync(paymentId);
+
+                if ( result.Status == PaymentStatus.Paid )
+                {
+                    // TODO: Verplaatsen naar andere methode
+
+                    // Create customer subscription
+                    UserPlanMetaData metaDataResponse = result.GetMetadata<UserPlanMetaData>();
+
+                    IMandateClient mandateclient = new MandateClient(MollieKeyTest);
+                    MandateResponse mandateResponse = await mandateclient.GetMandateAsync(metaDataResponse.CustomerId, result.MandateId);
+
+                    if ( mandateResponse.Status == MandateStatus.Valid )
+                    {
+                        int payInterval = metaDataResponse.Plan.payInterval;
+                        string price = metaDataResponse.Plan.Price.ToString();
+                        string payIntervalProper = (payInterval == 1) ? "12 months" : "1 month";
+
+                        ISubscriptionClient subscriptionClient = new SubscriptionClient(MollieKeyTest);
+                        SubscriptionRequest subscriptionRequest = new SubscriptionRequest()
+                        {
+                            Amount = new Amount(Currency.EUR, price),
+                            Interval = payIntervalProper,
+                            Description = $"RentVision Subscription - {metaDataResponse.Plan.Name} ({payIntervalProper})"
+                        };
+
+                        SubscriptionResponse subscriptionResponse = await subscriptionClient.CreateSubscriptionAsync(metaDataResponse.CustomerId, subscriptionRequest);
+
+                        if ( subscriptionResponse.Status == SubscriptionStatus.Active )
+                        {
+                            return new JsonResult(new { StatusCode = HttpStatusCode.OK, Value = $"{subscriptionResponse.Description} - {Enum.GetName(typeof(SubscriptionStatus), subscriptionResponse.Status)}" });
+                        }
+                    }
+
+                    return new JsonResult(mandateResponse);
+                }
+
+                // Clear paymentId from session
+                HttpContext.Session.Remove("paymentId");
+
+                return new JsonResult( new { StatusCode = HttpStatusCode.OK, Value = Enum.GetName(typeof(PaymentStatus), result.Status) });
+            }
+
+            return new JsonResult(HttpStatusCode.BadRequest);
+        }
+
+        [HttpGet("deleteTestAccounts")]
+        public async Task<IActionResult> DeleteTestAccounts()
+        {
+            ICustomerClient customerClient = new CustomerClient(MollieKeyTest);
+            ListResponse<CustomerResponse> response = await customerClient.GetCustomerListAsync();
+
+            foreach ( var account in response.Items )
+            {
+               await customerClient.DeleteCustomerAsync(account.Id);
+            }
 
             return new JsonResult(HttpStatusCode.OK);
         }

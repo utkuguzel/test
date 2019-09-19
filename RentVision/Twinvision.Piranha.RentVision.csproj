@@ -76,4 +76,8 @@
     <None Include="wwwroot\assets\js\hero.js" />
     <None Include="wwwroot\assets\js\jquery.color-2.1.2.min.js" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\Extensions\" />
+  </ItemGroup>
 </Project>

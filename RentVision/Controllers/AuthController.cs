@@ -148,7 +148,6 @@ namespace RentVision.Controllers
                 return Redirect(refererUrl);
             }
 
-
             // Handle Mollie
 
             // Always create a customer and return its ID, incase they want to upgrade later on...
@@ -162,7 +161,7 @@ namespace RentVision.Controllers
 
                 if ( plan != null )
                 {
-                    var checkoutUrl = await new CustomerController().CreatePaymentRequest(plan, email, customerCreationResponse.Value.ToString());
+                    var checkoutUrl = await new CustomerController().CreatePaymentRequest(plan, email, customerCreationResponse.Value.ToString(), HttpContext);
 
                     if (checkoutUrl != null)
                     {
