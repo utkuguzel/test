@@ -83,7 +83,8 @@ namespace Twinvision.Piranha.RentVision.Controllers
                 SequenceType = SequenceType.First,
                 Amount = new Amount(Currency.EUR, plan.Price.ToString()),
                 Description = $"RentVision - {plan.Name}",
-                RedirectUrl = $"http://localhost:53352/customer/paid"
+                RedirectUrl = $"http://localhost:53352/customer/paid",
+                WebhookUrl = $"{Configuration.BackOffice.Protocol}://{Configuration.BackOffice.HostName}/mollie/PaymentWebhook"
             };
 
             // Set the metadata
@@ -164,6 +165,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
                     Interval = payIntervalProper,
                     StartDate = DateTime.Now.AddMonths(payInterval == 1 ? 12 : 1),
                     Description = $"RentVision Subscription - {metaDataResponse.Plan.Name} ({payIntervalProper})",
+                    WebhookUrl = $"{Configuration.BackOffice.Protocol}://{Configuration.BackOffice.HostName}/mollie/PaymentWebhook"
                 };
 
                 SubscriptionResponse subscriptionResponse = await subscriptionClient.CreateSubscriptionAsync(metaDataResponse.CustomerId, subscriptionRequest);
