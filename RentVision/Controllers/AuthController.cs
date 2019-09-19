@@ -11,6 +11,7 @@ using RentVision.Helpers;
 using Twinvision.Piranha.RentVision.Helpers;
 using Twinvision.Piranha.RentVision.Controllers;
 using RentVision.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace RentVision.Controllers
 {
@@ -33,7 +34,8 @@ namespace RentVision.Controllers
             var userSiteReadyResponse = await _apiHelper.SendApiCallAsync(
                 Configuration.ApiCalls.UserSiteReady,
                 HttpMethod.Get,
-                new Dictionary<string, string>() { { "email", email } }
+                new Dictionary<string, string>() { { "email", email } },
+                context: HttpContext
             );
 
             var response = await userSiteReadyResponse.Content.ReadAsStringAsync();
@@ -70,11 +72,16 @@ namespace RentVision.Controllers
 
             // Check if user credentials match user input
 
-            var userCredentialResponse = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.CheckUserCredentials, HttpMethod.Post, urlParameters, password );
+            var userCredentialResponse = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.LoginUserRentVisionApi, HttpMethod.Post, urlParameters, password, HttpContext);
             string userCredentialString = await userCredentialResponse.Content.ReadAsStringAsync();
 
+            if (Guid.TryParse(userCredentialString, out Guid apiLoginKey))
+            {
+                HttpContext.Session.SetString("ApiLoginKey", userCredentialString);
+            }
+
             TempData["StatusCode"] = userCredentialResponse.StatusCode;
-            TempData["StatusMessage"] = userCredentialString;
+            TempData["StatusMessage"] = "";
 
             if ( !userCredentialResponse.IsSuccessStatusCode )
             {
@@ -90,7 +97,7 @@ namespace RentVision.Controllers
             }
 
             // Fetch customer subdomain and redirect
-            var subdomainResponse = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.UserSubDomain, HttpMethod.Get, urlParameters);
+            var subdomainResponse = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.UserSubDomain, HttpMethod.Get, urlParameters, context: HttpContext);
             var subdomain = await subdomainResponse.Content.ReadAsStringAsync();
 
             return Redirect($"{Configuration.BackOffice.Protocol}://{subdomain}.{Configuration.BackOffice.Domain}");
@@ -129,11 +136,16 @@ namespace RentVision.Controllers
 
             // Attempt to create an account if everything is ok
 
-            var response = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.CreateAccount, HttpMethod.Post, urlParameters, password );
+            var response = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.CreateAccount, HttpMethod.Post, urlParameters, password);
             string userCredentialString = await response.Content.ReadAsStringAsync();
 
+            if ( Guid.TryParse(userCredentialString, out Guid apiLoginKey) )
+            {
+                HttpContext.Session.SetString("ApiLoginKey", userCredentialString);
+            }
+
             TempData["StatusCode"] = response.StatusCode;
-            TempData["StatusMessage"] = userCredentialString;
+            TempData["StatusMessage"] = "";
 
             if ( !response.IsSuccessStatusCode )
             {
@@ -152,7 +164,7 @@ namespace RentVision.Controllers
 
             // Always create a customer and return its ID, incase they want to upgrade later on...
             var customerController = new CustomerController(_api, _clientFactory);
-            var customerCreationResponse = await customerController.CreateCustomerAsync(email, password, businessUnitName);
+            var customerCreationResponse = await customerController.CreateCustomerAsync(email, businessUnitName);
 
             if ( userPlan.ToLower() != "free" )
             {
@@ -162,7 +174,7 @@ namespace RentVision.Controllers
 
                 if ( plan != null )
                 {
-                    var checkoutUrl = await customerController.CreatePaymentRequest(plan, email, password, customerCreationResponse.Value.ToString(), HttpContext);
+                    var checkoutUrl = await customerController.CreatePaymentRequest(plan, email, customerCreationResponse.Value.ToString(), HttpContext);
 
                     if (checkoutUrl != null)
                     {
@@ -171,14 +183,13 @@ namespace RentVision.Controllers
                 }
             }
 
-            return DisplaySubDomainSetup(email, password);
+            return DisplaySubDomainSetup(email);
             //return new JsonResult(HttpStatusCode.OK);
         }
 
-        public IActionResult DisplaySubDomainSetup(string email, string password)
+        public IActionResult DisplaySubDomainSetup(string email)
         {
             TempData["Email"] = email;
-            TempData["Password"] = password;
 
             return RedirectToAction("setup", "cms");
         }
@@ -193,7 +204,8 @@ namespace RentVision.Controllers
             var subdomainResponse = await _apiHelper.SendApiCallAsync(
                 Configuration.ApiCalls.UserSubDomain,
                 HttpMethod.Get,
-                getUserKeyParameters
+                getUserKeyParameters,
+                context: HttpContext
             );
 
             var subdomain = await subdomainResponse.Content.ReadAsStringAsync();
@@ -202,10 +214,10 @@ namespace RentVision.Controllers
             // Add subDomainName to the list of parameters because we need it in the next call
             getUserKeyParameters.Add("subDomainName", subdomain);
 
-            var userKeyResponse = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.GetLoginKey,
+            var userKeyResponse = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.GetRentVisionLoginKey,
                 HttpMethod.Post,
                 getUserKeyParameters,
-                (string)TempData["password"]
+                context: HttpContext
             );
 
             string userKey = await userKeyResponse.Content.ReadAsStringAsync();

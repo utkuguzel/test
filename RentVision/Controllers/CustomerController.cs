@@ -29,7 +29,6 @@ namespace Twinvision.Piranha.RentVision.Controllers
     {
         public string CustomerId { get; set; }
         public string Email { get; set; }
-        public string Password { get; set; }
         public UserPlan Plan { get; set; }
     }
 
@@ -45,7 +44,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
             _apiHelper = new ApiHelper(api, clientFactory);
         }
 
-        public async Task<JsonResult> CreateCustomerAsync(string email, string password, string businessUnitName )
+        public async Task<JsonResult> CreateCustomerAsync(string email, string businessUnitName )
         {
             CustomerRequest customerRequest = new CustomerRequest()
             {
@@ -64,18 +63,17 @@ namespace Twinvision.Piranha.RentVision.Controllers
                 { "mollyId", customerResponse.Id }
             };
 
-            var setMollyIdResult = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.SetMollyId, HttpMethod.Post, urlParameters, password);
+            var setMollyIdResult = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.SetMollyId, HttpMethod.Post, urlParameters, context: HttpContext);
 
             return new JsonResult(customerResponse.Id);
         }
 
-        public async Task<string> CreatePaymentRequest(UserPlan plan, string email, string password, string customerId, HttpContext context)
+        public async Task<string> CreatePaymentRequest(UserPlan plan, string email, string customerId, HttpContext context)
         {
             UserPlanMetaData metadataRequest = new UserPlanMetaData()
             {
                 CustomerId = customerId,
                 Email = email,
-                Password = password,
                 Plan = plan
             };
 
@@ -83,7 +81,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
             {
                 CustomerId = $"{customerId}",
                 SequenceType = SequenceType.First,
-                Amount = new Amount(Currency.EUR, "0.01"),
+                Amount = new Amount(Currency.EUR, plan.Price.ToString()),
                 Description = $"RentVision - {plan.Name}",
                 RedirectUrl = $"http://localhost:53352/customer/paid"
             };
@@ -126,7 +124,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
                             { "userPlanName", metaDataResponse.Plan.Name }
                         };
 
-                        var setUserPlanResult = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.SetPlan, HttpMethod.Post, urlParameters, metaDataResponse.Password);
+                        var setUserPlanResult = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.SetPlan, HttpMethod.Post, urlParameters, context: HttpContext);
 
                         if ( !setUserPlanResult.IsSuccessStatusCode )
                         {
@@ -164,6 +162,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
                 {
                     Amount = new Amount(Currency.EUR, price),
                     Interval = payIntervalProper,
+                    StartDate = DateTime.Now.AddMonths(payInterval == 1 ? 12 : 1),
                     Description = $"RentVision Subscription - {metaDataResponse.Plan.Name} ({payIntervalProper})",
                 };
 

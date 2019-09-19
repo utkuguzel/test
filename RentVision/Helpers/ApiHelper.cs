@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
 using Piranha;
@@ -30,7 +31,7 @@ namespace Twinvision.Piranha.RentVision.Helpers
         /// <param name="data">A Dictionary containing parameter data</param>
         /// <param name="callMethod">The HttpMethod that should be used to send data</param>
         /// <returns>An HttpResponseMessage containing response data from the API</returns>
-        public async Task<HttpResponseMessage> SendApiCallAsync(string callType, HttpMethod callMethod, Dictionary<string, string> data = null, string password = null)
+        public async Task<HttpResponseMessage> SendApiCallAsync(string callType, HttpMethod callMethod, Dictionary<string, string> data = null, string password = null, HttpContext context = null)
         {
             data = data ?? new Dictionary<string, string>();
 
@@ -48,6 +49,12 @@ namespace Twinvision.Piranha.RentVision.Helpers
             if (password != null)
             {
                 request.Headers.Add("X-Password", password);
+            }
+
+            if (context != null)
+            {
+                var apiLoginKey = context.Session.GetString("ApiLoginKey");
+                request.Headers.Add("X-ApiLoginKey", apiLoginKey);
             }
 
             var client = _clientFactory.CreateClient("RentVisionApi");
