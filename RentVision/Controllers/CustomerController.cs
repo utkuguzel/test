@@ -19,6 +19,9 @@ using RentVision.Models;
 using Mollie.Api.Models.Mandate;
 using Mollie.Api.Models.List;
 using Mollie.Api.Models.Subscription;
+using RentVision.Models.Configuration;
+using System.Net.Http;
+using Piranha;
 
 namespace Twinvision.Piranha.RentVision.Controllers
 {
@@ -26,6 +29,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
     {
         public string CustomerId { get; set; }
         public string Email { get; set; }
+        public string Password { get; set; }
         public UserPlan Plan { get; set; }
     }
 
@@ -34,8 +38,14 @@ namespace Twinvision.Piranha.RentVision.Controllers
     {
         public static string MollieKeyLive { get; set; }
         public static string MollieKeyTest { get; set; }
+        public ApiHelper _apiHelper { get; set; }
 
-        public static async Task<JsonResult> CreateCustomerAsync(string email, string businessUnitName)
+        public CustomerController(IApi api, IHttpClientFactory clientFactory)
+        {
+            _apiHelper = new ApiHelper(api, clientFactory);
+        }
+
+        public async Task<JsonResult> CreateCustomerAsync(string email, string password, string businessUnitName )
         {
             CustomerRequest customerRequest = new CustomerRequest()
             {
@@ -47,15 +57,25 @@ namespace Twinvision.Piranha.RentVision.Controllers
             ICustomerClient customerClient = new CustomerClient(MollieKeyTest);
             CustomerResponse customerResponse = await customerClient.CreateCustomerAsync(customerRequest);
 
+            // Set customer mollyId in db
+            var urlParameters = new Dictionary<string, string>()
+            {
+                { "email", email },
+                { "mollyId", customerResponse.Id }
+            };
+
+            var setMollyIdResult = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.SetMollyId, HttpMethod.Post, urlParameters, password);
+
             return new JsonResult(customerResponse.Id);
         }
 
-        public async Task<string> CreatePaymentRequest(UserPlan plan, string email, string customerId, HttpContext context)
+        public async Task<string> CreatePaymentRequest(UserPlan plan, string email, string password, string customerId, HttpContext context)
         {
             UserPlanMetaData metadataRequest = new UserPlanMetaData()
             {
                 CustomerId = customerId,
                 Email = email,
+                Password = password,
                 Plan = plan
             };
 
@@ -94,37 +114,25 @@ namespace Twinvision.Piranha.RentVision.Controllers
 
                 if ( result.Status == PaymentStatus.Paid )
                 {
-                    // TODO: Verplaatsen naar andere methode
-
-                    // Create customer subscription
+                    // Create subscription if initial payment is paid
                     UserPlanMetaData metaDataResponse = result.GetMetadata<UserPlanMetaData>();
+                    var subscriptionResponse = await CreateCustomerSubscriptionAsync(metaDataResponse, result);
 
-                    IMandateClient mandateclient = new MandateClient(MollieKeyTest);
-                    MandateResponse mandateResponse = await mandateclient.GetMandateAsync(metaDataResponse.CustomerId, result.MandateId);
-
-                    if ( mandateResponse.Status == MandateStatus.Valid )
+                    if ( subscriptionResponse.Status == SubscriptionStatus.Active )
                     {
-                        int payInterval = metaDataResponse.Plan.payInterval;
-                        string price = metaDataResponse.Plan.Price.ToString();
-                        string payIntervalProper = (payInterval == 1) ? "12 months" : "1 month";
-
-                        ISubscriptionClient subscriptionClient = new SubscriptionClient(MollieKeyTest);
-                        SubscriptionRequest subscriptionRequest = new SubscriptionRequest()
+                        var urlParameters = new Dictionary<string, string>()
                         {
-                            Amount = new Amount(Currency.EUR, price),
-                            Interval = payIntervalProper,
-                            Description = $"RentVision Subscription - {metaDataResponse.Plan.Name} ({payIntervalProper})"
+                            { "email", metaDataResponse.Email },
+                            { "userPlanName", metaDataResponse.Plan.Name }
                         };
 
-                        SubscriptionResponse subscriptionResponse = await subscriptionClient.CreateSubscriptionAsync(metaDataResponse.CustomerId, subscriptionRequest);
+                        var setUserPlanResult = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.SetPlan, HttpMethod.Post, urlParameters, metaDataResponse.Password);
 
-                        if ( subscriptionResponse.Status == SubscriptionStatus.Active )
+                        if ( !setUserPlanResult.IsSuccessStatusCode )
                         {
-                            return new JsonResult(new { StatusCode = HttpStatusCode.OK, Value = $"{subscriptionResponse.Description} - {Enum.GetName(typeof(SubscriptionStatus), subscriptionResponse.Status)}" });
+                            return new JsonResult(new { StatusCode = HttpStatusCode.BadRequest, Value = "Failed to set user plan" });
                         }
                     }
-
-                    return new JsonResult(mandateResponse);
                 }
 
                 // Clear paymentId from session
@@ -134,6 +142,37 @@ namespace Twinvision.Piranha.RentVision.Controllers
             }
 
             return new JsonResult(HttpStatusCode.BadRequest);
+        }
+
+        public async Task<SubscriptionResponse> CreateCustomerSubscriptionAsync(UserPlanMetaData metaDataResponse, PaymentResponse result)
+        {
+            IMandateClient mandateclient = new MandateClient(MollieKeyTest);
+            MandateResponse mandateResponse = await mandateclient.GetMandateAsync(metaDataResponse.CustomerId, result.MandateId);
+
+            if (mandateResponse.Status == MandateStatus.Valid)
+            {
+                int payInterval = metaDataResponse.Plan.payInterval;
+                string price = metaDataResponse.Plan.Price.ToString();
+                string payIntervalProper = (payInterval == 1) ? "12 months" : "1 month";
+
+                ISubscriptionClient subscriptionClient = new SubscriptionClient(MollieKeyTest);
+
+                // TODO: WebhookUrl naar backoffice toevoegen
+                ////////////////////////////////////////////////
+                
+                SubscriptionRequest subscriptionRequest = new SubscriptionRequest()
+                {
+                    Amount = new Amount(Currency.EUR, price),
+                    Interval = payIntervalProper,
+                    Description = $"RentVision Subscription - {metaDataResponse.Plan.Name} ({payIntervalProper})",
+                };
+
+                SubscriptionResponse subscriptionResponse = await subscriptionClient.CreateSubscriptionAsync(metaDataResponse.CustomerId, subscriptionRequest);
+
+                return subscriptionResponse;
+            }
+
+            return null;
         }
 
         [HttpGet("deleteTestAccounts")]

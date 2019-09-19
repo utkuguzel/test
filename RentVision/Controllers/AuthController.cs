@@ -151,7 +151,8 @@ namespace RentVision.Controllers
             // Handle Mollie
 
             // Always create a customer and return its ID, incase they want to upgrade later on...
-            var customerCreationResponse = await CustomerController.CreateCustomerAsync(email, businessUnitName);
+            var customerController = new CustomerController(_api, _clientFactory);
+            var customerCreationResponse = await customerController.CreateCustomerAsync(email, password, businessUnitName);
 
             if ( userPlan.ToLower() != "free" )
             {
@@ -161,7 +162,7 @@ namespace RentVision.Controllers
 
                 if ( plan != null )
                 {
-                    var checkoutUrl = await new CustomerController().CreatePaymentRequest(plan, email, customerCreationResponse.Value.ToString(), HttpContext);
+                    var checkoutUrl = await customerController.CreatePaymentRequest(plan, email, password, customerCreationResponse.Value.ToString(), HttpContext);
 
                     if (checkoutUrl != null)
                     {
