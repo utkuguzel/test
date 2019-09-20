@@ -22,6 +22,7 @@ using Mollie.Api.Models.Subscription;
 using RentVision.Models.Configuration;
 using System.Net.Http;
 using Piranha;
+using RentVision.Helpers;
 
 namespace Twinvision.Piranha.RentVision.Controllers
 {
@@ -102,7 +103,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
         }
 
         [HttpGet("paid/{paymentId?}")]
-        public async Task<JsonResult> PaidAsync(string paymentId = null)
+        public async Task<IActionResult> PaidAsync(string paymentId = null)
         {
             paymentId = ( paymentId != null ) ? paymentId : HttpContext.Session.GetString("paymentId");
 
@@ -132,12 +133,18 @@ namespace Twinvision.Piranha.RentVision.Controllers
                             return new JsonResult(new { StatusCode = HttpStatusCode.BadRequest, Value = "Failed to set user plan" });
                         }
                     }
+
+                    // Clear paymentId from session after everything is handled correctly
+                    HttpContext.Session.Remove("paymentId");
+                    TempData["Email"] = metaDataResponse.Email;
+
+                    return RedirectToAction("setup", "cms");
                 }
 
-                // Clear paymentId from session after everything is handled
-                HttpContext.Session.Remove("paymentId");
+                var paymentStatus = Enum.GetName(typeof(PaymentStatus), result.Status);
+                var localizedPaymentMessage = AuthHelper.GetBackOfficeStringLocalized(CultureHelper.userCulture, paymentStatus);
 
-                return new JsonResult( new { StatusCode = HttpStatusCode.OK, Value = Enum.GetName(typeof(PaymentStatus), result.Status) });
+                return new JsonResult( new { StatusCode = HttpStatusCode.OK, Value = localizedPaymentMessage });
             }
 
             return new JsonResult(HttpStatusCode.BadRequest);

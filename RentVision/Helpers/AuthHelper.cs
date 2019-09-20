@@ -13,6 +13,13 @@ namespace RentVision.Helpers
             { "ERROR_REGISTER_PASSWORD_STRENGTH", "password was not strong enough" },
             { "ERROR_LOGIN_PASSWORd_INCORRECT", "password did not match" },
             { "ERROR_LOGIN_EMAIL_INCORRECT", "email not found" },
+
+            // Mollie
+            { "ERROR_PAYMENT_STATUS_FAILED", "Failed" },
+            { "ERROR_PAYMENT_STATUS_OPEN", "Open" },
+            { "ERROR_PAYMENT_STATUS_PENDING", "Pending" },
+            { "ERROR_PAYMENT_STATUS_CANCELED", "Canceled" },
+            { "ERROR_PAYMENT_STATUS_EXPIRED", "Expired" },
         };
 
         public static List<string> validateForm(IFormCollection form, string userCulture)

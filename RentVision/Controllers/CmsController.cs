@@ -226,6 +226,9 @@ namespace RentVision.Controllers
 
             if (cultureUrl != null)
             {
+                // Fix for culture redirect (TempData is only valid for 1 redirect)
+                TempData["Email"] = TempData["Email"] != null ? TempData["Email"].ToString() : null;
+
                 return LocalRedirect(cultureUrl);
             }
 
