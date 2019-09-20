@@ -170,7 +170,7 @@ namespace RentVision.Controllers
             {
                 int interval = Convert.ToInt32(payInterval);
                 var userPlanResponse = await _apiHelper.GetUserPlansAsync();
-                UserPlan plan = userPlanResponse.Find(m => m.Name.IndexOf(userPlan) != -1 && m.payInterval == interval);
+                UserPlan plan = userPlanResponse.Find(m => m.Name.IndexOf(userPlan) != -1 && m.PayInterval == interval);
 
                 if ( plan != null )
                 {

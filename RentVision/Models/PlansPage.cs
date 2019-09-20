@@ -35,6 +35,6 @@ namespace RentVision.Models
         public Guid UserPlanId { get; set; }
         public string Name { get; set; }
         public decimal Price { get; set; }
-        public int payInterval { get; set; }
+        public int PayInterval { get; set; }
     }
 }
