@@ -157,7 +157,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
 
             if (mandateResponse.Status == MandateStatus.Valid)
             {
-                int payInterval = metaDataResponse.Plan.payInterval;
+                int payInterval = metaDataResponse.Plan.PayInterval;
                 string price = metaDataResponse.Plan.Price.ToString();
                 string payIntervalProper = (payInterval == 1) ? "12 months" : "1 month";
 
