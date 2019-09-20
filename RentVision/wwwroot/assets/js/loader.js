@@ -2,7 +2,7 @@
     var loaderElem = $("#loader");
 
     if (loaderElem !== undefined) {
-        loaderElem.fadeOut(100);
+        loaderElem.fadeOut(250);
         //console.log("LOADING SCREEN FADE OUT");
     }
 });

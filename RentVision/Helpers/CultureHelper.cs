@@ -81,6 +81,13 @@ namespace RentVision.Helpers
                 return null;
             }
 
+            // Check if path contains parameters
+            //string parameters = "";
+            //if ( !string.IsNullOrWhiteSpace(Request.QueryString.ToString()))
+            //{
+            //    parameters = Request.QueryString.ToString();
+            //}
+
             Context.Session.SetString("redirectPath", culturizedPath);
 
             return (excludedCultures.Contains(culture)) ? null : culturizedPath;

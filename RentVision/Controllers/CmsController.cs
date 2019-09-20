@@ -159,15 +159,16 @@ namespace RentVision.Controllers
         {
             var model = await _loader.GetPage<RegisterPage>(id, HttpContext.User, draft);
 
-            TempData["UserPlan"] = userPlan;
-            TempData["PayInterval"] = payInterval;
             TempData["StatusMessage"] = "";
 
             // Return user to proper culture page
             string cultureUrl = CultureHelper.GetProperCultureUrl(Request, HttpContext);
-            
-            if ( cultureUrl != null )
+
+            if (cultureUrl != null)
             {
+                HttpContext.Session.SetString("UserPlan", userPlan);
+                HttpContext.Session.SetString("PayInterval", payInterval);
+
                 return LocalRedirect(cultureUrl);
             }
 

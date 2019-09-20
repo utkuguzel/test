@@ -104,8 +104,11 @@ namespace RentVision.Controllers
         }
 
         [Route("/auth/register"), HttpPost]
-        public async Task<IActionResult> RegisterAsync( string userPlan, string payInterval, string email, string subdomain, string businessUnitName, string password, string confirmPassword, bool tos )
+        public async Task<IActionResult> RegisterAsync( string email, string subdomain, string businessUnitName, string password, string confirmPassword, bool tos )
         {
+            string userPlan = HttpContext.Session.GetString("UserPlan");
+            string payInterval = HttpContext.Session.GetString("PayInterval");
+
             string refererUrl = Request.Headers["Referer"].ToString();
 
             if ( email == null || subdomain == null )
