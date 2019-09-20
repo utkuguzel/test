@@ -27,8 +27,8 @@ namespace RentVision.Models.Configuration
             public static string UserSubDomain { get; set; }
             public static string DeleteAccount { get; set; }
             public static string GetRentVisionLoginKey { get; set; }
-            public static string GetMollyId { get; set; }
-            public static string SetMollyId { get; set; }
+            public static string GetMollieId { get; set; }
+            public static string SetMollieId { get; set; }
             public static string KillAllSites { get; set; }
         }
     }

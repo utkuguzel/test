@@ -56,14 +56,14 @@ namespace Twinvision.Piranha.RentVision.Controllers
             ICustomerClient customerClient = new CustomerClient(MollieKeyTest);
             CustomerResponse customerResponse = await customerClient.CreateCustomerAsync(customerRequest);
 
-            // Set customer mollyId in db
+            // Set customer MollieId in db
             var urlParameters = new Dictionary<string, string>()
             {
                 { "email", email },
-                { "mollyId", customerResponse.Id }
+                { "MollieId", customerResponse.Id }
             };
 
-            var setMollyIdResult = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.SetMollyId, HttpMethod.Post, urlParameters, context: HttpContext);
+            var setMollieIdResult = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.SetMollieId, HttpMethod.Post, urlParameters, context: HttpContext);
 
             return new JsonResult(customerResponse.Id);
         }
@@ -134,7 +134,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
                     }
                 }
 
-                // Clear paymentId from session
+                // Clear paymentId from session after everything is handled
                 HttpContext.Session.Remove("paymentId");
 
                 return new JsonResult( new { StatusCode = HttpStatusCode.OK, Value = Enum.GetName(typeof(PaymentStatus), result.Status) });
@@ -155,10 +155,6 @@ namespace Twinvision.Piranha.RentVision.Controllers
                 string payIntervalProper = (payInterval == 1) ? "12 months" : "1 month";
 
                 ISubscriptionClient subscriptionClient = new SubscriptionClient(MollieKeyTest);
-
-                // TODO: WebhookUrl naar backoffice toevoegen
-                ////////////////////////////////////////////////
-                
                 SubscriptionRequest subscriptionRequest = new SubscriptionRequest()
                 {
                     Amount = new Amount(Currency.EUR, price),

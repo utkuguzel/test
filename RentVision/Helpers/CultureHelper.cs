@@ -29,8 +29,8 @@ namespace RentVision.Helpers
         public static string GetUserCulture( HttpRequest Request, HttpContext Context )
         {
             var rqf = Request.HttpContext.Features.Get<IRequestCultureFeature>();
-            var culture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
-            //var culture = "nl";
+            //var culture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
+            var culture = "nl";
 
             if (string.IsNullOrWhiteSpace(Context.Session.GetString("language")))
             {

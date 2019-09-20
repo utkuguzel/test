@@ -53,6 +53,14 @@ namespace RentVision.Controllers
             var model = await _loader.GetPage<BlogArchive>(id, HttpContext.User, draft);
             model.Archive = await _api.Archives.GetByIdAsync(id, page, category, tag, year, month);
 
+            // Return user to proper culture page
+            string cultureUrl = CultureHelper.GetProperCultureUrl(Request, HttpContext);
+
+            if (cultureUrl != null)
+            {
+                return LocalRedirect(cultureUrl);
+            }
+
             return View(model);
         }
 
@@ -66,6 +74,14 @@ namespace RentVision.Controllers
         {
             var model = await _loader.GetPage<StandardPage>(id, HttpContext.User, draft);
 
+            // Return user to proper culture page
+            string cultureUrl = CultureHelper.GetProperCultureUrl(Request, HttpContext);
+
+            if (cultureUrl != null)
+            {
+                return LocalRedirect(cultureUrl);
+            }
+
             return View(model);
         }
 
@@ -78,6 +94,14 @@ namespace RentVision.Controllers
         public async Task<IActionResult> Post(Guid id, bool draft = false)
         {
             var model = await _loader.GetPost<BlogPost>(id, HttpContext.User, draft);
+
+            // Return user to proper culture page
+            string cultureUrl = CultureHelper.GetProperCultureUrl(Request, HttpContext);
+
+            if (cultureUrl != null)
+            {
+                return LocalRedirect(cultureUrl);
+            }
 
             return View(model);
         }
@@ -155,6 +179,14 @@ namespace RentVision.Controllers
         {
             var model = await _loader.GetPage<ProductPage>(id, HttpContext.User, draft);
 
+            // Return user to proper culture page
+            string cultureUrl = CultureHelper.GetProperCultureUrl(Request, HttpContext);
+
+            if (cultureUrl != null)
+            {
+                return LocalRedirect(cultureUrl);
+            }
+
             return View(model);
         }
 
@@ -163,8 +195,13 @@ namespace RentVision.Controllers
         {
             var model = await _loader.GetPage<PlansPage>(id, HttpContext.User, draft);
 
-            //List<UserPlan> userPlans = await _apiHelper.GetUserPlansAsync();
-            //model.UserPlans = userPlans;
+            // Return user to proper culture page
+            string cultureUrl = CultureHelper.GetProperCultureUrl(Request, HttpContext);
+
+            if (cultureUrl != null)
+            {
+                return LocalRedirect(cultureUrl);
+            }
 
             return View(model);
         }
@@ -182,6 +219,14 @@ namespace RentVision.Controllers
             else if ( _DEBUG )
             {
                 TempData["Email"] = "";
+            }
+
+            // Return user to proper culture page
+            string cultureUrl = CultureHelper.GetProperCultureUrl(Request, HttpContext);
+
+            if (cultureUrl != null)
+            {
+                return LocalRedirect(cultureUrl);
             }
 
             return View(model);
