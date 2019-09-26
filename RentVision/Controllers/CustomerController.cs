@@ -115,11 +115,11 @@ namespace Twinvision.Piranha.RentVision.Controllers
             {
                 IPaymentClient paymentClient = new PaymentClient(MollieKeyTest);
                 PaymentResponse result = await paymentClient.GetPaymentAsync(paymentId);
+                UserPlanMetaData metaDataResponse = result.GetMetadata<UserPlanMetaData>();
 
                 if ( result.Status == PaymentStatus.Paid )
                 {
                     // Create subscription if initial payment is paid
-                    UserPlanMetaData metaDataResponse = result.GetMetadata<UserPlanMetaData>();
                     var subscriptionResponse = await CreateCustomerSubscriptionAsync(metaDataResponse, result);
 
                     if ( subscriptionResponse.Status == SubscriptionStatus.Active )
@@ -137,18 +137,13 @@ namespace Twinvision.Piranha.RentVision.Controllers
                             return new JsonResult(new { StatusCode = HttpStatusCode.BadRequest, Value = "Failed to set user plan" });
                         }
                     }
-
-                    // Clear paymentId from session after everything is handled correctly
-                    HttpContext.Session.Remove("paymentId");
-                    TempData["Email"] = metaDataResponse.Email;
-
-                    return RedirectToAction("setup", "cms");
                 }
 
-                var paymentStatus = Enum.GetName(typeof(PaymentStatus), result.Status);
-                var localizedPaymentMessage = AuthHelper.GetBackOfficeStringLocalized(CultureHelper.userCulture, paymentStatus);
+                // Clear paymentId from session after everything is handled
+                HttpContext.Session.Remove("paymentId");
+                TempData["Email"] = metaDataResponse.Email;
 
-                return new JsonResult( new { StatusCode = HttpStatusCode.OK, Value = localizedPaymentMessage });
+                return RedirectToAction("setup", "cms");
             }
 
             return new JsonResult(HttpStatusCode.BadRequest);
