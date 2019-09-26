@@ -166,11 +166,11 @@ namespace RentVision.Controllers
 
             if (cultureUrl != null)
             {
-                HttpContext.Session.SetString("UserPlan", userPlan);
-                HttpContext.Session.SetString("PayInterval", payInterval);
-
                 return LocalRedirect(cultureUrl);
             }
+
+            HttpContext.Session.SetString("UserPlan", userPlan);
+            HttpContext.Session.SetString("PayInterval", payInterval);
 
             return View(model);
         }

@@ -29,6 +29,7 @@ namespace RentVision.Models.Configuration
             public static string GetRentVisionLoginKey { get; set; }
             public static string GetMollieId { get; set; }
             public static string SetMollieId { get; set; }
+            public static string PaymentWebhook { get; set; }
             public static string KillAllSites { get; set; }
         }
     }

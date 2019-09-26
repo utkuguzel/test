@@ -15,6 +15,7 @@ using System;
 using System.IO;
 using RentVision.Models.Configuration;
 using Twinvision.Piranha.RentVision.Controllers;
+using Microsoft.Extensions.Logging;
 
 namespace RentVision
 {
@@ -84,6 +85,9 @@ namespace RentVision
                 options.UseSqlServer(Configuration.GetConnectionString("piranha")));
             services.AddPiranhaIdentityWithSeed<IdentitySQLServerDb>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("piranha")));
+
+            services.AddLogging(logging =>
+                logging.AddFile("app.log", append: true));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

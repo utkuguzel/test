@@ -36,6 +36,8 @@ namespace Twinvision.Piranha.RentVision.Controllers
     [Route("[controller]")]
     public class CustomerController : Controller
     {
+        private const string RedirectUrl = "http://de7602b3.ngrok.io";
+
         public static string MollieKeyLive { get; set; }
         public static string MollieKeyTest { get; set; }
         public ApiHelper _apiHelper { get; set; }
@@ -84,9 +86,11 @@ namespace Twinvision.Piranha.RentVision.Controllers
                 SequenceType = SequenceType.First,
                 Amount = new Amount(Currency.EUR, plan.Price.ToString()),
                 Description = $"RentVision - {plan.Name}",
-                RedirectUrl = $"http://localhost:53352/customer/paid",
-                WebhookUrl = $"{Configuration.BackOffice.Protocol}://{Configuration.BackOffice.HostName}/mollie/PaymentWebhook"
+                RedirectUrl = $"{RedirectUrl}/customer/paid",
+                WebhookUrl = $"{RedirectUrl}/api/mollie/getTransactionId"
             };
+
+            //{Configuration.BackOffice.Protocol}://{Configuration.BackOffice.HostName}/mollie/PaymentWebhook
 
             // Set the metadata
             paymentRequest.SetMetadata(metadataRequest);
@@ -168,7 +172,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
                     Interval = payIntervalProper,
                     StartDate = DateTime.Now.AddMonths(payInterval == 1 ? 12 : 1),
                     Description = $"RentVision Subscription - {metaDataResponse.Plan.Name} ({payIntervalProper})",
-                    WebhookUrl = $"{Configuration.BackOffice.Protocol}://{Configuration.BackOffice.HostName}/mollie/PaymentWebhook"
+                    WebhookUrl = $"{RedirectUrl}/api/mollie/getTransactionId"
                 };
 
                 SubscriptionResponse subscriptionResponse = await subscriptionClient.CreateSubscriptionAsync(metaDataResponse.CustomerId, subscriptionRequest);
