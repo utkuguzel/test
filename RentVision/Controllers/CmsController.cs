@@ -160,7 +160,11 @@ namespace RentVision.Controllers
         {
             var model = await _loader.GetPage<RegisterPage>(id, HttpContext.User, draft);
 
-            TempData["StatusMessage"] = "";
+            if ( userPlan != "Free" )
+            {
+                HttpContext.Session.SetString("UserPlan", userPlan);
+                HttpContext.Session.SetString("PayInterval", payInterval);
+            }
 
             // Return user to proper culture page
             string cultureUrl = CultureHelper.GetProperCultureUrl(Request, HttpContext);
@@ -169,9 +173,6 @@ namespace RentVision.Controllers
             {
                 return LocalRedirect(cultureUrl);
             }
-
-            HttpContext.Session.SetString("UserPlan", userPlan);
-            HttpContext.Session.SetString("PayInterval", payInterval);
 
             return View(model);
         }
@@ -196,6 +197,9 @@ namespace RentVision.Controllers
         public async Task<IActionResult> Plans(Guid id, bool draft = false)
         {
             var model = await _loader.GetPage<PlansPage>(id, HttpContext.User, draft);
+
+            HttpContext.Session.Remove("UserPlan");
+            HttpContext.Session.Remove("PayInterval");
 
             // Return user to proper culture page
             string cultureUrl = CultureHelper.GetProperCultureUrl(Request, HttpContext);

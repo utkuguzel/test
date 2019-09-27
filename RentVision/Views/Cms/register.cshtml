@@ -5,7 +5,7 @@
     ViewBag.Title = Model.Title;
 
     // Check if there's an error set in tempData and display it
-    string statusMessage = TempData["StatusMessage"].ToString() ?? "";
+    string statusMessage = TempData["StatusMessage"] != null ? TempData["StatusMessage"].ToString() : "";
     string[] errors = (TempData["Errors"] != null) ? (string[])TempData["Errors"] : null;
 }
 

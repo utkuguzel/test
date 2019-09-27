@@ -61,8 +61,12 @@ namespace RentVision
             );
             services.Configure<RequestLocalizationOptions>(options =>
             {
-                options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("en-US");
-                options.SupportedCultures = new List<CultureInfo> { new CultureInfo("en-US"), new CultureInfo("nl-NL"), new CultureInfo("nl") };
+                options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("en");
+                options.SupportedCultures = new List<CultureInfo>
+                {
+                    new CultureInfo("en"),
+                    new CultureInfo("nl")
+                };
             });
             services.AddMvc()
                 .AddPiranhaManagerOptions()

@@ -106,8 +106,8 @@ namespace RentVision.Controllers
         [Route("/auth/register"), HttpPost]
         public async Task<IActionResult> RegisterAsync( string email, string subdomain, string businessUnitName, string password, string confirmPassword, bool tos )
         {
-            string userPlan = HttpContext.Session.GetString("UserPlan");
-            string payInterval = HttpContext.Session.GetString("PayInterval");
+            string userPlan = HttpContext.Session.GetString("UserPlan") ?? "Free";
+            string payInterval = HttpContext.Session.GetString("PayInterval") ?? "2";
 
             string refererUrl = Request.Headers["Referer"].ToString();
 
@@ -148,7 +148,7 @@ namespace RentVision.Controllers
             }
 
             TempData["StatusCode"] = response.StatusCode;
-            TempData["StatusMessage"] = "";
+            TempData["StatusMessage"] = userCredentialString;
 
             if ( !response.IsSuccessStatusCode )
             {
