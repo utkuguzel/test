@@ -1,8 +1,11 @@
 @model PlansPage
 
-@{ 
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.AspNetCore.Localization
+@inject IViewLocalizer Localizer
+
+@{
     var plans = Model.Plans;
-    //var userPlans = Model.UserPlans;
 }
 
 <!-- START PLANS -->
@@ -13,10 +16,10 @@
                 <div class="row">
                     <div class="col-sm-12 d-flex justify-content-center">
                         <div class="filterBox">
-                            <h5>Choose your plan</h5>
+                            <h5>@Localizer["Choose your plan"]</h5>
                             <select class="planFilter">
-                                <option value="2" selected>Monthly</option>
-                                <option value="1">Yearly</option>
+                                <option value="2" selected>@Localizer["Monthly"]</option>
+                                <option value="1">@Localizer["Yearly"]</option>
                             </select>
                         </div>
                     </div>
@@ -24,16 +27,18 @@
                     {
                         foreach (var plan in plans)
                         {
+                            var price = (plan.Price == "0") ? Localizer["Free"].Value.ToString() : plan.Price.Value.ToString();
+
                             <div class="col-lg-4 col-sm-6">
                                 <div class="plan" data-plan="@plan.UserPlanType.Value">
                                     @*<div class="border border-red"></div>*@
                                     <h3 class="title" style="text-shadow: none !important;">@plan.Title</h3>
                                     <i class="material-icons-outlined">@plan.Icon.Value</i>
 
-                                    <h5 class="price">@plan.Price</h5>
+                                    <h5 class="price">@price!</h5>
                                     @*<span class="paymentInterval">@plan.PaymentType</span>*@
 
-                                    <p><a class="button button-active" href="/register">Sign up</a></p>
+                                    <p><a class="button button-active" href="/register">@Localizer["Sign up"]</a></p>
                                 </div>
 
                                 <div class="features">

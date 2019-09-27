@@ -16,6 +16,9 @@ using System.IO;
 using RentVision.Models.Configuration;
 using Twinvision.Piranha.RentVision.Controllers;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc.Razor;
+using System.Globalization;
+using System.Collections.Generic;
 
 namespace RentVision
 {
@@ -56,8 +59,15 @@ namespace RentVision
             services.AddLocalization(options =>
                 options.ResourcesPath = "Resources"
             );
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("en-US");
+                options.SupportedCultures = new List<CultureInfo> { new CultureInfo("en-US"), new CultureInfo("nl-NL"), new CultureInfo("nl") };
+            });
             services.AddMvc()
                 .AddPiranhaManagerOptions()
+                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+                .AddDataAnnotationsLocalization()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddPiranha();

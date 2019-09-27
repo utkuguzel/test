@@ -82,13 +82,13 @@
 }
 .plans .plans-inner .plan a.button {
   display: block !important;
-  max-width: 150px;
+  max-width: 200px;
   padding: 10px 20px;
   margin: 0 auto;
   text-align: center;
   text-decoration: none;
   color: #FFF;
-  border: 1px solid #4b6cb7;
+  border: 1px solid #344c82;
   border-radius: 4px;
   background: #4b6cb7;
   /* fallback for old browsers */

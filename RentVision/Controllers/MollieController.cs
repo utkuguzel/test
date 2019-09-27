@@ -30,11 +30,6 @@ namespace Twinvision.Piranha.RentVision.Controllers
         public async Task<JsonResult> GetMollieTransactionIdAsync()
         {
             var mollieId = Request.Form["id"];
-
-            Debug.WriteLine(" ");
-            Debug.WriteLine("RECEIVED MOLLIE TRANSACTION ID: " + mollieId);
-            Debug.WriteLine(" ");
-
             var urlParameters = new Dictionary<string, string>()
             {
                 { "id", mollieId }

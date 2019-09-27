@@ -31,7 +31,7 @@ function updateUserPlans(interval)
     {
         var userPlanType = $(v).data("plan");
 
-        if (userPlanType !== undefined)
+        if (userPlanType !== undefined && userPlanType !== "Free")
         {
             var plan = getUserPlanByNameInterval(userPlanType, interval);
 

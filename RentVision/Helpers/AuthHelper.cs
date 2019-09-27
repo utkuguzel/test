@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Localization;
+using Piranha;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text.RegularExpressions;
 
 namespace RentVision.Helpers
@@ -21,6 +24,13 @@ namespace RentVision.Helpers
             { "ERROR_PAYMENT_STATUS_CANCELED", "Canceled" },
             { "ERROR_PAYMENT_STATUS_EXPIRED", "Expired" },
         };
+
+        private readonly IStringLocalizer<AuthHelper> _localizer;
+
+        public AuthHelper(IStringLocalizer<AuthHelper> localizer)
+        {
+            _localizer = localizer;
+        }
 
         public static List<string> validateForm(IFormCollection form, string userCulture)
         {

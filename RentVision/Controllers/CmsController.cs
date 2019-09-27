@@ -13,6 +13,7 @@ using Twinvision.Piranha.RentVision.Helpers;
 using System.Net.Http;
 using RentVision.Models.Configuration;
 using System.Collections.Generic;
+using Microsoft.Extensions.Localization;
 
 namespace RentVision.Controllers
 {
