@@ -33,6 +33,8 @@
         }
 
         <form method="post" action="@Model.Fields.ButtonLink.Value">
+            @Html.AntiForgeryToken()
+
             <div class="input-icons"> 
                 <i class="material-icons">email</i> 
                 <input id="email" type="email" name="email" placeholder="@Model.Fields.Email.Value...">
@@ -79,6 +81,8 @@
                 <input id="tos" type="checkbox" name="tos" value="true">
                 <label for="tos">@Model.Fields.Tos.Value</label>
             </div>
+
+            @Html.Recaptcha(RecaptchaSettings.Value)
 
             <button disabled>@Model.Fields.ButtonText.Value</button>
             <a href="/"><i class="fas fa-arrow-left"></i>@Model.Fields.ReturnButtonText.Value</a>

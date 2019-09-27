@@ -12,6 +12,7 @@ using Twinvision.Piranha.RentVision.Helpers;
 using Twinvision.Piranha.RentVision.Controllers;
 using RentVision.Models;
 using Microsoft.AspNetCore.Http;
+using reCAPTCHA.AspNetCore;
 
 namespace RentVision.Controllers
 {
@@ -20,12 +21,14 @@ namespace RentVision.Controllers
         private readonly IApi _api;
         private readonly IHttpClientFactory _clientFactory;
         private ApiHelper _apiHelper;
+        private IRecaptchaService _recaptcha;
 
-        public AuthController(IApi api, IHttpClientFactory clientFactory )
+        public AuthController(IApi api, IHttpClientFactory clientFactory, IRecaptchaService recaptcha )
         {
             _api = api;
             _clientFactory = clientFactory;
             _apiHelper = new ApiHelper( _api, _clientFactory );
+            _recaptcha = recaptcha;
         }
 
         [Route("/auth/isUserSiteReady"), HttpPost]
@@ -103,13 +106,20 @@ namespace RentVision.Controllers
             return Redirect($"{Configuration.BackOffice.Protocol}://{subdomain}.{Configuration.BackOffice.Domain}");
         }
 
-        [Route("/auth/register"), HttpPost]
+        [Route("/auth/register"), HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> RegisterAsync( string email, string subdomain, string businessUnitName, string password, string confirmPassword, bool tos )
         {
+            string userCulture = CultureHelper.GetUserCulture(Request, HttpContext);
             string userPlan = HttpContext.Session.GetString("UserPlan") ?? "Free";
             string payInterval = HttpContext.Session.GetString("PayInterval") ?? "2";
-
             string refererUrl = Request.Headers["Referer"].ToString();
+
+            var recaptchaResponse = await _recaptcha.Validate(Request.Form["g-recaptcha-response"]);
+            if ( !recaptchaResponse.success )
+            {
+                TempData["StatusMessage"] = AuthHelper.GetBackOfficeStringLocalized(userCulture, "captcha incorrect");
+                return Redirect(refererUrl);
+            }
 
             if ( email == null || subdomain == null )
             {
@@ -119,7 +129,6 @@ namespace RentVision.Controllers
             email = email.ToLower();
             subdomain = subdomain.ToLower();
 
-            string userCulture = CultureHelper.GetUserCulture(Request, HttpContext);
             var formErrors = AuthHelper.validateForm(Request.Form, userCulture);
 
             if ( formErrors.Count > 0 )

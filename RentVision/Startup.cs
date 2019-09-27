@@ -19,6 +19,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc.Razor;
 using System.Globalization;
 using System.Collections.Generic;
+using reCAPTCHA.AspNetCore;
 
 namespace RentVision
 {
@@ -68,6 +69,11 @@ namespace RentVision
                     new CultureInfo("nl")
                 };
             });
+
+            // ReCaptcha
+            services.Configure<RecaptchaSettings>(Configuration.GetSection("RecaptchaSettings"));
+            services.AddTransient<IRecaptchaService, RecaptchaService>();
+
             services.AddMvc()
                 .AddPiranhaManagerOptions()
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)

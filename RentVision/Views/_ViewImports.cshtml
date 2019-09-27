@@ -6,5 +6,8 @@
 
 @using RentVision.Models
 @using Newtonsoft.Json
+@using reCAPTCHA.AspNetCore;
+@using Microsoft.Extensions.Options
 
 @inject Piranha.AspNetCore.Services.IApplicationService WebApp
+@inject IOptions<RecaptchaSettings> RecaptchaSettings

@@ -16,6 +16,7 @@ namespace RentVision.Helpers
             { "ERROR_REGISTER_PASSWORD_STRENGTH", "password was not strong enough" },
             { "ERROR_LOGIN_PASSWORd_INCORRECT", "password did not match" },
             { "ERROR_LOGIN_EMAIL_INCORRECT", "email not found" },
+            { "ERROR_REGISTER_CAPTCHA_INCORRECT", "captcha incorrect" },
 
             // Mollie
             { "ERROR_PAYMENT_STATUS_FAILED", "Failed" },
