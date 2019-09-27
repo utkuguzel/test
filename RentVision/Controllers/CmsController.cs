@@ -97,12 +97,12 @@ namespace RentVision.Controllers
             var model = await _loader.GetPost<BlogPost>(id, HttpContext.User, draft);
 
             // Return user to proper culture page
-            string cultureUrl = CultureHelper.GetProperCultureUrl(Request, HttpContext);
+            //string cultureUrl = CultureHelper.GetProperCultureUrl(Request, HttpContext);
 
-            if (cultureUrl != null)
-            {
-                return LocalRedirect(cultureUrl);
-            }
+            //if (cultureUrl != null)
+            //{
+            //    return LocalRedirect(cultureUrl);
+            //}
 
             return View(model);
         }

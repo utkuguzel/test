@@ -1,6 +1,12 @@
 @model BlogArchive
+
+@using Microsoft.AspNetCore.Localization
+
 @{
     ViewBag.Title = Model.Title;
+
+    var rqf = Context.Features.Get<IRequestCultureFeature>();
+    var culture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
 }
 @section head {
     <link rel="stylesheet/less" type="text/css" href="~/css/config.min.css">
@@ -15,7 +21,7 @@
     <div class="main">
         @foreach (var post in Model.Archive.Posts)
         {
-            <a href="@post.Permalink">
+            <a href="@Model.Slug/@post.Slug">
                 <div class="row archive-item">
                     <div class="hover-border"></div>
 
