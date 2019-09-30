@@ -12,7 +12,7 @@ namespace RentVision.Models
         [Region(Display = RegionDisplayMode.Setting)]
         public Hero Hero { get; set; }
         
-        [Region(Display = RegionDisplayMode.Hidden, ListTitle = "Title")]
+        [Region(ListTitle = "Name")]
         public IList<ModuleItem> ModuleItems { get; set; }
 
         public ProductPage()
