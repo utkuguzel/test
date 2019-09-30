@@ -106,8 +106,8 @@ namespace RentVision
             services.AddPiranhaIdentityWithSeed<IdentitySQLServerDb>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("piranha")));
 
-            services.AddLogging(logging =>
-                logging.AddFile("app.log", append: true));
+            //services.AddLogging(logging =>
+            //    logging.AddFile("app.log", append: true));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
