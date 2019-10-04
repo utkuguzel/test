@@ -82,6 +82,9 @@ function init() {
         $(this).stop().fadeOut(250);
     });
 
+    $(".headerOption.active").removeClass("active").find(".headerHoverBar").addClass("active");
+    $(".headerOption").removeClass("bg-visible");
+
     handleHeaderScroll(true);
 }
 

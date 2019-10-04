@@ -83,6 +83,9 @@
         $(this).stop().fadeOut(250);
     });
 
+    $(".headerOption.active").removeClass("active").find(".headerHoverBar").addClass("active");
+    $(".headerOption").removeClass("bg-visible");
+
     handleHeaderScroll(true);
 }
 
@@ -90,7 +93,8 @@ function handleHeaderScroll(init)
 {
     var top = typeof init === Boolean ? 0 : this.scrollTop;
 
-    if (top > 70) {
+    if (top > 70)
+    {
         $("#header").stop().animate({
             backgroundColor: "#222222",
             boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)"

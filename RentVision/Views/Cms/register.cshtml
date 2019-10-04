@@ -35,33 +35,39 @@
         <form method="post" action="@Model.Fields.ButtonLink.Value">
             @Html.AntiForgeryToken()
 
-            <div class="input-icons"> 
-                <i class="material-icons">email</i> 
-                <input id="email" type="email" name="email" placeholder="@Model.Fields.Email.Value...">
-            </div> 
-
-            <div class="input-icons">
-                <i class="material-icons">dns</i>
-                <input id="subdomain" type="text" name="subdomain" placeholder="@Model.Fields.Subdomain.Value...">
+            <div class="form-group mb-3">
+                <label for="email">@Model.Fields.Email.Value</label>
+                <input id="email" name="email" type="text" class="form-control" placeholder="john@doe.com" aria-label="@Model.Fields.Email.Value" aria-describedby="emailHelp">
+                <small id="emailHelp" class="form-text text-muted">@Model.Fields.EmailLabel.Value</small>
             </div>
 
-            <div class="input-icons">
-                <i class="material-icons">business</i>
-                <input id="businessUnitName" type="text" name="businessUnitName" placeholder="@Model.Fields.BusinessUnitName.Value...">
-            </div>
+            <div class="form-group mb-3">
+                <label for="subdomain">@Model.Fields.Subdomain.Value</label>
 
-            <div class="d-inline-flex">
-                <div class="padding padding-right">
-                    <div class="input-icons">
-                        <i class="material-icons">lock</i>
-                        <input id="password" type="password" name="password" placeholder="@Model.Fields.Password.Value...">
+                <div class="input-group">
+                    <input id="subdomain" name="subdomain" type="text" class="form-control" placeholder="johnsrental" aria-label="@Model.Fields.Subdomain.Value" aria-describedby="subdomainHelp">
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2">.rentvision.eu</span>
                     </div>
                 </div>
-                <div class="padding padding-left">
-                    <div class="input-icons">
-                        <i class="material-icons">lock</i>
-                        <input id="confirmPassword" type="password" name="confirmPassword" placeholder="@Model.Fields.ConfirmPassword.Value...">
-                    </div>
+
+                <small id="subdomainHelp" class="form-text text-muted">@Model.Fields.SubdomainLabel.Value</small>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="businessUnitName">@Model.Fields.BusinessUnitName.Value</label>
+                <input id="businessUnitName" name="businessUnitName" type="text" class="form-control" placeholder="John's Rental B.V." aria-label="@Model.Fields.BusinessUnitName.Value" aria-describedby="basic-addon2">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="password">Password</label>
+                  <input id="password" type="password" class="form-control" name="password" placeholder="Password...">
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label for="confirmPassword">Confirm password</label>
+                  <input id="confirmPassword" type="password" class="form-control" name="confirmPassword" placeholder="Confirm password..." />
                 </div>
             </div>
 

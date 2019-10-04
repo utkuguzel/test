@@ -10,8 +10,14 @@ namespace RentVision.Models.Regions
         [Field(Title = "E-mail", Options = FieldOption.HalfWidth)]
         public StringField Email { get; set; }
 
+        [Field(Title = "E-mail label")]
+        public StringField EmailLabel { get; set; }
+
         [Field(Title = "Subdomain", Options = FieldOption.HalfWidth)]
         public StringField Subdomain { get; set; }
+
+        [Field(Title = "Subdomain label")]
+        public StringField SubdomainLabel { get; set; }
 
         [Field(Title = "Business unit name", Options = FieldOption.HalfWidth)]
         public StringField BusinessUnitName { get; set; }

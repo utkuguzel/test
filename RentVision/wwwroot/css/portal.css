@@ -61,6 +61,12 @@ form {
   border-radius: 4px;
   background: #FFF;
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+  /*input[name="confirmPassword"] {
+        border-left: none;
+    }*/
+  /*input[type="text"], input[type="password"] {
+        width: 100%;
+    }*/
 }
 .form .input-icons i,
 .setup .input-icons i {
@@ -96,12 +102,6 @@ form {
 .setup .padding {
   width: 100%;
 }
-.form input[type="email"],
-.setup input[type="email"],
-.form input[type="password"],
-.setup input[type="password"],
-.form input[type="text"],
-.setup input[type="text"],
 .form button,
 .setup button,
 .form select,
@@ -115,19 +115,17 @@ form {
   border: 1px solid #ccc;
   border-radius: 3px;
 }
-.form input[name="firstname"],
-.setup input[name="firstname"] {
-  border-right: none;
-}
-.form input[name="confirmPassword"],
-.setup input[name="confirmPassword"] {
-  border-left: none;
-}
 .form input[type="text"],
 .setup input[type="text"],
 .form input[type="password"],
-.setup input[type="password"] {
-  width: 100%;
+.setup input[type="password"],
+.form input[type="email"],
+.setup input[type="email"] {
+  height: 50px;
+}
+.form input[name="firstname"],
+.setup input[name="firstname"] {
+  border-right: none;
 }
 .form input[type="password"],
 .setup input[type="password"] {

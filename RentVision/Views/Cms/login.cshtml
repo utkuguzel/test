@@ -41,17 +41,15 @@
         <form method="post" action="@Model.Fields.ButtonLink.Value">
             <label for="email">@Model.Fields.Email.Value</label>
 
-            <div class="input-icons">
-                <i class="material-icons">email</i>
-                <input id="email" type="email" name="email" placeholder="@Model.Fields.Email.Value..." />
-            </div> 
+            <div class="input-group mb-3">
+                <input name="email" type="text" class="form-control" placeholder="@Model.Fields.Email.Value" aria-label="@Model.Fields.Email.Value" aria-describedby="basic-addon2">
+            </div>
 
             <label for="password">@Model.Fields.Password.Value</label>
 
-            <div class="input-icons">
-                <i class="material-icons">lock</i>
-                <input id="password" type="password" name="password" placeholder="@Model.Fields.Password.Value..." />
-            </div> 
+            <div class="input-group mb-3">
+                <input name="password" type="password" class="form-control" placeholder="@Model.Fields.Password.Value" aria-label="@Model.Fields.Password.Value" aria-describedby="basic-addon2">
+            </div>
 
             <input id="remember" type="checkbox" name="remember" checked="checked" value="true" />
             <label for="remember">@Model.Fields.Remember.Value</label>

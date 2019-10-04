@@ -117,7 +117,7 @@ form {
         }
     }
 
-    input[type="email"], input[type="password"], input[type="text"], button, select {
+    button, select {
         display: block;
         width: 100%;
         max-width: 600px;
@@ -128,17 +128,21 @@ form {
         border-radius: 3px;
     }
 
+    input[type="text"], input[type="password"], input[type="email"] {
+        height: 50px;
+    }
+
     input[name="firstname"] {
         border-right: none;
     }
 
-    input[name="confirmPassword"] {
+    /*input[name="confirmPassword"] {
         border-left: none;
-    }
+    }*/
 
-    input[type="text"], input[type="password"] {
+    /*input[type="text"], input[type="password"] {
         width: 100%;
-    }
+    }*/
 
     input[type="password"] {
         margin: 0 0 10px 0;
