@@ -318,6 +318,7 @@ img {
   line-height: 65px;
   padding: 0 30px;
   cursor: pointer;
+  transition: background 0.1s;
 }
 #header #rightmenu #menuoptions li.headerOption i.fas {
   font-size: 0.75em;
@@ -327,20 +328,25 @@ img {
 #header #rightmenu #menuoptions li.headerOption i.fas.fa-angle-up {
   color: #EEE;
 }
-#header #rightmenu #menuoptions li.headerOption:hover {
+#header #rightmenu #menuoptions li.headerOption.bg-visible:hover {
   color: #FFF;
+  background-color: #151515;
 }
 #header #rightmenu #menuoptions li.headerOption.active {
-  background-color: #6FC516;
+  background: #1a5aa3;
+  background: linear-gradient(0deg, #1a5aa3 0%, #1c6ac3 100%);
 }
 #header #rightmenu #menuoptions li.headerOption .headerHoverBar {
-  display: none;
   position: absolute;
   left: 0;
   top: 0;
   width: 100%;
   height: 2px;
   background: #4b6cb7;
+}
+#header #rightmenu #menuoptions li.headerOption .headerHoverBar.active {
+  display: initial !important;
+  height: 2px;
 }
 #header #rightmenu #menuoptions li.headerOption .headerDropdown {
   display: none;

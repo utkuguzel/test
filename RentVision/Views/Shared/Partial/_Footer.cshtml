@@ -1,7 +1,6 @@
 @{ 
     var rqf = Context.Features.Get<IRequestCultureFeature>();
     var culture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
-    var culturePrefix = $"{culture.Replace("en", "")}";
 
     // Get current siteId based on users' culture
     var sites = await WebApp.Api.Sites.GetAllAsync();
@@ -61,7 +60,7 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="left">
-                                <p>&copy; @DateTime.Now.Year, <a href="/">RentVision</a>. All rights reserved.</p>
+                                <p>&copy; @DateTime.Now.Year <a href="/">RentVision</a>. @Localizer["All rights reserved"].</p>
                             </div>
                         </div>
 

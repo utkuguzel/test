@@ -56,8 +56,11 @@
             @{ 
                 foreach ( var headerItem in startPage.HeaderItems )
                 {
+                    var currentPage = await WebApp.Api.Pages.GetByIdAsync(WebApp.PageId);
+                    string active = currentPage.Title == headerItem.Title ? "active" : "";
+
                     <a href="@headerItem.PageLinkFixed.Value">
-                        <li class="headerOption home">
+                        <li class="headerOption home @active">
                             <div class="headerHoverBar"></div>
                             <i class="fas @headerItem.Icon.Value"></i>@headerItem.Title
                         </li>

@@ -323,6 +323,8 @@
                 padding: 0 30px;
                 cursor: pointer;
                 //background: @COLOUR_HEADER;
+                transition: background 0.1s;
+
                 i.fas {
                     font-size: 0.75em;
                     padding-right: 10px;
@@ -333,23 +335,33 @@
                     }
                 }
 
-                &:hover {
+                &.bg-visible:hover {
                     color: #FFF;
-                    //background-color: darken(#222, 1%);
+                    background-color: darken(#222, 5%);
+                }
+
+                &:not(.bg-visible):hover {
+                    text-decoration: underline !important;
                 }
 
                 &.active {
-                    background-color: #6FC516;
+                    background: rgb(26,90,163);
+                    background: linear-gradient(0deg, rgba(26,90,163,1) 0%, rgba(28,106,195,1) 100%);
                 }
 
                 .headerHoverBar {
-                    display: none;
+                    //display: none;
                     position: absolute;
                     left: 0;
                     top: 0;
                     width: 100%;
                     height: 2px;
                     background: #4b6cb7;
+
+                    &.active {
+                        display: initial !important;
+                        height: 2px;
+                    }
                 }
 
                 .headerDropdown {

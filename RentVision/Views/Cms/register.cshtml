@@ -79,7 +79,7 @@
 
             <div class="box">
                 <input id="tos" type="checkbox" name="tos" value="true">
-                <label for="tos">@Model.Fields.Tos.Value</label>
+                <label for="tos">@Html.Raw(Model.Fields.Tos.Value)</label>
             </div>
 
             @Html.Recaptcha(RecaptchaSettings.Value)

@@ -77,24 +77,16 @@ function init() {
     //    }
     //});
 
-    // Handle green hover bar above header option
-    $(".headerOption").on("mouseenter touchend", function (e) {
-        $(this).find(".headerHoverBar").stop().slideDown(100);
-    });
-
-    // Handles green hover bar animation above header option
-    $(".headerOption").on("mouseleave touchend", function (e) {
-        $(this).find(".headerHoverBar").stop().slideUp(100);
-    });
-
     // Error modal events
     $("#errorModal").on("mousedown touchend", function () {
         $(this).stop().fadeOut(250);
     });
+
+    handleHeaderScroll(true);
 }
 
-$("body").scroll(function (e) {
-    var top = this.scrollTop;
+function handleHeaderScroll(init) {
+    var top = typeof init === Boolean ? 0 : this.scrollTop;
 
     if (top > 70) {
         $("#header").stop().animate({
@@ -106,6 +98,9 @@ $("body").scroll(function (e) {
             background: "#222222",
             borderLeft: "1px solid rgba(0, 0, 0, 0.2)"
         }, 100);
+
+        $(".headerHoverBar.active").removeClass("active").closest(".headerOption").addClass("active");
+        $(".headerOption").addClass("bg-visible");
     } else if (top <= 70) {
         $("#header").stop().animate({
             backgroundColor: "rgba(0, 0, 0, 0)",
@@ -116,9 +111,13 @@ $("body").scroll(function (e) {
             background: "rgba(0, 0, 0, 0)",
             borderLeft: "initial"
         }, 100);
+
+        $(".headerOption.active").removeClass("active").find(".headerHoverBar").addClass("active");
+        $(".headerOption").removeClass("bg-visible");
     }
-});
+}
 
 // Events
 $(document).ready(init);
+$("body").scroll(handleHeaderScroll);
 
