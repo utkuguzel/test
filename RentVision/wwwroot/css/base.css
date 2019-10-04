@@ -14,6 +14,9 @@ a:hover {
   text-decoration: none;
   color: #2276D9;
 }
+.card-deck a {
+  text-shadow: none !important;
+}
 .logo {
   width: 200px;
   height: 70px;

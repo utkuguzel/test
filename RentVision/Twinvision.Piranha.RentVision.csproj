@@ -83,6 +83,5 @@
 
   <ItemGroup>
     <Folder Include="Models\Extensions\" />
-    <Folder Include="Resources\Views\Cms\" />
   </ItemGroup>
 </Project>

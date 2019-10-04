@@ -10,13 +10,19 @@ body, html {
 }
 
 a {
-	text-shadow: 1px 1px 0px #222;
-	color: @COLOUR_DARKMEDIUMGRAY;
+    text-shadow: 1px 1px 0px #222;
+    color: @COLOUR_DARKMEDIUMGRAY;
 
-	&:hover {
-		text-decoration: none;
-		color: @COLOUR_HOVER_LINK;
-	}
+    &:hover {
+        text-decoration: none;
+        color: @COLOUR_HOVER_LINK;
+    }
+}
+
+.card-deck {
+    a {
+        text-shadow: none !important;
+    }
 }
 
 .logo {

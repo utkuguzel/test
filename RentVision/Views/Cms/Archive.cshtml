@@ -13,37 +13,31 @@
     <link rel="stylesheet/less" type="text/css" href="~/css/components/block.min.css">
     <link rel="stylesheet/less" type="text/css" href="~/css/news.min.css">
 }
-<div class="container-fluid">
-    <partial name="/Views/Shared/Partial/_Menu.cshtml" />
+    <div class="container-fluid" style="background-color: #e5e9ec">
+        <partial name="/Views/Shared/Partial/_Menu.cshtml" />
 
-    @await Html.PartialAsync("/Views/Shared/Partial/_Hero.cshtml", Model)
+        @await Html.PartialAsync("/Views/Shared/Partial/_Hero.cshtml", Model)
 
-    <div class="main">
-        @foreach (var post in Model.Archive.Posts)
-        {
-            <a href="@Model.Slug/@post.Slug">
-                <div class="row archive-item">
-                    <div class="hover-border"></div>
-
-                    <div class="col-sm-12">
-                        <h2>@post.Title</h2>
-                        <p class="subtitle">
-                            @post.Published.Value.ToString("yyyy-MM-dd") in @post.Category.Title
-                        </p>
+        <div class="card-deck" style="padding: 0 20px">
+            @foreach (var post in Model.Archive.Posts)
+            {
+                <a href="@Model.Slug/@post.Slug">
+                    <div class="card mb-3">
+                        <img src="@Url.Content(WebApp.Media.ResizeImage(post.Regions.Hero.PrimaryImage, 250))" class="card-img-top" alt="@Model.Title">
+                        <div class="card-body">
+                            <h5 class="card-title">@post.Title</h5>
+                            @*<p class="card-text">@post.Regions.Hero.Ingress.Value</p>*@
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">@Localizer["Published on"] @post.Published.Value.ToLongDateString()</small>
+                        </div>
                     </div>
-
-                    <div class="col-sm-9">
-                        <p>
-                            @post.Regions.Hero.Ingress.Value
-                        </p>
-                    </div>
-                </div>
-            </a>
-        }
+                </a>
+            }
         </div>
 
-    <partial name="/Views/Shared/Partial/_Footer.cshtml" />
-</div>
+        <partial name="/Views/Shared/Partial/_Footer.cshtml" />
+    </div>
 
 @section script {
     @*<script type="text/javascript" src="~/assets/js/news.js"></script>*@
