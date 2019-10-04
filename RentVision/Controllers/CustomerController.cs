@@ -36,7 +36,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
     [Route("[controller]")]
     public class CustomerController : Controller
     {
-        private const string RedirectUrl = "http://9d8e8083.ngrok.io";
+        private const string RedirectUrl = "https://rentvision.eu";
 
         public static string MollieKeyLive { get; set; }
         public static string MollieKeyTest { get; set; }
