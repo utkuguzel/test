@@ -14,6 +14,8 @@ using System.Net.Http;
 using RentVision.Models.Configuration;
 using System.Collections.Generic;
 using Microsoft.Extensions.Localization;
+using Microsoft.AspNetCore.Localization;
+using System.Linq;
 
 namespace RentVision.Controllers
 {
@@ -75,13 +77,25 @@ namespace RentVision.Controllers
         {
             var model = await _loader.GetPage<StandardPage>(id, HttpContext.User, draft);
 
-            // Return user to proper culture page
-            string cultureUrl = CultureHelper.GetProperCultureUrl(Request, HttpContext);
+            // TEST
+            var rqf = HttpContext.Features.Get<IRequestCultureFeature>();
+            var culture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
 
-            if (cultureUrl != null)
-            {
-                return LocalRedirect(cultureUrl);
-            }
+            var sites = await _api.Sites.GetAllAsync();
+            var site = sites.SingleOrDefault(m => m.Culture == culture);
+
+            var pageResult = await _api.Pages.GetAllAsync<StandardPage>(siteId: site.Id);
+
+            model = await _api.Pages.GetByIdAsync<StandardPage>(pageResult.FirstOrDefault(m => m.Slug == model.Slug).Id);
+            // END TEST
+
+            // Return user to proper culture page
+            //string cultureUrl = CultureHelper.GetProperCultureUrl(Request, HttpContext);
+
+            //if (cultureUrl != null)
+            //{
+            //    return LocalRedirect(cultureUrl);
+            //}
 
             return View(model);
         }

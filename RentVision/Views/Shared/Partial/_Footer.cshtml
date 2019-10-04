@@ -1,7 +1,16 @@
 @{ 
+    var rqf = Context.Features.Get<IRequestCultureFeature>();
+    var culture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
+    var culturePrefix = $"{culture.Replace("en", "")}";
+
+    // Get current siteId based on users' culture
+    var sites = await WebApp.Api.Sites.GetAllAsync();
+    var site = sites.SingleOrDefault(m => m.Culture == culture);
+
     var sitemap = WebApp.Site.Sitemap;
-    var homePageResult = await WebApp.Api.Pages.GetStartpageAsync<StartPage>();
-    var termsAndConditions = await WebApp.Api.Pages.GetBySlugAsync<StandardPage>("terms-and-conditions");
+    var homePageResult = await WebApp.Api.Pages.GetStartpageAsync<StartPage>(site.Id);
+    var termsAndConditions = await WebApp.Api.Pages.GetBySlugAsync<StandardPage>($"terms-and-conditions", site.Id);
+    var privacy = await WebApp.Api.Pages.GetBySlugAsync<StandardPage>($"privacy", site.Id);
     var footerItems = homePageResult.FooterItems.ToList();
 }
 
@@ -58,7 +67,7 @@
 
                         <div class="col-lg-6">
                             <div class="right">
-                                <a href="@termsAndConditions.Permalink">@termsAndConditions.Title</a>
+                                <a href="@termsAndConditions.Permalink">@termsAndConditions.Title</a> - <a href="@privacy.Permalink">@privacy.Title</a>
                             </div>
                         </div>
                     </div>

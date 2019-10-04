@@ -1,13 +1,14 @@
 @using RentVision.Helpers
 
 @{
-    string userCulture = CultureHelper.userCulture;
+    var rqf = Context.Features.Get<IRequestCultureFeature>();
+    var culture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
 
     var sitemap = WebApp.Site.Sitemap;
 
     // Get current siteId based on users' culture
     var sites = await WebApp.Api.Sites.GetAllAsync();
-    var site = sites.SingleOrDefault(m => m.Culture == userCulture);
+    var site = sites.SingleOrDefault(m => m.Culture == culture);
 
     // Get current start page
     var pageResult = await WebApp.Api.Pages.GetAllAsync<StartPage>(siteId: site.Id);
@@ -19,7 +20,7 @@
 <!-- START HEADER -->
 <div id="header">
     <div id="leftmenu">
-        <a href="/">
+        <a href="/@culture.Replace("en", "")">
             <img alt="logo" src="~/assets/images/logos/RentVision-03-Light.svg">
         </a>
     </div>
