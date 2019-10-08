@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Mollie.Api;
 using Mollie.Api.Models.Payment.Request;
 using Mollie.Api.Models;
 using Mollie.Api.Client;
@@ -22,7 +20,6 @@ using Mollie.Api.Models.Subscription;
 using RentVision.Models.Configuration;
 using System.Net.Http;
 using Piranha;
-using RentVision.Helpers;
 
 namespace Twinvision.Piranha.RentVision.Controllers
 {
