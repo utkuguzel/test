@@ -5,13 +5,16 @@
         }
         return "";
     }
+
+    var currentPage = await WebApp.Api.Pages.GetByIdAsync(WebApp.PageId);
+    string smallHeader = !currentPage.IsStartPage && currentPage.Slug != "plans" ? "hero-small" : "";
 }
 
 <!-- START HERO -->
 <section class="cd-hero js-cd-hero">
     <div class="dots"></div>
 
-    <ul class="cd-hero__slider">
+    <ul class="cd-hero__slider @smallHeader">
         <li class="cd-hero__slide cd-hero__slide--selected js-cd-slide" @PrimaryImage()>
             <div class="cd-hero__content cd-hero__content--half-width">
                 <h2>@Model.Hero.Title</h2>
