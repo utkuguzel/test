@@ -1,9 +1,10 @@
 ﻿var email;
-var businessUnitName;
 var timer;
 
-function init()
+function startSetupPoll()
 {
+    $(".setup-success").hide();
+
     email = $(".setup").data("email");
 
     $(".timeOutMessage").hide();
@@ -27,6 +28,12 @@ function isUserSiteReady()
         success: onSuccessCallBack,
         error: onErrorCallBack
     });
+
+    setTimeout(function () {
+        $(".setup-working").fadeOut("fast", function () {
+            $(".setup-success").fadeIn("fast");
+        });
+    }, 2500);
 
     timer = setTimeout(isUserSiteReady, 1000);
 }
@@ -72,5 +79,3 @@ function onErrorCallBack(jqXhr, error, errorStr)
 {
     console.log(error + ": " + errorStr);
 }
-
-$(document).ready(init);

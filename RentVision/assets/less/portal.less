@@ -60,7 +60,169 @@ form {
 .logo-box {
     padding: 10px 0 10px 0;
     margin: 0 0 20px 0;
-    background: #222;
+    background: rgb(34,34,34);
+    background: linear-gradient(180deg, rgba(34,34,34,1) 0%, rgba(17,17,17,1) 100%);
+
+    &.wizard-box {
+        border-bottom: 1px solid #d4d4d4;
+        background-color: #fafafa;
+        margin: 0;
+    }
+}
+
+.wizard {
+    span {
+        color: #AAA !important;
+
+        &.badge-info {
+            color: #FFF !important;
+        }
+
+        &.badge-success {
+            color: #FFF !important;
+        }
+    }
+
+    .step-content {
+        float: initial !important;
+        color: #333;
+
+        button {
+            width: auto;
+            padding: 0;
+            min-width: 180px;
+            margin: 0 auto;
+        }
+    }
+
+    .step-buttons {
+        padding: 5px 0;
+        font-size: 0.9em;
+        background: #f5f5f5;
+        border-top: 1px solid #DDD;
+
+        span {
+            padding: 10px 0;
+        }
+
+        button {
+            width: auto;
+            height: auto;
+            padding: 5px 20px;
+        }
+    }
+}
+
+.verificationForm {
+    //padding-top: 30px;
+    input {
+        margin: 0 5px;
+        text-align: center;
+        line-height: 80px;
+        font-size: 50px;
+        border: solid 1px #ccc;
+        box-shadow: 0 0 5px #ccc inset;
+        outline: none;
+        width: 10%;
+        transition: all .2s ease-in-out;
+        border-radius: 3px;
+
+        &:focus {
+            border-color: #436692;
+            box-shadow: 0 0 5px #436692 inset;
+        }
+
+        &::selection {
+            background: transparent;
+        }
+    }
+
+    &.success {
+        input {
+            background: rgba(111,200,111,0.4);
+            color: rgb(57, 101, 57);
+        }
+    }
+
+    &.error {
+        input {
+            background: rgba(200,111,111,0.4);
+            color: rgb(101, 57, 57);
+        }
+    }
+}
+
+.setup-success {
+    i {
+        color: rgba(111,200,111,1);
+        text-shadow: 1px 1px 2px rgba(10,10,10,0.2);
+    }
+}
+
+/*.modal {
+    position: absolute;
+    z-index: 1000;
+    left: 0;
+    top: 10%;
+    width: auto;
+    height: auto;
+    min-width: 300px;
+    background: #FFF;
+
+    .modal-top-bar {
+        background: rgb(34,34,34);
+        background: linear-gradient(180deg, rgba(34,34,34,1) 0%, rgba(17,17,17,1) 100%);
+    }
+}*/
+
+.wizard .step-content {
+    background: #FEFEFE;
+
+    button {
+        display: inline-block !important;
+
+        &.btn-skip {
+            float: left;
+        }
+
+        &.btn-next {
+            float: right;
+        }
+    }
+
+    button i {
+        font-size: 1em;
+        padding: 0 0 0 10px;
+        vertical-align: middle;
+    }
+
+    .plan-summary {
+        background: #F6F6F6;
+        border: 1px solid #DDD;
+
+        th {
+            font-weight: 600;
+            text-align: right;
+            color: #444;
+        }
+
+        td {
+            text-align: left;
+            font-family: 'open sans', Arial;
+            font-size: 0.9em;
+            vertical-align: middle;
+        }
+    }
+
+    h4 {
+        font-size: 1.2em;
+    }
+
+    h5 {
+        margin: 0 0 30px 0;
+        font-size: 0.9em;
+        font-family: 'Open Sans', Arial;
+    }
 }
 
 .form, .setup {
@@ -135,15 +297,12 @@ form {
     input[name="firstname"] {
         border-right: none;
     }
-
     /*input[name="confirmPassword"] {
         border-left: none;
     }*/
-
     /*input[type="text"], input[type="password"] {
         width: 100%;
     }*/
-
     input[type="password"] {
         margin: 0 0 10px 0;
     }
@@ -153,7 +312,7 @@ form {
         font-size: 0.8em;
     }
 
-    button {
+    /*button {
         margin: 10px 0 10px 0;
         border-radius: 4px;
         transition: background 0.5s !important;
@@ -165,7 +324,7 @@ form {
         &:hover {
             .gradient-hover();
         }
-    }
+    }*/
 
     a {
         text-shadow: none;
@@ -176,72 +335,71 @@ form {
     }
 }
 
-.setup {
-    //padding: 10px 20px 20px 20px !important;
+    .setup {
+        //padding: 10px 20px 20px 20px !important;
+        .setup-content {
+            text-align: center;
 
-    .setup-content {
-        text-align: center;
+            .timeOutMessage {
+                font-size: 0.8em;
+            }
 
-        .timeOutMessage {
-            font-size: 0.8em;
+            i {
+                font-size: 3em;
+                margin: 20px 0;
+            }
+
+            p {
+                font-size: 0.9em;
+            }
+
+            span {
+                font-size: 0.8em;
+                color: #AAA;
+            }
         }
+    }
 
-        i {
-            font-size: 3em;
-            margin: 20px 0;
-        }
-
-        p {
-            font-size: 0.9em;
-        }
+    .passwordRequirements {
+        display: block;
+        margin: 10px 0;
+        padding: 10px 20px;
+        background: rgba(198,17,32, 0.2);
+        font-size: 0.9em;
+        border: 1px solid rgba(198,17,32, 0.2);
+        border-radius: 2px;
+        color: hsla(340, 89%, 25%, 1) !important;
+        text-shadow: 0 1px 0 rgba(255,255,255,0.5);
 
         span {
-            font-size: 0.8em;
-            color: #AAA;
+            display: block;
+            margin: 0 0 5px 0;
         }
-    }
-}
 
-.passwordRequirements {
-    display: block;
-    margin: 10px 0;
-    padding: 10px 20px;
-    background: rgba(198,17,32, 0.2);
-    font-size: 0.9em;
-    border: 1px solid rgba(198,17,32, 0.2);
-    border-radius: 2px;
-    color: hsla(340, 89%, 25%, 1) !important;
-    text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+        ul {
+            margin: 0;
 
-    span {
-        display: block;
-        margin: 0 0 5px 0;
-    }
+            li {
+                i {
+                    color: rgba(200, 111, 111, 0.8);
+                    padding: 0 5px 0 0;
 
-    ul {
-        margin: 0;
-
-        li {
-            i {
-                color: rgba(200, 111, 111, 0.8);
-                padding: 0 5px 0 0;
-
-                &.fa-check {
-                    color: rgb(110, 193, 60);
+                    &.fa-check {
+                        color: rgb(110, 193, 60);
+                    }
                 }
             }
         }
     }
-}
 
-button[disabled] {
-    background: #DDD;
-    color: #555;
-    border: 1px solid darken(#DDD, 15%);
-
-    &:hover {
+    button[disabled] {
         background: #DDD;
         color: #555;
-        cursor: not-allowed;
+        border: 1px solid darken(#DDD, 15%);
+
+        &:hover {
+            background: #DDD;
+            color: #555;
+            cursor: not-allowed;
+        }
     }
-}

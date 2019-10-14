@@ -10,5 +10,9 @@ namespace RentVision.Models
     {
         [Region( Title = "Setup fields" )]
         public SetupFields SetupFields { get; set; }
+        
+        public string Email { get; set; }
+
+        public Plan SelectedPlan { get; set; }
     }
 }

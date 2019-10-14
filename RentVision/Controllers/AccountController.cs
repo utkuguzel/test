@@ -26,21 +26,7 @@ namespace RentVision.Controllers
         [HttpPost("/verify/email/{email}")]
         public async Task<JsonResult> VerifyEmailAsync(string email)
         {
-            var apiCallResponse = await _apiHelper.SendApiCallAsync(
-                Configuration.ApiCalls.UserSubDomain,
-                HttpMethod.Get,
-                new Dictionary<string, string>() { { "email", email } },
-                context: HttpContext
-            );
-            var apiLoginKey = string.Empty;
-            var apiStatusCode = apiCallResponse.StatusCode;
-
-            if (apiCallResponse.IsSuccessStatusCode)
-            {
-                apiLoginKey = await apiCallResponse.Content.ReadAsStringAsync();
-            }
-
-            return new JsonResult(new { StatusCode = apiStatusCode, Value = apiLoginKey });
+            return new JsonResult(HttpStatusCode.OK);
         }
 
         [HttpPost("/verify/transaction/{transactionId}")]

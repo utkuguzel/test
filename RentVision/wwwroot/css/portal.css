@@ -50,7 +50,132 @@ form {
 .logo-box {
   padding: 10px 0 10px 0;
   margin: 0 0 20px 0;
-  background: #222;
+  background: #222222;
+  background: linear-gradient(180deg, #222222 0%, #111111 100%);
+}
+.logo-box.wizard-box {
+  border-bottom: 1px solid #d4d4d4;
+  background-color: #fafafa;
+  margin: 0;
+}
+.wizard span {
+  color: #AAA !important;
+}
+.wizard span.badge-info {
+  color: #FFF !important;
+}
+.wizard span.badge-success {
+  color: #FFF !important;
+}
+.wizard .step-content {
+  float: initial !important;
+  color: #333;
+}
+.wizard .step-content button {
+  width: auto;
+  padding: 0;
+  min-width: 180px;
+  margin: 0 auto;
+}
+.wizard .step-buttons {
+  padding: 5px 0;
+  font-size: 0.9em;
+  background: #f5f5f5;
+  border-top: 1px solid #DDD;
+}
+.wizard .step-buttons span {
+  padding: 10px 0;
+}
+.wizard .step-buttons button {
+  width: auto;
+  height: auto;
+  padding: 5px 20px;
+}
+.verificationForm input {
+  margin: 0 5px;
+  text-align: center;
+  line-height: 80px;
+  font-size: 50px;
+  border: solid 1px #ccc;
+  box-shadow: 0 0 5px #ccc inset;
+  outline: none;
+  width: 10%;
+  transition: all 0.2s ease-in-out;
+  border-radius: 3px;
+}
+.verificationForm input:focus {
+  border-color: #436692;
+  box-shadow: 0 0 5px #436692 inset;
+}
+.verificationForm input::selection {
+  background: transparent;
+}
+.verificationForm.success input {
+  background: rgba(111, 200, 111, 0.4);
+  color: #396539;
+}
+.verificationForm.error input {
+  background: rgba(200, 111, 111, 0.4);
+  color: #653939;
+}
+.setup-success i {
+  color: #6fc86f;
+  text-shadow: 1px 1px 2px rgba(10, 10, 10, 0.2);
+}
+/*.modal {
+    position: absolute;
+    z-index: 1000;
+    left: 0;
+    top: 10%;
+    width: auto;
+    height: auto;
+    min-width: 300px;
+    background: #FFF;
+
+    .modal-top-bar {
+        background: rgb(34,34,34);
+        background: linear-gradient(180deg, rgba(34,34,34,1) 0%, rgba(17,17,17,1) 100%);
+    }
+}*/
+.wizard .step-content {
+  background: #FEFEFE;
+}
+.wizard .step-content button {
+  display: inline-block !important;
+}
+.wizard .step-content button.btn-skip {
+  float: left;
+}
+.wizard .step-content button.btn-next {
+  float: right;
+}
+.wizard .step-content button i {
+  font-size: 1em;
+  padding: 0 0 0 10px;
+  vertical-align: middle;
+}
+.wizard .step-content .plan-summary {
+  background: #F6F6F6;
+  border: 1px solid #DDD;
+}
+.wizard .step-content .plan-summary th {
+  font-weight: 600;
+  text-align: right;
+  color: #444;
+}
+.wizard .step-content .plan-summary td {
+  text-align: left;
+  font-family: 'open sans', Arial;
+  font-size: 0.9em;
+  vertical-align: middle;
+}
+.wizard .step-content h4 {
+  font-size: 1.2em;
+}
+.wizard .step-content h5 {
+  margin: 0 0 30px 0;
+  font-size: 0.9em;
+  font-family: 'Open Sans', Arial;
 }
 .form,
 .setup {
@@ -66,6 +191,19 @@ form {
     }*/
   /*input[type="text"], input[type="password"] {
         width: 100%;
+    }*/
+  /*button {
+        margin: 10px 0 10px 0;
+        border-radius: 4px;
+        transition: background 0.5s !important;
+        color: #FFF;
+        border: 1px solid darken(@COLOUR_VIVIDBURGUNDY, 15%);
+
+        .gradient();
+
+        &:hover {
+            .gradient-hover();
+        }
     }*/
 }
 .form .input-icons i,
@@ -134,23 +272,6 @@ form {
 .form label,
 .setup label {
   font-size: 0.8em;
-}
-.form button,
-.setup button {
-  margin: 10px 0 10px 0;
-  border-radius: 4px;
-  transition: background 0.5s !important;
-  color: #FFF;
-  border: 1px solid #344c82;
-  background: #4b6cb7;
-  /* fallback for old browsers */
-  background: linear-gradient(0deg, #1a5aa3 0%, #1c6ac3 100%);
-}
-.form button:hover,
-.setup button:hover {
-  background: #4b6cb7;
-  /* fallback for old browsers */
-  background: linear-gradient(0deg, #1c6ac3 0%, #1a5aa3 100%);
 }
 .form a,
 .setup a {

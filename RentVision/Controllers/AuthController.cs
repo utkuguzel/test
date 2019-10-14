@@ -173,30 +173,30 @@ namespace RentVision.Controllers
             }
 
             // Handle Mollie
+            // TODO: VERPLAATSEN NAAR SETUP
 
             // Always create a customer and return its ID, incase they want to upgrade later on...
-            var customerController = new CustomerController(_api, _clientFactory);
-            var customerCreationResponse = await customerController.CreateCustomerAsync(email, businessUnitName);
+            //var customerController = new CustomerController(_api, _clientFactory);
+            //var customerCreationResponse = await customerController.CreateCustomerAsync(email, businessUnitName);
 
-            if ( userPlan.ToLower() != "free" )
-            {
-                int interval = Convert.ToInt32(payInterval);
-                var userPlanResponse = await _apiHelper.GetUserPlansAsync();
-                UserPlan plan = userPlanResponse.Find(m => m.Name.IndexOf(userPlan) != -1 && m.PayInterval == interval);
+            //if ( userPlan.ToLower() != "free" )
+            //{
+            //    int interval = Convert.ToInt32(payInterval);
+            //    var userPlanResponse = await _apiHelper.GetUserPlansAsync();
+            //    UserPlan plan = userPlanResponse.Find(m => m.Name.IndexOf(userPlan) != -1 && m.PayInterval == interval);
 
-                if ( plan != null )
-                {
-                    var checkoutUrl = await customerController.CreatePaymentRequest(plan, email, customerCreationResponse.Value.ToString(), HttpContext);
+            //    if ( plan != null )
+            //    {
+            //        var checkoutUrl = await customerController.CreatePaymentRequest(plan, email, customerCreationResponse.Value.ToString(), HttpContext);
 
-                    if (checkoutUrl != null)
-                    {
-                        return Redirect(checkoutUrl);
-                    }
-                }
-            }
+            //        if (checkoutUrl != null)
+            //        {
+            //            return Redirect(checkoutUrl);
+            //        }
+            //    }
+            //}
 
             return DisplaySubDomainSetup(email);
-            //return new JsonResult(HttpStatusCode.OK);
         }
 
         public IActionResult DisplaySubDomainSetup(string email)

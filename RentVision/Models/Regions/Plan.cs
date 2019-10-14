@@ -31,4 +31,11 @@ namespace RentVision.Models.Regions
         [Field]
         public StringField UserPlanType { get; set; }
     }
+
+    public class SelectedPlan
+    {
+        public string Title { get; set; }
+        public string Price { get; set; }
+        public string PaymentType { get; set; }
+    }
 }

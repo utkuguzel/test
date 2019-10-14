@@ -487,6 +487,9 @@ img {
   background: url('/assets/images/hero4.jpg') no-repeat;
   background-size: cover;
 }
+.hero.hero-small {
+  height: 250px !important;
+}
 .hero .hero-content {
   position: relative;
   width: inherit;

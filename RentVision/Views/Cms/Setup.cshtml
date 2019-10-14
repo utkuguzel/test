@@ -3,33 +3,137 @@
 
 @{
     ViewBag.Title = Model.Title;
-
-    string email = (!String.IsNullOrWhiteSpace(TempData["Email"].ToString())) ? TempData["Email"].ToString() : "";
 }
 
 @section head {
     <link rel="stylesheet/less" type="text/css" href="~/css/config.min.css">
     <link rel="stylesheet/less" type="text/css" href="~/css/portal.min.css">
+    @* Custom scripts *@
+    <link rel="stylesheet" href="//www.fuelcdn.com/fuelux/3.13.0/css/fuelux.min.css">
 }
+    <div id="modalBox"></div>
 
-<div class="d-flex justify-content-center">
-    <div class="setup" data-email="@email">
-        <div class="logo-box">
-            <div class="logo logo-dark"></div>
+    <div class="container-fluid">
+        <div class="d-flex justify-content-center">
+            <div class="setup" data-email="@Model.Email">
+                <div class="logo-box wizard-box">
+                    <div class="logo logo-dark"></div>
+                </div>
+
+                <div class="setup-content">
+                    <div class="wizard" data-initialize="wizard" data-restrict="previous" id="myWizard">
+                        <div class="steps-container">
+                            <ul class="steps">
+                                <li data-step="1" data-name="campaign" class="active">
+                                    <span class="badge">1</span>Verification
+                                    <span class="chevron"></span>
+                                </li>
+                                <li data-step="2">
+                                    <span class="badge">2</span>Payment
+                                    <span class="chevron"></span>
+                                </li>
+                                <li data-step="3" data-name="template">
+                                    <span class="badge">3</span>Setup
+                                    <span class="chevron"></span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="step-content">
+                            <div class="step-pane active sample-pane alert" data-step="1">
+                                <h4>Verify your e-mailaddress</h4>
+                                <h5>Enter the code you received in the e-mail we sent you.</h5>
+
+                                <div class="verificationForm">
+                                    <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
+                                    <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
+                                    <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
+                                    <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
+                                </div>
+                            </div>
+                            <div class="step-pane sample-pane alert" data-step="2">
+                                <h4>Payment</h4>
+                                <h5>Start your payment by clicking on the button below.</h5>
+
+                                <table class="table plan-summary">
+                                    <tbody>
+                                        <tr>
+                                            <th>Package</th>
+                                            <td>RentVision - Basic Subscription</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Cost</th>
+                                            <td>&euro; 8,-</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Subscription type</th>
+                                            <td>Monthly</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <div class="clearfix">
+                                    <button type="button" class="btn btn-light btn-skip" onclick="$('#confirmSkipPaymentModal').appendTo('#modalBox')" data-toggle="modal" data-target="#confirmSkipPaymentModal">
+                                        Skip
+                                        <i class="fas fa-times"></i>
+                                    </button>
+
+                                    <button type="button" class="btn btn-primary btn-next">
+                                        Checkout
+                                        <i class="fas fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="step-pane sample-pane alert" data-step="3">
+                                <h4>Environment setup</h4>
+                                <div class="setup-working">
+                                    <h5>We're setting up your environment</h5>
+                                    <i class="fas fa-spinner fa-pulse"></i>
+                                    <p>Hold on tight, this may take a few seconds...</p>
+                                </div>
+
+                                <div class="setup-success">
+                                    <h5>Your environment was successfully created</h5>
+                                    <i class="fas fa-check"></i>
+                                    <p>You can visit your new dashboard by clicking on the button below</p>
+                                    <button class="btn btn-info">My dashboard</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step-buttons">
+                            <span>This step will update automatically when completing the action above.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="setup-content">
-            <h5>@Model.SetupFields.Title</h5>
-
-            <i class="fas @Model.SetupFields.Icon.Value fa-pulse"></i>
-
-            <p class="loadingText">@Model.SetupFields.LoadingText</p>
-
-            <p class="timeOutMessage">@Model.SetupFields.TimeOutMessage</p>
+        <!-- Modal -->
+        <div class="modal fade" id="confirmSkipPaymentModal" tabindex="-1" role="dialog" aria-labelledby="confirmSkipPaymentModal" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmSkipPaymentModalTitle">Are you sure?</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to skip payment? Skipping this step will set your account to a free plan.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger">Skip payment</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 
 @section script {
+    <script src="//www.fuelcdn.com/fuelux/3.13.0/js/fuelux.min.js"></script>
+    @* Custom scripts *@
     <script type="text/javascript" src="~/assets/js/setup.js"></script>
+    <script type="text/javascript" src="~/assets/js/verificationCode.js"></script>
 }

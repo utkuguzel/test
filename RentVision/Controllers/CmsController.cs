@@ -226,31 +226,11 @@ namespace RentVision.Controllers
             return View(model);
         }
 
-        [Route("setup")]
-        public async Task<IActionResult> Setup(Guid id, bool draft = false)
+        [Route("setup/{email}")]
+        public async Task<IActionResult> Setup(Guid id, string email, bool draft = false)
         {
             var model = await _loader.GetPage<SetupPage>(id, HttpContext.User, draft);
-
-            // Set temporary debug data if _DEBUG is enabled
-            if ( ( TempData["Email"] == null ) && !_DEBUG )
-            {
-                return LocalRedirect("/");
-            }
-            else if ( _DEBUG )
-            {
-                TempData["Email"] = "";
-            }
-
-            // Return user to proper culture page
-            string cultureUrl = CultureHelper.GetProperCultureUrl(Request, HttpContext);
-
-            if (cultureUrl != null)
-            {
-                // Fix for culture redirect (TempData is only valid for 1 redirect)
-                TempData["Email"] = TempData["Email"] != null ? TempData["Email"].ToString() : null;
-
-                return LocalRedirect(cultureUrl);
-            }
+            model.Email = email;
 
             return View(model);
         }
