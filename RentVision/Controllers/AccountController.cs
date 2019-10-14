@@ -23,9 +23,10 @@ namespace RentVision.Controllers
             _apiHelper = new ApiHelper(_api, _clientFactory);
         }
 
-        [HttpPost("/verify/email/{email}")]
-        public async Task<JsonResult> VerifyEmailAsync(string email)
+        [HttpPost("/verify/email/{verificationCode:int}")]
+        public async Task<JsonResult> VerifyEmailAsync(int verificationCode)
         {
+            // POST: http://backoffice.rentvision.eu/api/VerificationCode/Verified/{email}
             return new JsonResult(HttpStatusCode.OK);
         }
 

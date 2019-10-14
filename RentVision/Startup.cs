@@ -39,13 +39,6 @@ namespace RentVision
             Configuration = configuration;
             Config = configuration;
 
-            // Map BackOffice and ApiCalls to their corresponding class
-            var backOfficeConfig = Configuration.GetSection("BackOffice").Get<Configuration.BackOffice>();
-            var apiCallsConfig = Configuration.GetSection("ApiCalls").Get<Configuration.ApiCalls>();
-
-            Configuration.GetSection("BackOffice").Bind(backOfficeConfig);
-            Configuration.GetSection("ApiCalls").Bind(apiCallsConfig);
-
             // Initialize Mollie keys in customerController
             var mollieSettings = Configuration.GetSection("MollieSettings");
 
@@ -91,8 +84,8 @@ namespace RentVision
             services.AddHttpClient("RentVisionApi", c =>
             {
                 c.DefaultRequestHeaders.Add(
-                    $"{Configuration.GetSection("BackOffice")["apiKeyHeader"]}",
-                    $"{Configuration.GetSection("BackOffice")["apiKey"]}"
+                    $"{Models.Configuration.Configuration.BackOffice.ApiKeyHeaderName}",
+                    $"{Models.Configuration.Configuration.BackOffice.ApiKey}"
                 );
             });
 
