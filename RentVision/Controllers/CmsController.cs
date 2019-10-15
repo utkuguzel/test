@@ -226,11 +226,12 @@ namespace RentVision.Controllers
             return View(model);
         }
 
-        [Route("setup/{email}")]
-        public async Task<IActionResult> Setup(Guid id, string email, bool draft = false)
+        [Route("setup")]
+        public async Task<IActionResult> Setup(Guid id, bool draft = false)
         {
             var model = await _loader.GetPage<SetupPage>(id, HttpContext.User, draft);
-            model.Email = email;
+            model.Email = HttpContext.Session.GetString("email");
+            model.SelectedPlan = JsonConvert.DeserializeObject<UserPlan>(HttpContext.Session.GetString("plan"));
 
             return View(model);
         }

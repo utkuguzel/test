@@ -59,15 +59,15 @@
                                     <tbody>
                                         <tr>
                                             <th>Package</th>
-                                            <td>RentVision - Basic Subscription</td>
+                                            <td>RentVision - @Model.SelectedPlan.Name</td>
                                         </tr>
                                         <tr>
                                             <th>Cost</th>
-                                            <td>&euro; 8,-</td>
+                                            <td>&euro; @Model.SelectedPlan.Price.ToString()</td>
                                         </tr>
                                         <tr>
                                             <th>Subscription type</th>
-                                            <td>Monthly</td>
+                                            <td>@(Model.SelectedPlan.PayInterval == 1 ? "Yearly" : "Monthly")</td>
                                         </tr>
                                     </tbody>
                                 </table>

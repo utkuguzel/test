@@ -26,6 +26,8 @@ namespace Twinvision.Piranha.RentVision.Controllers
             _apiHelper = new ApiHelper(api, clientFactory);
         }
 
+        // This method will be triggered by the Mollie Webhook
+        // And sends the transactionId to the centralized API for further processing.
         [HttpPost("getTransactionId")]
         public async Task<JsonResult> GetMollieTransactionIdAsync()
         {
@@ -36,7 +38,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
             };
 
             var paymentWebhookResponse = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.PaymentWebhook, HttpMethod.Post, urlParameters, context: HttpContext);
-            var responseResult = paymentWebhookResponse.Content.ReadAsStringAsync();
+            var responseResult = await paymentWebhookResponse.Content.ReadAsStringAsync();
 
             if ( !paymentWebhookResponse.IsSuccessStatusCode )
             {
@@ -44,12 +46,6 @@ namespace Twinvision.Piranha.RentVision.Controllers
             }
 
             return new JsonResult(new { HttpStatusCode.OK, responseResult });
-        }
-
-        [HttpGet("test")]
-        public JsonResult Test()
-        {
-            return new JsonResult(HttpStatusCode.OK);
         }
     }
 }

@@ -53,19 +53,51 @@
     }
 
     function verifyCode() {
-        //TODO: Ajax call aanroepen hier
+        var code = "";
+        var email = $(".setup").data("email");
+        
+        for (var i = 0; i < 4; i++) {
+            code += body.find('input').eq(i).val();
+        }
 
-        $(".verificationForm").addClass("success");
+        $.post("/account/verify/code/" + email + "/" + code, function (response) {
+            console.log(response);
+            if (response.statusCode === 200) {
+                $(".verificationForm").addClass("success");
 
-        setTimeout(function () {
-            $('.wizard').wizard('next');
-        }, 1000);
+                setTimeout(function () {
+                    $('.wizard').wizard('next');
+                }, 1000);
+            }
+            else {
+                $(".verificationForm").addClass("error");
+            }
+        });
+    }
+
+    function checkPayment() {
+        //
     }
 
     $('.wizard').on('actionclicked.fu.wizard', function (evt, data) {
-        if (data.step === 2 && data.direction === "next") {
+        if (data.step === 1 && data.direction === "next") {
+            checkPayment();
+        }
+        else if (data.step === 2 && data.direction === "next") {
             startSetupPoll();
         }
+    });
+
+    // Check if user is already verified
+    $.post("/account/verify/" + $(".setup").data("email"), function (response) {
+        var responseObject = JSON.parse(response.responseString);
+        if (responseObject.value === true) {
+            $('.wizard').wizard('next');
+            $(".verificationForm").addClass("success");
+            console.log("Account was already verified");
+        }
+
+        console.log(responseObject);
     });
 
     body.on('keyup', 'input', goToNextInput);

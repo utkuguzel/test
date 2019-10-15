@@ -13,6 +13,7 @@ using Twinvision.Piranha.RentVision.Controllers;
 using RentVision.Models;
 using Microsoft.AspNetCore.Http;
 using reCAPTCHA.AspNetCore;
+using Newtonsoft.Json;
 
 namespace RentVision.Controllers
 {
@@ -74,10 +75,8 @@ namespace RentVision.Controllers
             };
 
             // Check if user credentials match user input
-
             var userCredentialResponse = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.LoginUserRentVisionApi, HttpMethod.Post, urlParameters, password, HttpContext);
             string userCredentialString = await userCredentialResponse.Content.ReadAsStringAsync();
-
             if (Guid.TryParse(userCredentialString, out Guid apiLoginKey))
             {
                 HttpContext.Session.SetString("ApiLoginKey", userCredentialString);
@@ -110,9 +109,13 @@ namespace RentVision.Controllers
         public async Task<IActionResult> RegisterAsync( string email, string subdomain, string businessUnitName, string password, string confirmPassword, bool tos )
         {
             string userCulture = CultureHelper.GetUserCulture(Request, HttpContext);
+            string refererUrl = Request.Headers["Referer"].ToString();
+            // Get userPlan
             string userPlan = HttpContext.Session.GetString("UserPlan") ?? "Free";
             string payInterval = HttpContext.Session.GetString("PayInterval") ?? "2";
-            string refererUrl = Request.Headers["Referer"].ToString();
+            int interval = Convert.ToInt32(payInterval);
+            var userPlanResponse = await _apiHelper.GetUserPlansAsync();
+            UserPlan plan = userPlanResponse.Find(m => m.Name.IndexOf(userPlan) != -1 && m.PayInterval == interval);
 
             var recaptchaResponse = await _recaptcha.Validate(Request.Form["g-recaptcha-response"]);
             if ( !recaptchaResponse.success )
@@ -130,11 +133,9 @@ namespace RentVision.Controllers
             subdomain = subdomain.ToLower();
 
             var formErrors = AuthHelper.validateForm(Request.Form, userCulture);
-
             if ( formErrors.Count > 0 )
             {
                 TempData["Errors"] = formErrors.ToArray();
-
                 return Redirect(refererUrl);
             }
 
@@ -147,10 +148,8 @@ namespace RentVision.Controllers
             };
 
             // Attempt to create an account if everything is ok
-
             var response = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.CreateAccount, HttpMethod.Post, urlParameters, password);
             string userCredentialString = await response.Content.ReadAsStringAsync();
-
             if ( Guid.TryParse(userCredentialString, out Guid apiLoginKey) )
             {
                 HttpContext.Session.SetString("ApiLoginKey", userCredentialString);
@@ -163,7 +162,6 @@ namespace RentVision.Controllers
             {
                 // Get localized back-end error message and display it to the visitor
                 string localizedBackOfficeMessage = AuthHelper.GetBackOfficeStringLocalized(userCulture, userCredentialString);
-
                 if ( localizedBackOfficeMessage != null )
                 {
                     TempData["StatusMessage"] = localizedBackOfficeMessage;
@@ -196,12 +194,26 @@ namespace RentVision.Controllers
             //    }
             //}
 
-            return DisplaySubDomainSetup(email);
-        }
+            // Create verification code
+            var verificationCodeParameters = new Dictionary<string, string>()
+            {
+                { "email", email },
+                { "culture", userCulture }
+            };
+            var verificationCodeResponse = await _apiHelper.SendApiCallAsync(
+                Configuration.ApiCalls.CreateVerificationCode,
+                HttpMethod.Post,
+                verificationCodeParameters,
+                context: HttpContext
+            );
+            if ( !verificationCodeResponse.IsSuccessStatusCode )
+            {
+                TempData["StatusMessage"] = await verificationCodeResponse.Content.ReadAsStringAsync();
+                return Redirect(refererUrl);
+            }
 
-        public IActionResult DisplaySubDomainSetup(string email)
-        {
-            TempData["Email"] = email;
+            HttpContext.Session.SetString("email", email);
+            HttpContext.Session.SetString("plan", JsonConvert.SerializeObject(plan));
 
             return RedirectToAction("setup", "cms");
         }

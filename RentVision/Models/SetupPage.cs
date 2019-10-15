@@ -13,6 +13,6 @@ namespace RentVision.Models
         
         public string Email { get; set; }
 
-        public Plan SelectedPlan { get; set; }
+        public UserPlan SelectedPlan { get; set; }
     }
 }

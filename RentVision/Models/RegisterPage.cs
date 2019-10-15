@@ -11,5 +11,7 @@ namespace RentVision.Models
     {
         [Region]
         public RegisterFields Fields { get; set; }
+
+        public UserPlan SelectedUserPlan { get; set; }
     }
 }

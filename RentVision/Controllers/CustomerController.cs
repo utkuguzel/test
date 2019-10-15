@@ -116,7 +116,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
 
                 if ( result.Status == PaymentStatus.Paid )
                 {
-                    // Create subscription if initial payment is paid
+                    // Create subscription if initial payment was paid
                     var subscriptionResponse = await CreateCustomerSubscriptionAsync(metaDataResponse, result);
 
                     if ( subscriptionResponse.Status == SubscriptionStatus.Active )

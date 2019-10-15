@@ -23,20 +23,47 @@ namespace RentVision.Controllers
             _apiHelper = new ApiHelper(_api, _clientFactory);
         }
 
-        [HttpPost("/verify/email/{verificationCode:int}")]
-        public async Task<JsonResult> VerifyEmailAsync(int verificationCode)
+        [HttpPost("verify/{email}")]
+        public async Task<JsonResult> Verify(string email)
         {
-            // POST: http://backoffice.rentvision.eu/api/VerificationCode/Verified/{email}
-            return new JsonResult(HttpStatusCode.OK);
+            var urlParameters = new Dictionary<string, string>()
+            {
+                { "email", email }
+            };
+            var verificationCodeResponse = await _apiHelper.SendApiCallAsync(
+                Configuration.ApiCalls.GetVerificationCodeStatus,
+                HttpMethod.Get, urlParameters,
+                context: HttpContext
+            );
+            var responseString = await verificationCodeResponse.Content.ReadAsStringAsync();
+            return new JsonResult(new { verificationCodeResponse.StatusCode, responseString });
         }
 
-        [HttpPost("/verify/transaction/{transactionId}")]
+        // TEST
+        [HttpPost("verify/code/{email}/{code}")]
+        public async Task<JsonResult> VerifyCodeAsync(string email, string code)
+        {
+            var urlParameters = new Dictionary<string, string>()
+            {
+                { "email", email },
+                { "code", code }
+            };
+            var verificationCodeResponse = await _apiHelper.SendApiCallAsync(
+                Configuration.ApiCalls.SetVerificationCodeVerified,
+                HttpMethod.Post, urlParameters,
+                context: HttpContext
+            );
+            var responseString = await verificationCodeResponse.Content.ReadAsStringAsync();
+            return new JsonResult(new { verificationCodeResponse.StatusCode, responseString });
+        }
+
+        [HttpPost("verify/transaction")]
         public async Task<JsonResult> VerifyTransactionAsync(string transactionId)
         {
             return new JsonResult(HttpStatusCode.OK);
         }
 
-        [HttpPost("/verify/environment/{email}")]
+        [HttpPost("verify/environment")]
         public async Task<JsonResult> VerifyEnvironmentAsync(string email)
         {
             return new JsonResult(HttpStatusCode.OK);
