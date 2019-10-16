@@ -44,7 +44,7 @@
                                 <h4>Verify your e-mailaddress</h4>
                                 <h5>Enter the code you received in the e-mail we sent you.</h5>
 
-                                <div class="verificationForm">
+                                <div class="verificationForm" @(Model.Code != null ? $"data-code={Model.Code}" : "")>
                                     <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
                                     <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
                                     <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />

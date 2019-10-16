@@ -61,25 +61,24 @@
         }
 
         $.post("/account/verify/code/" + email + "/" + code, function (response) {
-            console.log(response);
             if (response.statusCode === 200) {
-                $(".verificationForm").addClass("success");
+                $(".verificationForm").removeClass("error").addClass("success");
 
                 setTimeout(function () {
                     $('.wizard').wizard('next');
                 }, 1000);
             }
             else {
-                $(".verificationForm").addClass("error");
+                $(".verificationForm").removeClass("success").addClass("error");
             }
         });
     }
 
     function checkPayment() {
-        //
+        // TODO: Check payment status here
     }
 
-    $('.wizard').on('actionclicked.fu.wizard', function (evt, data) {
+    $('.wizard').on('actionclicked.fu.wizard', function (_, data) {
         if (data.step === 1 && data.direction === "next") {
             checkPayment();
         }
@@ -93,12 +92,27 @@
         var responseObject = JSON.parse(response.responseString);
         if (responseObject.value === true) {
             $('.wizard').wizard('next');
-            $(".verificationForm").addClass("success");
-            console.log("Account was already verified");
+            $(".verificationForm").removeClass("error").addClass("success");
         }
-
-        console.log(responseObject);
+        else {
+            // Check if there is a code set in the code attribute
+            checkForExistingCode();
+        }
     });
+
+    function checkForExistingCode() {
+        var existingCode = $(".verificationForm").data("code");
+
+        if (existingCode !== undefined) {
+            var strExistingCode = existingCode.toString();
+
+            for (var i = 0; i < 4; i++) {
+                body.find('input').eq(i).val(strExistingCode[i]);
+            }
+
+            verifyCode();
+        }
+    }
 
     body.on('keyup', 'input', goToNextInput);
     body.on('keydown paste', 'input', onKeyDown);

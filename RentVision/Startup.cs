@@ -50,6 +50,7 @@ namespace RentVision
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDistributedMemoryCache();
             services.AddLocalization(options =>
                 options.ResourcesPath = "Resources"
             );
@@ -89,7 +90,14 @@ namespace RentVision
                 );
             });
 
-            services.AddSession();
+            services.AddSession(options =>
+            {
+                // Set a short timeout for easy testing.
+                options.IdleTimeout = TimeSpan.FromHours(1);
+                options.Cookie.HttpOnly = true;
+                // Make the session cookie essential
+                options.Cookie.IsEssential = true;
+            });
 
             //
             // Setup Piranha & Asp.Net Identity with SQL Server

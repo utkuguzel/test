@@ -9,6 +9,9 @@ using System.Collections.Generic;
 
 namespace RentVision.Controllers
 {
+    /// <summary>
+    /// This controller handles the verification of each step in Setup
+    /// </summary>
     [Route("[controller]")]
     public class AccountController : Controller
     {
@@ -39,7 +42,6 @@ namespace RentVision.Controllers
             return new JsonResult(new { verificationCodeResponse.StatusCode, responseString });
         }
 
-        // TEST
         [HttpPost("verify/code/{email}/{code}")]
         public async Task<JsonResult> VerifyCodeAsync(string email, string code)
         {

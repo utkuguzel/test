@@ -226,14 +226,40 @@ namespace RentVision.Controllers
             return View(model);
         }
 
-        [Route("setup")]
-        public async Task<IActionResult> Setup(Guid id, bool draft = false)
+        [Route("setup/{email?}/{code?}")]
+        public async Task<IActionResult> Setup(Guid id, string email, string code, bool draft = false)
         {
-            var model = await _loader.GetPage<SetupPage>(id, HttpContext.User, draft);
-            model.Email = HttpContext.Session.GetString("email");
-            model.SelectedPlan = JsonConvert.DeserializeObject<UserPlan>(HttpContext.Session.GetString("plan"));
+            email = !string.IsNullOrWhiteSpace(email) ? email : HttpContext.Session.GetString("email");
 
-            return View(model);
+            if (email == null)
+                return LocalRedirect("/");
+
+            var urlParameters = new Dictionary<string, string>()
+            {
+                { "email", email }
+            };
+            var singleUserPlanResponse = await _apiHelper.SendApiCallAsync(
+                Configuration.ApiCalls.SingleUserPlan,
+                HttpMethod.Get,
+                urlParameters,
+                context: HttpContext
+            );
+            var singleUserPlan = await singleUserPlanResponse.Content.ReadAsStringAsync();
+
+            if ( singleUserPlanResponse.StatusCode == HttpStatusCode.OK )
+            {
+                var model = await _loader.GetPage<SetupPage>(id, HttpContext.User, draft);
+                model.Email = email;
+                model.SelectedPlan = JsonConvert.DeserializeObject<UserPlan>(singleUserPlan);
+                if (!string.IsNullOrWhiteSpace(code))
+                {
+                    model.Code = code;
+                }
+
+                return View(model);
+            }
+
+            return LocalRedirect("/");
         }
 
         [Route("/api/getUserPlans")]
