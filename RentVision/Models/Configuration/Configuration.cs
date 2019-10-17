@@ -12,7 +12,7 @@ namespace RentVision.Models.Configuration
             public const string Protocol            = "http";
             public const string Domain              = "rentvision.eu";
             //public const string HostName           = "backoffice.rentvision.eu/api";
-            public const string HostName            = "7be24226.ngrok.io/api";
+            public const string HostName            = "b96b208b.ngrok.io/api";
             public const string ApiKeyHeaderName    = "X-Api-Key";
             public const string ApiKey              = "TestKey";
         }

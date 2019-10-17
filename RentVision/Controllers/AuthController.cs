@@ -79,7 +79,9 @@ namespace RentVision.Controllers
             string userCredentialString = await userCredentialResponse.Content.ReadAsStringAsync();
             if (Guid.TryParse(userCredentialString, out Guid apiLoginKey))
             {
+                var expirationOffset = new DateTimeOffset().ToOffset(TimeSpan.FromMinutes(20));
                 HttpContext.Session.SetString("ApiLoginKey", userCredentialString);
+                Response.Cookies.Append("ApiLoginKey", userCredentialString, options: new CookieOptions { Expires = expirationOffset });
             }
 
             TempData["StatusCode"] = userCredentialResponse.StatusCode;
@@ -152,7 +154,9 @@ namespace RentVision.Controllers
             string userCredentialString = await response.Content.ReadAsStringAsync();
             if ( Guid.TryParse(userCredentialString, out Guid apiLoginKey) )
             {
+                var expirationOffset = new DateTimeOffset().ToOffset(TimeSpan.FromMinutes(20));
                 HttpContext.Session.SetString("ApiLoginKey", userCredentialString);
+                Response.Cookies.Append("ApiLoginKey", userCredentialString, options: new CookieOptions { Expires = expirationOffset });
             }
 
             TempData["StatusCode"] = response.StatusCode;
