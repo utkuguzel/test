@@ -197,7 +197,7 @@ form {
         }
     }
 
-    button i {
+    button i, a i {
         font-size: 1em;
         padding: 0 0 0 10px;
         vertical-align: middle;
@@ -323,7 +323,7 @@ form {
         font-size: 0.8em;
     }
 
-    /*button {
+    button.register:not(disabled), button.login:not(disabled) {
         margin: 10px 0 10px 0;
         border-radius: 4px;
         transition: background 0.5s !important;
@@ -335,7 +335,7 @@ form {
         &:hover {
             .gradient-hover();
         }
-    }*/
+    }
 
     a {
         text-shadow: none;
@@ -346,30 +346,43 @@ form {
     }
 }
 
-    .setup {
-        //padding: 10px 20px 20px 20px !important;
-        .setup-content {
-            text-align: center;
-
-            .timeOutMessage {
-                font-size: 0.8em;
-            }
+.setup {
+    .step-pane-payment {
+        .btn.btn-primary {
+            float: right;
+            margin: 0 !important;
+            min-width: 180px;
+            height: 50px;
+            line-height: 35px;
 
             i {
-                font-size: 3em;
-                margin: 20px 0;
-            }
-
-            p {
-                font-size: 0.9em;
-            }
-
-            span {
-                font-size: 0.8em;
-                color: #AAA;
+                margin: 0 !important;
             }
         }
     }
+
+    .setup-content {
+        text-align: center;
+
+        .timeOutMessage {
+            font-size: 0.8em;
+        }
+
+        i {
+            font-size: 3em;
+            margin: 20px 0;
+        }
+
+        p {
+            font-size: 0.9em;
+        }
+
+        span {
+            font-size: 0.8em;
+            color: #AAA;
+        }
+    }
+}
 
     .passwordRequirements {
         display: block;

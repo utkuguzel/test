@@ -96,13 +96,13 @@ function handleHeaderScroll(init)
     if (top > 70)
     {
         $("#header").stop().animate({
-            backgroundColor: "#222222",
+            backgroundColor: "linear-gradient(180deg, rgba(34,34,34,1) 0%, rgba(17,17,17,1) 100%)",
             boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)"
         }, 100);
 
 
         $(".headerOption").stop().animate({
-            background: "#222222",
+            background: "linear-gradient(180deg, rgba(34,34,34,1) 0%, rgba(17,17,17,1) 100%)",
             borderLeft: "1px solid rgba(0, 0, 0, 0.2)"
         }, 100);
 

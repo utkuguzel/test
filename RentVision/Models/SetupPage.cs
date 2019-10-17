@@ -14,5 +14,6 @@ namespace RentVision.Models
         public string Email { get; set; }
         public UserPlan SelectedPlan { get; set; }
         public string Code { get; set; }
+        public string MollieCheckoutUrl { get; set; }
     }
 }

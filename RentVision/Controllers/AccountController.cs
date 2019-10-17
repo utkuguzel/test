@@ -62,6 +62,8 @@ namespace RentVision.Controllers
         [HttpPost("verify/transaction")]
         public async Task<JsonResult> VerifyTransactionAsync(string transactionId)
         {
+            // TODO: TransactionRecords table aanmaken
+
             return new JsonResult(HttpStatusCode.OK);
         }
 

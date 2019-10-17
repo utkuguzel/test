@@ -153,7 +153,8 @@ form {
 .wizard .step-content button.btn-next {
   float: right;
 }
-.wizard .step-content button i {
+.wizard .step-content button i,
+.wizard .step-content a i {
   font-size: 1em;
   padding: 0 0 0 10px;
   vertical-align: middle;
@@ -198,19 +199,6 @@ form {
     }*/
   /*input[type="text"], input[type="password"] {
         width: 100%;
-    }*/
-  /*button {
-        margin: 10px 0 10px 0;
-        border-radius: 4px;
-        transition: background 0.5s !important;
-        color: #FFF;
-        border: 1px solid darken(@COLOUR_VIVIDBURGUNDY, 15%);
-
-        .gradient();
-
-        &:hover {
-            .gradient-hover();
-        }
     }*/
 }
 .form .input-icons i,
@@ -280,6 +268,27 @@ form {
 .setup label {
   font-size: 0.8em;
 }
+.form button.register:not(disabled),
+.setup button.register:not(disabled),
+.form button.login:not(disabled),
+.setup button.login:not(disabled) {
+  margin: 10px 0 10px 0;
+  border-radius: 4px;
+  transition: background 0.5s !important;
+  color: #FFF;
+  border: 1px solid #344c82;
+  background: #4b6cb7;
+  /* fallback for old browsers */
+  background: linear-gradient(0deg, #1a5aa3 0%, #1c6ac3 100%);
+}
+.form button.register:not(disabled):hover,
+.setup button.register:not(disabled):hover,
+.form button.login:not(disabled):hover,
+.setup button.login:not(disabled):hover {
+  background: #4b6cb7;
+  /* fallback for old browsers */
+  background: linear-gradient(0deg, #1c6ac3 0%, #1a5aa3 100%);
+}
 .form a,
 .setup a {
   text-shadow: none;
@@ -287,6 +296,16 @@ form {
 .form a i,
 .setup a i {
   padding: 0 10px 0 0;
+}
+.setup .step-pane-payment .btn.btn-primary {
+  float: right;
+  margin: 0 !important;
+  min-width: 180px;
+  height: 50px;
+  line-height: 35px;
+}
+.setup .step-pane-payment .btn.btn-primary i {
+  margin: 0 !important;
 }
 .setup .setup-content {
   text-align: center;

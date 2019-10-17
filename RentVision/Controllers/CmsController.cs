@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Localization;
 using Microsoft.AspNetCore.Localization;
 using System.Linq;
+using Twinvision.Piranha.RentVision.Controllers;
 
 namespace RentVision.Controllers
 {
@@ -251,6 +252,10 @@ namespace RentVision.Controllers
                 var model = await _loader.GetPage<SetupPage>(id, HttpContext.User, draft);
                 model.Email = email;
                 model.SelectedPlan = JsonConvert.DeserializeObject<UserPlan>(singleUserPlan);
+                if(model.SelectedPlan.Price > 0)
+                {
+                    model.MollieCheckoutUrl = await GenerateMollieCheckoutUrl(email, model.SelectedPlan, email);
+                }
                 if (!string.IsNullOrWhiteSpace(code))
                 {
                     model.Code = code;
@@ -260,6 +265,21 @@ namespace RentVision.Controllers
             }
 
             return LocalRedirect("/");
+        }
+
+        private async Task<string> GenerateMollieCheckoutUrl(string email, UserPlan userPlan, string businessUnitName)
+        {
+            var customerController = new CustomerController(_api, _clientFactory);
+            var customerCreationResponse = await customerController.CreateCustomerAsync(email, businessUnitName);
+            int interval = Convert.ToInt32(userPlan.PayInterval);
+
+            var checkoutUrl = await customerController.CreatePaymentRequest(userPlan, email, customerCreationResponse.Value.ToString(), HttpContext);
+            if (checkoutUrl != null)
+            {
+                return checkoutUrl;
+            }
+
+            return null;
         }
 
         [Route("/api/getUserPlans")]
