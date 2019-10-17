@@ -1,10 +1,9 @@
 ﻿var email;
 var timer;
+var nopes = 0;
 
 function startSetupPoll()
 {
-    $(".setup-success").hide();
-
     email = $(".setup").data("email");
 
     $(".timeOutMessage").hide();
@@ -29,12 +28,6 @@ function isUserSiteReady()
         error: onErrorCallBack
     });
 
-    setTimeout(function () {
-        $(".setup-working").fadeOut("fast", function () {
-            $(".setup-success").fadeIn("fast");
-        });
-    }, 2500);
-
     timer = setTimeout(isUserSiteReady, 1000);
 }
 
@@ -55,19 +48,31 @@ function onSuccessCallBack(response)
     }
     else if (response.statusCode !== 200)
     {
-        $(".setup-content > i").hide();
-        $(".setup-content > .timeOutMessage").hide();
-        $(".setup-content > .loadingText").text("An unknown error occured, please try again. If this problem persists, please contact technical support.");
+        $(".setup-working").fadeOut("fast", function () {
+            $(".setup-error").fadeIn("fast");
+        });
     }
     else if (response.response === "false")
     {
-        //console.log("Nope");
+        nopes += 1;
+
+        if (nopes >= 30) {
+            clearTimeout(timer);
+            $(".setup-working").fadeOut("fast", function () {
+                $(".setup-error").fadeIn("fast");
+            });
+        }
     }
 }
 
 function onUserKeySuccessCallBack(data)
 {
-    window.location.href = data.realRedirectUrl;
+    $(".setup-working").fadeOut("fast", function () {
+        $(".setup-success").fadeIn("fast");
+    });
+
+    $(".setup-success").find("a").attr("href", data.realRedirectUrl);
+    //window.location.href = data.realRedirectUrl;
 }
 
 function onUserKeyErrorCallBack(jqXhr, error, errorStr)

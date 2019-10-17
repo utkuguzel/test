@@ -25,15 +25,15 @@
                         <div class="steps-container">
                             <ul class="steps">
                                 <li data-step="1" data-name="campaign" class="active">
-                                    <span class="badge">1</span>Verification
+                                    <span class="badge">1</span>@Localizer["Verification"]
                                     <span class="chevron"></span>
                                 </li>
                                 <li data-step="2">
-                                    <span class="badge">2</span>Payment
+                                    <span class="badge">2</span>@Localizer["Payment"]
                                     <span class="chevron"></span>
                                 </li>
                                 <li data-step="3" data-name="template">
-                                    <span class="badge">3</span>Setup
+                                    <span class="badge">3</span>@Localizer["Setup"]
                                     <span class="chevron"></span>
                                 </li>
                             </ul>
@@ -41,8 +41,8 @@
 
                         <div class="step-content">
                             <div class="step-pane active sample-pane alert" data-step="1">
-                                <h4>Verify your e-mailaddress</h4>
-                                <h5>Enter the code you received in the e-mail we sent you.</h5>
+                                <h4>@Localizer["Verify your e-mailaddress"]</h4>
+                                <h5>@Localizer["Enter the code that you received in the e-mail we sent you."]</h5>
 
                                 <div class="verificationForm" @(Model.Code != null ? $"data-code={Model.Code}" : "")>
                                     <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
@@ -51,58 +51,65 @@
                                     <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
                                 </div>
                             </div>
-                            <div class="step-pane sample-pane alert" data-step="2">
-                                <h4>Payment</h4>
-                                <h5>Start your payment by clicking on the button below.</h5>
+                            <div class="step-pane step-pane-payment sample-pane alert" data-step="2" data-skip="@(Model.SelectedPlan.Price <= 0 ? true : false)">
+                                <h4>@Localizer["Payment"]</h4>
+                                <h5>@Localizer["Start your payment by clicking on the button below."]</h5>
 
                                 <table class="table plan-summary">
                                     <tbody>
                                         <tr>
-                                            <th>Package</th>
+                                            <th>@Localizer["Package"]</th>
                                             <td>RentVision - @Model.SelectedPlan.Name</td>
                                         </tr>
                                         <tr>
-                                            <th>Cost</th>
+                                            <th>@Localizer["Cost"]</th>
                                             <td>&euro; @Model.SelectedPlan.Price.ToString()</td>
                                         </tr>
                                         <tr>
-                                            <th>Subscription type</th>
-                                            <td>@(Model.SelectedPlan.PayInterval == 1 ? "Yearly" : "Monthly")</td>
+                                            <th>@Localizer["Subscription type"]</th>
+                                            <td>@(Model.SelectedPlan.PayInterval == 1 ? Localizer["Yearly"] : Localizer["Monthly"])</td>
                                         </tr>
                                     </tbody>
                                 </table>
 
                                 <div class="clearfix">
                                     <button type="button" class="btn btn-light btn-skip" onclick="$('#confirmSkipPaymentModal').appendTo('#modalBox')" data-toggle="modal" data-target="#confirmSkipPaymentModal">
-                                        Skip
+                                        @Localizer["Skip"]
                                         <i class="fas fa-times"></i>
                                     </button>
 
                                     <button type="button" class="btn btn-primary btn-next">
-                                        Checkout
+                                        @Localizer["Checkout"]
                                         <i class="fas fa-arrow-right"></i>
                                     </button>
                                 </div>
                             </div>
                             <div class="step-pane sample-pane alert" data-step="3">
-                                <h4>Environment setup</h4>
+                                <h4>@Localizer["Environment setup"]</h4>
                                 <div class="setup-working">
-                                    <h5>We're setting up your environment</h5>
+                                    <h5>@Localizer["We're setting up your environment"]</h5>
                                     <i class="fas fa-spinner fa-pulse"></i>
-                                    <p>Hold on tight, this may take a few seconds...</p>
+                                    <p>@Localizer["Hold on tight, this may take a few seconds..."]</p>
                                 </div>
 
                                 <div class="setup-success">
-                                    <h5>Your environment was successfully created</h5>
+                                    <h5 class="environment">@Localizer["Your environment was successfully created"]</h5>
                                     <i class="fas fa-check"></i>
-                                    <p>You can visit your new dashboard by clicking on the button below</p>
-                                    <button class="btn btn-info">My dashboard</button>
+                                    <p>@Localizer["You can visit your new dashboard by clicking on the button below"]</p>
+                                    <a href="" class="btn btn-info">@Localizer["My dashboard"]</a>
+                                </div>
+
+                                <div class="setup-error">
+                                    <h5 class="environment">@Localizer["An error occured"]</h5>
+                                    <i class="fas fa-times"></i>
+                                    <p>@Localizer["An error occured, please try again. If this problem persists, please contact technical support."]</p>
+                                    <a href="/setup" class="btn btn-info">@Localizer["Try again"]</a>
                                 </div>
                             </div>
                         </div>
 
                         <div class="step-buttons">
-                            <span>This step will update automatically when completing the action above.</span>
+                            <span>@Localizer["This step will update automatically when completing the action above."]</span>
                         </div>
                     </div>
                 </div>
@@ -114,17 +121,17 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="confirmSkipPaymentModalTitle">Are you sure?</h5>
+                        <h5 class="modal-title" id="confirmSkipPaymentModalTitle">@Localizer["Are you sure?"]</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        Are you sure you want to skip payment? Skipping this step will set your account to a free plan.
+                        @Localizer["Are you sure you want to skip payment? Skipping this step will set your account to a free plan."]
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-danger">Skip payment</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">@Localizer["Close"]</button>
+                        <button type="button" class="btn btn-danger">@Localizer["Skip payment"]</button>
                     </div>
                 </div>
             </div>

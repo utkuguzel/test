@@ -274,7 +274,8 @@ namespace RentVision.Controllers
         public async Task<IActionResult> KillAllSites()
         {
             var result = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.KillAllSites, HttpMethod.Post);
-            return new JsonResult(result);
+            var resultString = await result.Content.ReadAsStringAsync();
+            return new JsonResult(new { result.StatusCode, resultString });
         }
     }
 }

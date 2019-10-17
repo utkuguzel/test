@@ -80,7 +80,16 @@
 
     $('.wizard').on('actionclicked.fu.wizard', function (_, data) {
         if (data.step === 1 && data.direction === "next") {
-            checkPayment();
+            var planFree = $(".step-pane-payment").data("skip");
+
+            if (planFree !== "True") {
+                checkPayment();
+            }
+            else if ( planFree === "True" ) {
+                $(".step-pane-payment").data("skip", "");
+                $(".wizard").wizard("next");
+                startSetupPoll();
+            }
         }
         else if (data.step === 2 && data.direction === "next") {
             startSetupPoll();
@@ -91,6 +100,7 @@
     $.post("/account/verify/" + $(".setup").data("email"), function (response) {
         var responseObject = JSON.parse(response.responseString);
         if (responseObject.value === true) {
+            console.log("Skip verification");
             $('.wizard').wizard('next');
             $(".verificationForm").removeClass("error").addClass("success");
         }
@@ -113,6 +123,9 @@
             verifyCode();
         }
     }
+
+    $(".setup-success").hide();
+    $(".setup-error").hide();
 
     body.on('keyup', 'input', goToNextInput);
     body.on('keydown paste', 'input', onKeyDown);

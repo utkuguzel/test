@@ -122,6 +122,10 @@ form {
   color: #6fc86f;
   text-shadow: 1px 1px 2px rgba(10, 10, 10, 0.2);
 }
+.setup-error i {
+  color: #c86f6f;
+  text-shadow: 1px 1px 2px rgba(10, 10, 10, 0.2);
+}
 /*.modal {
     position: absolute;
     z-index: 1000;
@@ -176,6 +180,9 @@ form {
   margin: 0 0 30px 0;
   font-size: 0.9em;
   font-family: 'Open Sans', Arial;
+}
+.wizard .step-content h5.environment {
+  margin: 0 !important;
 }
 .form,
 .setup {
