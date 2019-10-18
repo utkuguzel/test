@@ -227,13 +227,31 @@ namespace RentVision.Controllers
             return View(model);
         }
 
-        [Route("setup/{email?}/{code?}")]
-        public async Task<IActionResult> Setup(Guid id, string email, string code, bool draft = false)
+        [Route("setup/{code?}")]
+        public async Task<IActionResult> Setup(Guid id, string code, bool draft = false)
         {
-            email = !string.IsNullOrWhiteSpace(email) ? email : HttpContext.Session.GetString("email");
+            string email = null;
+            string apiLoginKey = HttpContext.Session.GetString("ApiLoginKey") ?? CookieHelper.GetCookie("ApiLoginKey", HttpContext);
+            if (apiLoginKey != null)
+            {
+                var GetEmailFromLoginKeyParameters = new Dictionary<string, string>()
+                {
+                    { "ApiLoginKey", apiLoginKey }
+                };
+                var emailResponse = await _apiHelper.SendApiCallAsync(
+                    Configuration.ApiCalls.GetEmailFromLoginKey,
+                    HttpMethod.Get,
+                    GetEmailFromLoginKeyParameters,
+                    context: HttpContext
+                );
+                if (emailResponse.IsSuccessStatusCode)
+                {
+                    email = await emailResponse.Content.ReadAsStringAsync();
+                }
+            }
 
             if (email == null)
-                return LocalRedirect("/");
+                return LocalRedirect("/login");
 
             var urlParameters = new Dictionary<string, string>()
             {

@@ -60,7 +60,7 @@
             code += body.find('input').eq(i).val();
         }
 
-        $.post("/account/verify/code/" + email + "/" + code, function (response) {
+        $.post("/verify/code/" + email + "/" + code, function (response) {
             if (response.statusCode === 200) {
                 $(".verificationForm").removeClass("error").addClass("success");
 
@@ -97,7 +97,7 @@
     });
 
     // Check if user is already verified
-    $.post("/account/verify/" + $(".setup").data("email"), function (response) {
+    $.post("/verify/code/" + $(".setup").data("email"), function (response) {
         var responseObject = JSON.parse(response.responseString);
         if (responseObject.value === true) {
             console.log("Skip verification");

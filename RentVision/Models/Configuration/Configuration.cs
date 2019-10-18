@@ -12,7 +12,7 @@ namespace RentVision.Models.Configuration
             public const string Protocol            = "http";
             public const string Domain              = "rentvision.eu";
             //public const string HostName           = "backoffice.rentvision.eu/api";
-            public const string HostName            = "b96b208b.ngrok.io/api";
+            public const string HostName            = "178eb58a.ngrok.io/api";
             public const string ApiKeyHeaderName    = "X-Api-Key";
             public const string ApiKey              = "TestKey";
         }
@@ -31,6 +31,7 @@ namespace RentVision.Models.Configuration
             public const string GetRentVisionLoginKey   = "RentVisionAccount/GetRentVisionLoginKey";
             public const string GetMollieId             = "RentVisionAccount/GetMollieId";
             public const string SetMollieId             = "RentVisionAccount/SetMollieId";
+            public const string GetEmailFromLoginKey    = "RentVisionAccount/GetEmailFromLoginKey";
             // VerificationCode
             public const string CreateVerificationCode      = "VerificationCode/Create";
             public const string SetVerificationCodeVerified = "VerificationCode/Verified";

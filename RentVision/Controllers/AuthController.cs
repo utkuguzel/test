@@ -156,7 +156,10 @@ namespace RentVision.Controllers
             {
                 var expirationOffset = new DateTimeOffset().ToOffset(TimeSpan.FromMinutes(20));
                 HttpContext.Session.SetString("ApiLoginKey", userCredentialString);
-                Response.Cookies.Append("ApiLoginKey", userCredentialString, options: new CookieOptions { Expires = expirationOffset });
+                CookieHelper.SetCookie("ApiLoginKey",
+                    userCredentialString,
+                    HttpContext, options: new CookieOptions { Expires = expirationOffset }
+                );
             }
 
             TempData["StatusCode"] = response.StatusCode;
@@ -191,9 +194,6 @@ namespace RentVision.Controllers
                 TempData["StatusMessage"] = await verificationCodeResponse.Content.ReadAsStringAsync();
                 return Redirect(refererUrl);
             }
-
-            HttpContext.Session.SetString("email", email);
-            HttpContext.Session.SetString("plan", JsonConvert.SerializeObject(plan));
 
             return RedirectToAction("setup", "cms");
         }

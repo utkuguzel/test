@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
 using Piranha;
+using RentVision.Helpers;
 using RentVision.Models;
 using RentVision.Models.Configuration;
 using System;
@@ -51,10 +52,17 @@ namespace Twinvision.Piranha.RentVision.Helpers
                 request.Headers.Add("X-Password", password);
             }
 
-            if (context != null)
+            if (context != null && callType != Configuration.ApiCalls.LoginUserRentVisionApi)
             {
-                var apiLoginKey = context.Session.GetString("ApiLoginKey");
-                request.Headers.Add("X-ApiLoginKey", apiLoginKey);
+                var apiLoginKey = context.Session.GetString("ApiLoginKey") ?? CookieHelper.GetCookie("ApiLoginKey", context);
+                if (apiLoginKey != null)
+                {
+                    request.Headers.Add("X-ApiLoginKey", apiLoginKey);
+                }
+                else
+                {
+                    throw new Exception("ApiLoginKey cookie is null");
+                }
             }
 
             var client = _clientFactory.CreateClient("RentVisionApi");

@@ -13,20 +13,20 @@ namespace RentVision.Controllers
     /// This controller handles the verification of each step in Setup
     /// </summary>
     [Route("[controller]")]
-    public class AccountController : Controller
+    public class VerifyController : Controller
     {
         private readonly IApi _api;
         private readonly IHttpClientFactory _clientFactory;
         private ApiHelper _apiHelper;
 
-        public AccountController(IApi api, IHttpClientFactory clientFactory)
+        public VerifyController(IApi api, IHttpClientFactory clientFactory)
         {
             _api = api;
             _clientFactory = clientFactory;
             _apiHelper = new ApiHelper(_api, _clientFactory);
         }
 
-        [HttpPost("verify/{email}")]
+        [HttpPost("code/{email}")]
         public async Task<JsonResult> Verify(string email)
         {
             var urlParameters = new Dictionary<string, string>()
@@ -42,7 +42,7 @@ namespace RentVision.Controllers
             return new JsonResult(new { verificationCodeResponse.StatusCode, responseString });
         }
 
-        [HttpPost("verify/code/{email}/{code}")]
+        [HttpPost("code/{email}/{code}")]
         public async Task<JsonResult> VerifyCodeAsync(string email, string code)
         {
             var urlParameters = new Dictionary<string, string>()
@@ -59,7 +59,7 @@ namespace RentVision.Controllers
             return new JsonResult(new { verificationCodeResponse.StatusCode, responseString });
         }
 
-        [HttpPost("verify/transaction")]
+        [HttpPost("transaction")]
         public async Task<JsonResult> VerifyTransactionAsync(string transactionId)
         {
             // TODO: TransactionRecords table aanmaken
@@ -67,7 +67,7 @@ namespace RentVision.Controllers
             return new JsonResult(HttpStatusCode.OK);
         }
 
-        [HttpPost("verify/environment")]
+        [HttpPost("environment")]
         public async Task<JsonResult> VerifyEnvironmentAsync(string email)
         {
             return new JsonResult(HttpStatusCode.OK);
