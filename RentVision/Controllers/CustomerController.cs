@@ -68,6 +68,33 @@ namespace Twinvision.Piranha.RentVision.Controllers
             return new JsonResult(customerResponse.Id);
         }
 
+        public async Task<ListResponse<PaymentResponse>> GetPaymentListAsync(string customerId = null)
+        {
+            IPaymentClient paymentClient = new PaymentClient(MollieKeyTest);
+            ListResponse<PaymentResponse> response = null;
+            if (customerId != null)
+            {
+                response = await paymentClient.GetPaymentListAsync(profileId: customerId);
+            }
+            else
+            {
+                response = await paymentClient.GetPaymentListAsync();
+            }
+            return response;
+        }
+
+        public async Task<ListResponse<CustomerResponse>> GetCustomerListAsync()
+        {
+            ICustomerClient customerClient = new CustomerClient(MollieKeyTest);
+            ListResponse<CustomerResponse> response = await customerClient.GetCustomerListAsync();
+            return response;
+        }
+
+        public bool DoesCustomerExist(string customer, ListResponse<CustomerResponse> customerList)
+        {
+            return customerList.Items.Exists(c => c.Email == customer || c.Name == customer);
+        }
+
         public async Task<string> CreatePaymentRequest(UserPlan plan, string email, string customerId, HttpContext context)
         {
             UserPlanMetaData metadataRequest = new UserPlanMetaData()

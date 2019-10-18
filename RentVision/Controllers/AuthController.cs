@@ -101,10 +101,14 @@ namespace RentVision.Controllers
             }
 
             // Fetch customer subdomain and redirect
-            var subdomainResponse = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.UserSubDomain, HttpMethod.Get, urlParameters, context: HttpContext);
-            var subdomain = await subdomainResponse.Content.ReadAsStringAsync();
+            //var subdomainResponse = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.UserSubDomain, HttpMethod.Get, urlParameters, context: HttpContext);
+            //var subdomain = await subdomainResponse.Content.ReadAsStringAsync();
 
-            return Redirect($"{Configuration.BackOffice.Protocol}://{subdomain}.{Configuration.BackOffice.Domain}");
+            //return Redirect($"{Configuration.BackOffice.Protocol}://{subdomain}.{Configuration.BackOffice.Domain}");
+
+            // TODO: Verify all steps before continuing
+
+            return RedirectToAction("setup", "cms");
         }
 
         [Route("/auth/register"), HttpPost, ValidateAntiForgeryToken]

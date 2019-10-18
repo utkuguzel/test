@@ -288,16 +288,33 @@ namespace RentVision.Controllers
         private async Task<string> GenerateMollieCheckoutUrl(string email, UserPlan userPlan, string businessUnitName)
         {
             var customerController = new CustomerController(_api, _clientFactory);
-            var customerCreationResponse = await customerController.CreateCustomerAsync(email, businessUnitName);
-            int interval = Convert.ToInt32(userPlan.PayInterval);
-
-            var checkoutUrl = await customerController.CreatePaymentRequest(userPlan, email, customerCreationResponse.Value.ToString(), HttpContext);
-            if (checkoutUrl != null)
+            var customerList = await customerController.GetCustomerListAsync();
+            var customerCreationResponse = "";
+            var checkoutUrl = "";
+            if ( !customerController.DoesCustomerExist(email, customerList) )
             {
-                return checkoutUrl;
+                var response = await customerController.CreateCustomerAsync(email, businessUnitName);
+                customerCreationResponse = response.Value.ToString();
+                checkoutUrl = await customerController.CreatePaymentRequest(userPlan, email, customerCreationResponse, HttpContext);
+            }
+            else
+            {
+                var customerId = customerList.Items.Where(c => c.Email == email).Select( m => m.Id ).FirstOrDefault().ToString();
+                var response = await customerController.GetPaymentListAsync();
+                var openPaymentsList = response.Items.Where(p => p.CustomerId == customerId && p.Status == Mollie.Api.Models.Payment.PaymentStatus.Open);
+                if (openPaymentsList.Count() > 0)
+                {
+                    checkoutUrl = openPaymentsList.Select( u => u.Links.Checkout.Href ).FirstOrDefault().ToString();
+                }
+                else
+                {
+                    checkoutUrl = await customerController.CreatePaymentRequest(userPlan, email, customerId, HttpContext);
+                }
+
+                customerCreationResponse = customerId;
             }
 
-            return null;
+            return checkoutUrl;
         }
 
         [Route("/api/getUserPlans")]
