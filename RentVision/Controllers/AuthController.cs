@@ -47,35 +47,26 @@ namespace RentVision.Controllers
             return new JsonResult( new { userSiteReadyResponse.StatusCode, response } );
         }
 
+        [ValidateAntiForgeryToken]
         [Route("/auth/login"), HttpPost]
-        public async Task<IActionResult> LoginAsync(string email, string password, bool remember)
+        public async Task<IActionResult> LoginAsync(LoginPage model)
         {
-            string refererUrl = Request.Headers["Referer"].ToString();
-
-            if (email == null)
-            {
-                return Redirect(refererUrl);
-            }
-
-            email = email.ToLower();
-
+            var pageModel = await _api.Pages.GetByIdAsync<LoginPage>(model.Id);
             string userCulture = CultureHelper.GetUserCulture(Request, HttpContext);
-            var formErrors = AuthHelper.validateForm(Request.Form, userCulture);
 
-            if (formErrors.Count > 0)
+            if ( string.IsNullOrEmpty(model.Email))
             {
-                TempData["Errors"] = formErrors.ToArray();
-
-                return Redirect(refererUrl);
+                return View("~/Views/Cms/login.cshtml", pageModel);
             }
+            model.Email = model.Email.ToLower();
 
             var urlParameters = new Dictionary<string, string>()
             {
-                { "email", email }
+                { "email", model.Email }
             };
 
             // Check if user credentials match user input
-            var userCredentialResponse = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.LoginUserRentVisionApi, HttpMethod.Post, urlParameters, password, HttpContext);
+            var userCredentialResponse = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.LoginUserRentVisionApi, HttpMethod.Post, urlParameters, model.Password, HttpContext);
             string userCredentialString = await userCredentialResponse.Content.ReadAsStringAsync();
             if (Guid.TryParse(userCredentialString, out Guid apiLoginKey))
             {
@@ -97,7 +88,7 @@ namespace RentVision.Controllers
                     TempData["StatusMessage"] = localizedBackOfficeMessage;
                 }
 
-                return Redirect(refererUrl);
+                return View("~/Views/Cms/login.cshtml", pageModel);
             }
 
             // Fetch customer subdomain and redirect
@@ -112,8 +103,21 @@ namespace RentVision.Controllers
         }
 
         [Route("/auth/register"), HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> RegisterAsync( string email, string subdomain, string businessUnitName, string password, string confirmPassword, bool tos )
+        public async Task<IActionResult> RegisterAsync( RegisterPage model )
         {
+            var pageModel = await _api.Pages.GetByIdAsync<RegisterPage>(model.Id);
+            pageModel.Email = model.Email ?? "";
+            pageModel.BusinessUnitName = model.BusinessUnitName ?? "";
+            pageModel.Subdomain = model.Subdomain ?? "";
+            pageModel.Password = model.Password ?? "";
+            pageModel.ConfirmPassword = model.ConfirmPassword ?? "";
+            pageModel.Tos = model.Tos;
+
+            if ( !ModelState.IsValid )
+            {
+                return View("~/Views/Cms/register.cshtml", pageModel);
+            }
+
             string userCulture = CultureHelper.GetUserCulture(Request, HttpContext);
             string refererUrl = Request.Headers["Referer"].ToString();
             // Get userPlan
@@ -130,31 +134,19 @@ namespace RentVision.Controllers
                 return Redirect(refererUrl);
             }
 
-            if ( email == null || subdomain == null )
-            {
-                return Redirect(refererUrl);
-            }
-
-            email = email.ToLower();
-            subdomain = subdomain.ToLower();
-
-            var formErrors = AuthHelper.validateForm(Request.Form, userCulture);
-            if ( formErrors.Count > 0 )
-            {
-                TempData["Errors"] = formErrors.ToArray();
-                return Redirect(refererUrl);
-            }
+            model.Email = model.Email.ToLower();
+            model.Subdomain = model.Subdomain.ToLower();
 
             var urlParameters = new Dictionary<string, string>()
             {
-                { "email", email },
+                { "email", model.Email },
                 { "userPlanName", plan.Name },
-                { "subDomainName", subdomain },
-                { "businessUnitName", businessUnitName }
+                { "subDomainName", model.Subdomain },
+                { "businessUnitName", model.BusinessUnitName }
             };
 
             // Attempt to create an account if everything is ok
-            var response = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.CreateAccount, HttpMethod.Post, urlParameters, password);
+            var response = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.CreateAccount, HttpMethod.Post, urlParameters, model.Password);
             string userCredentialString = await response.Content.ReadAsStringAsync();
             if ( Guid.TryParse(userCredentialString, out Guid apiLoginKey) )
             {
@@ -184,7 +176,7 @@ namespace RentVision.Controllers
             // Create verification code
             var verificationCodeParameters = new Dictionary<string, string>()
             {
-                { "email", email },
+                { "email", model.Email },
                 { "culture", userCulture }
             };
             var verificationCodeResponse = await _apiHelper.SendApiCallAsync(

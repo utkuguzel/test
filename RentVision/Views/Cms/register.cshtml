@@ -14,30 +14,33 @@
 }
 
 <div class="d-flex justify-content-center form-register">
-	<div class="form">
-		<div class="logo-box">
-			<div class="logo logo-dark"></div>
-		</div>
+    <div class="form">
+        <div class="logo-box">
+            <div class="logo logo-dark"></div>
+        </div>
 
-        @if ( !string.IsNullOrWhiteSpace(statusMessage) )
+        @if (!string.IsNullOrWhiteSpace(statusMessage))
         {
             <span class="statusMessage">@statusMessage</span>
         }
 
-        @if ( errors != null && errors.Length > 0 )
+        @if (errors != null && errors.Length > 0)
         {
-            foreach ( var error in errors )
+            foreach (var error in errors)
             {
                 <span class="statusMessage">@error</span>
             }
         }
 
+        <span class="statusMessage">@Html.ValidationSummary()</span>
+
         <form method="post" action="@Model.Fields.ButtonLink.Value">
             @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" />
 
             <div class="form-group mb-3">
                 <label for="email">@Model.Fields.Email.Value</label>
-                <input id="email" name="email" type="text" class="form-control" placeholder="john@doe.com" aria-label="@Model.Fields.Email.Value" aria-describedby="emailHelp">
+                <input asp-for="Email" id="email" name="email" type="text" class="form-control" placeholder="john@doe.com" aria-label="@Model.Fields.Email.Value" aria-describedby="emailHelp">
                 <small id="emailHelp" class="form-text text-muted">@Model.Fields.EmailLabel.Value</small>
             </div>
 
@@ -45,7 +48,7 @@
                 <label for="subdomain">@Model.Fields.Subdomain.Value</label>
 
                 <div class="input-group">
-                    <input id="subdomain" name="subdomain" type="text" class="form-control" placeholder="johnsrental" aria-label="@Model.Fields.Subdomain.Value" aria-describedby="subdomainHelp">
+                    <input asp-for="Subdomain" id="subdomain" name="subdomain" type="text" class="form-control" placeholder="johnsrental" aria-label="@Model.Fields.Subdomain.Value" aria-describedby="subdomainHelp">
                     <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">.rentvision.eu</span>
                     </div>
@@ -56,18 +59,18 @@
 
             <div class="form-group mb-3">
                 <label for="businessUnitName">@Model.Fields.BusinessUnitName.Value</label>
-                <input id="businessUnitName" name="businessUnitName" type="text" class="form-control" placeholder="John's Rental B.V." aria-label="@Model.Fields.BusinessUnitName.Value" aria-describedby="basic-addon2">
+                <input asp-for="BusinessUnitName" id="businessUnitName" name="businessUnitName" type="text" class="form-control" placeholder="John's Rental B.V." aria-label="@Model.Fields.BusinessUnitName.Value" aria-describedby="basic-addon2">
             </div>
 
             <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="password">Password</label>
-                  <input id="password" type="password" class="form-control" name="password" placeholder="Password...">
+                    <label for="password">Password</label>
+                    <input asp-for="Password" id="password" type="password" class="form-control" name="password" placeholder="Password...">
                 </div>
 
                 <div class="form-group col-md-6">
-                  <label for="confirmPassword">Confirm password</label>
-                  <input id="confirmPassword" type="password" class="form-control" name="confirmPassword" placeholder="Confirm password..." />
+                    <label for="confirmPassword">Confirm password</label>
+                    <input asp-for="ConfirmPassword" id="confirmPassword" type="password" class="form-control" name="confirmPassword" placeholder="Confirm password..." />
                 </div>
             </div>
 
@@ -81,21 +84,24 @@
                     <li class="specialCharRequirement"><i class="fas fa-times"></i>@Model.Fields.specialCharRequirement</li>
                     <li class="passwordMatchRequirement"><i class="fas fa-times"></i>@Model.Fields.passwordMatchRequirement</li>
                 </ul>
-                </div>
+            </div>
 
             <div class="box">
-                <input id="tos" type="checkbox" name="tos" value="true">
+                <input asp-for="Tos" id="tos" type="checkbox" name="tos" value="true">
                 <label for="tos">@Html.Raw(Model.Fields.Tos.Value)</label>
             </div>
 
             @Html.Recaptcha(RecaptchaSettings.Value)
 
+            <div class="requirements"></div>
+
             <button class="register" disabled>@Model.Fields.ButtonText.Value</button>
             <a href="/"><i class="fas fa-arrow-left"></i>@Model.Fields.ReturnButtonText.Value</a>
         </form>
-	</div>
+    </div>
 </div>
 
 @section script {
     <script type="text/javascript" src="~/assets/js/register.js"></script>
+    <script type="text/javascript" src="~/assets/js/formValidator.js"></script>
 }

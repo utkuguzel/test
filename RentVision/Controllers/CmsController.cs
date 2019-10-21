@@ -284,7 +284,7 @@ namespace RentVision.Controllers
 
             return LocalRedirect("/");
         }
-
+        
         private async Task<string> GenerateMollieCheckoutUrl(string email, UserPlan userPlan, string businessUnitName)
         {
             var customerController = new CustomerController(_api, _clientFactory);

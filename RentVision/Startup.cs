@@ -20,6 +20,8 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using System.Globalization;
 using System.Collections.Generic;
 using reCAPTCHA.AspNetCore;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 
 namespace RentVision
 {
@@ -44,6 +46,8 @@ namespace RentVision
 
             CustomerController.MollieKeyLive = mollieSettings["apiKeyLive"];
             CustomerController.MollieKeyTest = mollieSettings["apiKeyTest"];
+
+            ValidatorOptions.LanguageManager.Enabled = true;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -74,7 +78,11 @@ namespace RentVision
                 .AddPiranhaManagerOptions()
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                 .AddDataAnnotationsLocalization()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddFluentValidation();
+
+            services.AddTransient<IValidator<LoginForm>, LoginPageValidator>();
+            services.AddTransient<IValidator<RegisterForm>, RegisterPageValidator>();
 
             services.AddPiranha();
             services.AddPiranhaApplication();

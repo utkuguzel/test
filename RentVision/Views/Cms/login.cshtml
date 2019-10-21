@@ -7,7 +7,7 @@
     // Check if there's an error set in tempData and display it
     string statusMessage = "";
 
-    if ( TempData["StatusMessage"] != null )
+    if (TempData["StatusMessage"] != null)
     {
         statusMessage = TempData["StatusMessage"].ToString();
     }
@@ -25,37 +25,49 @@
             <div class="logo logo-dark"></div>
         </div>
 
-        @if ( !string.IsNullOrWhiteSpace(statusMessage) )
+        @if (!string.IsNullOrWhiteSpace(statusMessage))
         {
             <span class="statusMessage">@statusMessage</span>
         }
 
-        @if ( errors != null && errors.Length > 0 )
+        @if (errors != null && errors.Length > 0)
         {
-            foreach ( var error in errors )
+            foreach (var error in errors)
             {
                 <span class="statusMessage">@error</span>
             }
         }
 
+        <span class="statusMessage">
+            @Html.ValidationSummary()
+        </span>
+
         <form method="post" action="@Model.Fields.ButtonLink.Value">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" value="@Model.Id" />
             <label for="email">@Model.Fields.Email.Value</label>
 
             <div class="input-group mb-3">
-                <input name="email" type="text" class="form-control" placeholder="@Model.Fields.Email.Value" aria-label="@Model.Fields.Email.Value" aria-describedby="basic-addon2">
+                <input asp-for="Email" name="email" type="text" class="form-control" placeholder="@Model.Fields.Email.Value" aria-label="@Model.Fields.Email.Value" aria-describedby="basic-addon2">
             </div>
 
             <label for="password">@Model.Fields.Password.Value</label>
 
             <div class="input-group mb-3">
-                <input name="password" type="password" class="form-control" placeholder="@Model.Fields.Password.Value" aria-label="@Model.Fields.Password.Value" aria-describedby="basic-addon2">
+                <input asp-for="Password" name="password" type="password" class="form-control" placeholder="@Model.Fields.Password.Value" aria-label="@Model.Fields.Password.Value" aria-describedby="basic-addon2">
             </div>
 
-            <input id="remember" type="checkbox" name="remember" checked="checked" value="true" />
+            <input asp-for="Remember" id="remember" type="checkbox" name="remember" checked="checked" value="true" />
             <label for="remember">@Model.Fields.Remember.Value</label>
+
+            <div class="requirements"></div>
 
             <button class="login">@Model.Fields.ButtonText.Value</button>
             <a href="/"><i class="fas fa-arrow-left"></i>@Model.Fields.ReturnButtonText.Value</a>
         </form>
     </div>
 </div>
+
+@section Script {
+    <script type="text/javascript" src="~/assets/js/formValidator.js"></script>
+}
