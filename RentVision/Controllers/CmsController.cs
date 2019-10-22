@@ -26,7 +26,6 @@ namespace RentVision.Controllers
         private readonly IModelLoader _loader;
         private readonly IHttpClientFactory _clientFactory;
         private readonly ApiHelper _apiHelper;
-        private bool _DEBUG = false;
 
         /// <summary>
         /// Default constructor.

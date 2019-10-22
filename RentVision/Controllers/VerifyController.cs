@@ -7,7 +7,6 @@ using Twinvision.Piranha.RentVision.Helpers;
 using RentVision.Models.Configuration;
 using System.Collections.Generic;
 using RentVision.Models;
-using Microsoft.Extensions.Localization;
 using Microsoft.AspNetCore.Localization;
 using Twinvision.Piranha.RentVision.Resources;
 using System.Globalization;
@@ -34,32 +33,32 @@ namespace RentVision.Controllers
         [HttpPost("form/register")]
         public JsonResult VerifyRegisterForm(RegisterForm form)
         {
+            // FluentValidation bug fix, should refactor
             var rqf = HttpContext.Features.Get<IRequestCultureFeature>();
             Strings.Culture = new CultureInfo(rqf.RequestCulture.Culture.TwoLetterISOLanguageName);
+
             var validator = new RegisterPageValidator();
             var validationResult = validator.Validate(form);
-
             if (validationResult.IsValid)
             {
                 return Json(HttpStatusCode.OK);
             }
-
             return Json(validationResult.Errors);
         }
 
         [HttpPost("form/login")]
         public JsonResult VerifyLoginForm(LoginForm form)
         {
+            // FluentValidation bug fix, should refactor
             var rqf = HttpContext.Features.Get<IRequestCultureFeature>();
             Strings.Culture = new CultureInfo(rqf.RequestCulture.Culture.TwoLetterISOLanguageName);
+
             var validator = new LoginPageValidator();
             var validationResult = validator.Validate(form);
-
             if (validationResult.IsValid)
             {
                 return Json(HttpStatusCode.OK);
             }
-
             return Json(validationResult.Errors);
         }
 
@@ -97,7 +96,7 @@ namespace RentVision.Controllers
         }
 
         [HttpPost("transaction")]
-        public async Task<JsonResult> VerifyTransactionAsync(string transactionId)
+        public JsonResult VerifyTransaction(string transactionId)
         {
             // TODO: TransactionRecords table aanmaken
 
@@ -105,7 +104,7 @@ namespace RentVision.Controllers
         }
 
         [HttpPost("environment")]
-        public async Task<JsonResult> VerifyEnvironmentAsync(string email)
+        public JsonResult VerifyEnvironment(string email)
         {
             return new JsonResult(HttpStatusCode.OK);
         }
