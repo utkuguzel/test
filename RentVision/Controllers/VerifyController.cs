@@ -8,6 +8,9 @@ using RentVision.Models.Configuration;
 using System.Collections.Generic;
 using RentVision.Models;
 using Microsoft.Extensions.Localization;
+using Microsoft.AspNetCore.Localization;
+using Twinvision.Piranha.RentVision.Resources;
+using System.Globalization;
 
 namespace RentVision.Controllers
 {
@@ -31,6 +34,8 @@ namespace RentVision.Controllers
         [HttpPost("form/register")]
         public JsonResult VerifyRegisterForm(RegisterForm form)
         {
+            var rqf = HttpContext.Features.Get<IRequestCultureFeature>();
+            Strings.Culture = new CultureInfo(rqf.RequestCulture.Culture.TwoLetterISOLanguageName);
             var validator = new RegisterPageValidator();
             var validationResult = validator.Validate(form);
 
@@ -45,6 +50,8 @@ namespace RentVision.Controllers
         [HttpPost("form/login")]
         public JsonResult VerifyLoginForm(LoginForm form)
         {
+            var rqf = HttpContext.Features.Get<IRequestCultureFeature>();
+            Strings.Culture = new CultureInfo(rqf.RequestCulture.Culture.TwoLetterISOLanguageName);
             var validator = new LoginPageValidator();
             var validationResult = validator.Validate(form);
 

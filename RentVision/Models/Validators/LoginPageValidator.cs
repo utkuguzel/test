@@ -4,6 +4,8 @@ using Piranha.Models;
 using System.Collections.Generic;
 using FluentValidation;
 using Microsoft.Extensions.Localization;
+using Microsoft.AspNetCore.Http;
+using RentVision.Helpers;
 using Twinvision.Piranha.RentVision.Resources;
 
 namespace RentVision.Models
@@ -14,10 +16,14 @@ namespace RentVision.Models
         {
             RuleFor(user => user.Email)
                 .NotEmpty()
-                .WithMessage(x => Strings.EmailInvalid)
-                .EmailAddress();
+                .WithName(x => Strings.Email)
+                .WithMessage(x => Strings.NotEmptyValidator)
+                .EmailAddress()
+                .WithMessage(x => Strings.EmailValidator);
             RuleFor(user => user.Password)
-                .NotEmpty();
+                .NotEmpty()
+                .WithName( x => Strings.Password )
+                .WithMessage(x => Strings.NotEmptyValidator);
         }
     }
 }

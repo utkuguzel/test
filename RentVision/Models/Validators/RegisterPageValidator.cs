@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using FluentValidation;
 using Microsoft.Extensions.Localization;
 using System.Threading.Tasks;
+using Twinvision.Piranha.RentVision.Resources;
 
 namespace RentVision.Models
 {
@@ -14,19 +15,34 @@ namespace RentVision.Models
         {
             RuleFor(user => user.Email)
                 .NotEmpty()
-                .EmailAddress();
+                .WithName( x => Strings.Email)
+                .WithMessage( x => Strings.NotEmptyValidator)
+                .EmailAddress()
+                .WithMessage( x => Strings.EmailValidator);
             RuleFor(user => user.Subdomain)
                 .NotEmpty()
+                .WithName(x => Strings.Subdomain)
+                .WithMessage(x => Strings.NotEmptyValidator)
                 .MinimumLength(3)
-                .MaximumLength(12);
+                .WithMessage(x => Strings.MinimumLength_Simple)
+                .MaximumLength(12)
+                .WithMessage(x => Strings.MaximumLength_Simple);
             RuleFor(user => user.BusinessUnitName)
-                .NotEmpty();
+                .NotEmpty()
+                .WithName(x => Strings.BusinessUnitName)
+                .WithMessage(x => Strings.NotEmptyValidator);
             RuleFor(user => user.Password)
-                .NotEmpty();
+                .NotEmpty()
+                .WithName(x => Strings.Password)
+                .WithMessage(x => Strings.NotEmptyValidator);
             RuleFor(user => user.ConfirmPassword)
-                .NotEmpty();
+                .NotEmpty()
+                .WithName(x => Strings.ConfirmPassword)
+                .WithMessage(x => Strings.NotEmptyValidator);
             RuleFor(user => user.Password)
-                .Matches(x => x.ConfirmPassword);
+                .Matches(x => x.ConfirmPassword)
+                .WithName(x => Strings.ConfirmPassword)
+                .WithMessage(x => Strings.EqualValidator);
         }
     }
 }

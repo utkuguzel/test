@@ -43,11 +43,8 @@ namespace RentVision
 
             // Initialize Mollie keys in customerController
             var mollieSettings = Configuration.GetSection("MollieSettings");
-
             CustomerController.MollieKeyLive = mollieSettings["apiKeyLive"];
             CustomerController.MollieKeyTest = mollieSettings["apiKeyTest"];
-
-            ValidatorOptions.LanguageManager.Enabled = true;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -74,15 +71,15 @@ namespace RentVision
             services.Configure<RecaptchaSettings>(Configuration.GetSection("RecaptchaSettings"));
             services.AddTransient<IRecaptchaService, RecaptchaService>();
 
+            services.AddTransient<IValidator<LoginForm>, LoginPageValidator>();
+            services.AddTransient<IValidator<RegisterForm>, RegisterPageValidator>();
+
             services.AddMvc()
+                .AddFluentValidation()
                 .AddPiranhaManagerOptions()
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                 .AddDataAnnotationsLocalization()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddFluentValidation();
-
-            services.AddTransient<IValidator<LoginForm>, LoginPageValidator>();
-            services.AddTransient<IValidator<RegisterForm>, RegisterPageValidator>();
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddPiranha();
             services.AddPiranhaApplication();

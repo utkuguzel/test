@@ -117,37 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BusinessUnitName" xml:space="preserve">
-    <value>Business unit name</value>
-  </data>
-  <data name="ConfirmPassword" xml:space="preserve">
-    <value>Confirm password</value>
-  </data>
-  <data name="Email" xml:space="preserve">
-    <value>E-mail</value>
-  </data>
   <data name="EmailValidator" xml:space="preserve">
-    <value>'{PropertyName}' is not a valid e-mail address</value>
+    <value>'{PropertyName}' is geen geldig email adres.</value>
   </data>
   <data name="EqualValidator" xml:space="preserve">
-    <value>'{PropertyName}' must be equal to '{ComparisonValue}'.</value>
+    <value>'{PropertyName}' moet gelijk zijn aan '{ComparisonValue}'.</value>
   </data>
   <data name="LengthValidator" xml:space="preserve">
-    <value>'{PropertyName}' must be between {MinLength} and {MaxLength} characters. You entered {TotalLength} characters.</value>
+    <value>De lengte van '{PropertyName}' moet tussen {MinLength} en {MaxLength} karakters zijn. Er zijn {TotalLength} karakters ingevoerd.</value>
   </data>
   <data name="MaximumLength_Simple" xml:space="preserve">
-    <value>The length of '{PropertyName}' must be {MaxLength} characters or fewer.</value>
+    <value>De lengte van '{PropertyName}' moet kleiner zijn dan of gelijk aan {MaxLength} tekens.</value>
   </data>
   <data name="MinimumLength_Simple" xml:space="preserve">
-    <value>The length of '{PropertyName}' must be at least {MinLength} characters.</value>
+    <value>De lengte van '{PropertyName}' moet groter zijn dan of gelijk aan {MinLength} tekens.</value>
   </data>
   <data name="NotEmptyValidator" xml:space="preserve">
-    <value>'{PropertyName}' must not be empty.</value>
-  </data>
-  <data name="Password" xml:space="preserve">
-    <value>Password</value>
-  </data>
-  <data name="Subdomain" xml:space="preserve">
-    <value>Subdomain</value>
+    <value>'{PropertyName}' mag niet leeg zijn.</value>
   </data>
 </root>

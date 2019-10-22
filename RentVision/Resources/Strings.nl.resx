@@ -117,7 +117,37 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="EmailInvalid" xml:space="preserve">
-    <value>{PropertyName} is geen geldig e-mail adres.</value>
+  <data name="BusinessUnitName" xml:space="preserve">
+    <value>Bedrijfsnaam</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Bevestig wachtwoord</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>E-mailadres</value>
+  </data>
+  <data name="EmailValidator" xml:space="preserve">
+    <value>Het veld '{PropertyName}' is geen geldig e-mailadres.</value>
+  </data>
+  <data name="EqualValidator" xml:space="preserve">
+    <value>Het veld '{PropertyName}' moet gelijk zijn aan het veld '{ComparisonValue}'.</value>
+  </data>
+  <data name="LengthValidator" xml:space="preserve">
+    <value>De lengte van '{PropertyName}' moet tussen {MinLength} en {MaxLength} karakters zijn. Er zijn {TotalLength} karakters ingevoerd.</value>
+  </data>
+  <data name="MaximumLength_Simple" xml:space="preserve">
+    <value>De lengte van '{PropertyName}' moet kleiner zijn dan of gelijk aan {MaxLength} tekens.</value>
+  </data>
+  <data name="MinimumLength_Simple" xml:space="preserve">
+    <value>De lengte van '{PropertyName}' moet groter zijn dan of gelijk aan {MinLength} tekens.</value>
+  </data>
+  <data name="NotEmptyValidator" xml:space="preserve">
+    <value>Het veld '{PropertyName}' mag niet leeg zijn.</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Wachtwoord</value>
+  </data>
+  <data name="Subdomain" xml:space="preserve">
+    <value>Subdomein</value>
   </data>
 </root>
