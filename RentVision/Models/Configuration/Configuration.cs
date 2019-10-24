@@ -10,11 +10,17 @@ namespace RentVision.Models.Configuration
         public class BackOffice
         {
             public const string Protocol            = "http";
-            public const string Domain              = "rentvision.eu";
-            //public const string HostName           = "backoffice.rentvision.eu/api";
-            public const string HostName            = "ddc2692f.ngrok.io/api";
+            public const string HostName            = "rentvision_backoffice.eu.ngrok.io/api";
             public const string ApiKeyHeaderName    = "X-Api-Key";
             public const string ApiKey              = "TestKey";
+            public static string Url = $"{Protocol}://{HostName}";
+        }
+
+        public class Website
+        {
+            public const string Protocol = "http";
+            public const string HostName = "rentvision.eu.ngrok.io";
+            public static string Url = $"{Protocol}://{HostName}";
         }
 
         public class ApiCalls
@@ -31,13 +37,16 @@ namespace RentVision.Models.Configuration
             public const string GetRentVisionLoginKey   = "RentVisionAccount/GetRentVisionLoginKey";
             public const string GetMollieId             = "RentVisionAccount/GetMollieId";
             public const string SetMollieId             = "RentVisionAccount/SetMollieId";
-            public const string GetEmailFromLoginKey    = "RentVisionAccount/GetEmailFromLoginKey";
+            public const string GetEmail                = "RentVisionAccount/GetEmail";
+            public const string GetPayment              = "RentVisionAccount/GetPayment";
             // VerificationCode
             public const string CreateVerificationCode      = "VerificationCode/Create";
             public const string SetVerificationCodeVerified = "VerificationCode/Verified";
             public const string GetVerificationCodeStatus   = "VerificationCode/Verified";
             // Misc
             public const string PaymentWebhook          = "Mollie/PaymentWebhook";
+            public const string SubscriptionWebhook     = "Mollie/SubscriptionWebhook";
+            public const string GetTransactionStatus    = "Mollie/GetTransactionStatus";
             public const string KillAllSites            = "RentVision/KillAllSites";
         }
     }

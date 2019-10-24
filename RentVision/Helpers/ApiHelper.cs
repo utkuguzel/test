@@ -37,7 +37,7 @@ namespace Twinvision.Piranha.RentVision.Helpers
             data = data ?? new Dictionary<string, string>();
 
             var query = QueryHelpers.AddQueryString(
-                $"{Configuration.BackOffice.Protocol}://{Configuration.BackOffice.HostName}/{callType}",
+                $"{Configuration.BackOffice.Url}/{callType}",
                 data
             );
 

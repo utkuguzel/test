@@ -28,8 +28,8 @@ namespace Twinvision.Piranha.RentVision.Controllers
 
         // This method will be triggered by the Mollie Webhook
         // And sends the transactionId to the centralized API for further processing.
-        [HttpPost("getTransactionId")]
-        public async Task<JsonResult> GetMollieTransactionIdAsync()
+        [HttpPost("updateTransaction")]
+        public async Task<ActionResult> UpdateTransactionAsync()
         {
             var mollieId = Request.Form["id"];
             var urlParameters = new Dictionary<string, string>()
@@ -37,15 +37,35 @@ namespace Twinvision.Piranha.RentVision.Controllers
                 { "id", mollieId }
             };
 
-            var paymentWebhookResponse = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.PaymentWebhook, HttpMethod.Post, urlParameters, context: HttpContext);
+            var paymentWebhookResponse = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.PaymentWebhook, HttpMethod.Post, urlParameters);
             var responseResult = await paymentWebhookResponse.Content.ReadAsStringAsync();
 
             if ( !paymentWebhookResponse.IsSuccessStatusCode )
             {
-                return new JsonResult(new { HttpStatusCode.BadRequest, responseResult });
+                return BadRequest(responseResult);
             }
 
-            return new JsonResult(new { HttpStatusCode.OK, responseResult });
+            return Ok();
+        }
+
+        [HttpPost("updateSubscription")]
+        public async Task<ActionResult> UpdateSubscriptionAsync()
+        {
+            var mollieId = Request.Form["id"];
+            var urlParameters = new Dictionary<string, string>()
+            {
+                { "id", mollieId }
+            };
+
+            var paymentWebhookResponse = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.SubscriptionWebhook, HttpMethod.Post, urlParameters);
+            var responseResult = await paymentWebhookResponse.Content.ReadAsStringAsync();
+
+            if (!paymentWebhookResponse.IsSuccessStatusCode)
+            {
+                return BadRequest(responseResult);
+            }
+
+            return Ok();
         }
     }
 }

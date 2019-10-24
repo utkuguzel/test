@@ -17,6 +17,10 @@ using Microsoft.Extensions.Localization;
 using Microsoft.AspNetCore.Localization;
 using System.Linq;
 using Twinvision.Piranha.RentVision.Controllers;
+using Mollie.Api.Client;
+using Mollie.Api.Models.Payment;
+using Mollie.Api.Models.Url;
+using Mollie.Api.Models.Payment.Response;
 
 namespace RentVision.Controllers
 {
@@ -233,14 +237,14 @@ namespace RentVision.Controllers
             string apiLoginKey = HttpContext.Session.GetString("ApiLoginKey") ?? CookieHelper.GetCookie("ApiLoginKey", HttpContext);
             if (apiLoginKey != null)
             {
-                var GetEmailFromLoginKeyParameters = new Dictionary<string, string>()
+                var GetEmailParameters = new Dictionary<string, string>()
                 {
                     { "ApiLoginKey", apiLoginKey }
                 };
                 var emailResponse = await _apiHelper.SendApiCallAsync(
-                    Configuration.ApiCalls.GetEmailFromLoginKey,
+                    Configuration.ApiCalls.GetEmail,
                     HttpMethod.Get,
-                    GetEmailFromLoginKeyParameters,
+                    GetEmailParameters,
                     context: HttpContext
                 );
                 if (emailResponse.IsSuccessStatusCode)
@@ -271,7 +275,9 @@ namespace RentVision.Controllers
                 model.SelectedPlan = JsonConvert.DeserializeObject<UserPlan>(singleUserPlan);
                 if(model.SelectedPlan.Price > 0)
                 {
-                    model.MollieCheckoutUrl = await GenerateMollieCheckoutUrl(email, model.SelectedPlan, email);
+                    var checkoutData = await GenerateMollieCheckoutUrl(email, model.SelectedPlan, email, HttpContext);
+                    model.MollieCheckoutUrl = checkoutData.checkoutUrl;
+                    model.MolliePaymentId = checkoutData.paymentId;
                 }
                 if (!string.IsNullOrWhiteSpace(code))
                 {
@@ -284,36 +290,49 @@ namespace RentVision.Controllers
             return LocalRedirect("/");
         }
         
-        private async Task<string> GenerateMollieCheckoutUrl(string email, UserPlan userPlan, string businessUnitName)
+        private async Task<(string checkoutUrl, string paymentId)> GenerateMollieCheckoutUrl(string email, UserPlan userPlan, string businessUnitName, HttpContext context)
         {
             var customerController = new CustomerController(_api, _clientFactory);
             var customerList = await customerController.GetCustomerListAsync();
-            var customerCreationResponse = "";
-            var checkoutUrl = "";
+            PaymentResponse checkoutUrl;
             if ( !customerController.DoesCustomerExist(email, customerList) )
             {
-                var response = await customerController.CreateCustomerAsync(email, businessUnitName);
-                customerCreationResponse = response.Value.ToString();
-                checkoutUrl = await customerController.CreatePaymentRequest(userPlan, email, customerCreationResponse, HttpContext);
+                var response = await customerController.CreateCustomerAsync(email, businessUnitName, context);
+                var mollieCustomerId = response.Value.ToString();
+                checkoutUrl = await customerController.CreatePaymentRequest(userPlan, email, mollieCustomerId, HttpContext);
             }
             else
             {
-                var customerId = customerList.Items.Where(c => c.Email == email).Select( m => m.Id ).FirstOrDefault().ToString();
-                var response = await customerController.GetPaymentListAsync();
-                var openPaymentsList = response.Items.Where(p => p.CustomerId == customerId && p.Status == Mollie.Api.Models.Payment.PaymentStatus.Open);
-                if (openPaymentsList.Count() > 0)
+                var mollieResponse = await _apiHelper.SendApiCallAsync(
+                    Configuration.ApiCalls.GetMollieId,
+                    HttpMethod.Get,
+                    context: HttpContext);
+                var mollieId = await mollieResponse.Content.ReadAsStringAsync();
+                if ( !mollieResponse.IsSuccessStatusCode )
                 {
-                    checkoutUrl = openPaymentsList.Select( u => u.Links.Checkout.Href ).FirstOrDefault().ToString();
+                    throw new Exception("Failed to retrieve customer MollieId");
+                }
+                var paymentListResponse = await customerController.GetPaymentListAsync();
+                var customerPayments = paymentListResponse.Items.Where(m => m.CustomerId == mollieId).ToList();
+                // Customer exists but there are no payments
+                if ( customerPayments.Count <= 0 )
+                {
+                    checkoutUrl = await customerController.CreatePaymentRequest(userPlan, email, mollieId, HttpContext);
                 }
                 else
                 {
-                    checkoutUrl = await customerController.CreatePaymentRequest(userPlan, email, customerId, HttpContext);
+                    // Check if there are any open payments, and if so return one
+                    var openPayment = customerPayments.FirstOrDefault(m => m.Status == PaymentStatus.Open);
+                    if ( openPayment != null )
+                    {
+                        return (openPayment.Links.Checkout.Href, openPayment.Id);
+                    }
                 }
 
-                customerCreationResponse = customerId;
+                return (null, null);
             }
 
-            return checkoutUrl;
+            return (checkoutUrl.Links.Checkout.Href, checkoutUrl.Id);
         }
 
         [Route("/api/getUserPlans")]

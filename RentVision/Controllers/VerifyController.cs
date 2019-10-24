@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Piranha;
+using System;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Http;
@@ -10,6 +11,8 @@ using RentVision.Models;
 using Microsoft.AspNetCore.Localization;
 using Twinvision.Piranha.RentVision.Resources;
 using System.Globalization;
+using RentVision.Helpers;
+using Microsoft.AspNetCore.Http;
 
 namespace RentVision.Controllers
 {
@@ -62,6 +65,28 @@ namespace RentVision.Controllers
             return Json(validationResult.Errors);
         }
 
+        [HttpPost("createVerificationCodeEmail/{email}")]
+        public async Task<HttpStatusCode> CreateVerificationCodeEmail(string email)
+        {
+            string userCulture = CultureHelper.GetUserCulture(Request, HttpContext);
+            var verificationCodeParameters = new Dictionary<string, string>()
+            {
+                { "email", email },
+                { "culture", userCulture }
+            };
+            var verificationCodeResponse = await _apiHelper.SendApiCallAsync(
+                Configuration.ApiCalls.CreateVerificationCode,
+                HttpMethod.Post,
+                verificationCodeParameters,
+                context: HttpContext
+            );
+            if (!verificationCodeResponse.IsSuccessStatusCode)
+            {
+                return verificationCodeResponse.StatusCode;
+            }
+            return HttpStatusCode.OK;
+        }
+
         [HttpPost("code/{email}")]
         public async Task<JsonResult> Verify(string email)
         {
@@ -95,12 +120,21 @@ namespace RentVision.Controllers
             return new JsonResult(new { verificationCodeResponse.StatusCode, responseString });
         }
 
-        [HttpPost("transaction")]
-        public JsonResult VerifyTransaction(string transactionId)
+        [HttpPost("transaction/{transactionId}")]
+        public async Task<JsonResult> VerifyTransactionAsync(string transactionId)
         {
-            // TODO: TransactionRecords table aanmaken
+            var urlParameters = new Dictionary<string, string>()
+            {
+                { "id", transactionId }
+            };
+            var transactionResponse = await _apiHelper.SendApiCallAsync(
+                Configuration.ApiCalls.GetTransactionStatus,
+                HttpMethod.Get,
+                urlParameters,
+                context: HttpContext);
+            var paymentStatus = await transactionResponse.Content.ReadAsStringAsync();
 
-            return new JsonResult(HttpStatusCode.OK);
+            return new JsonResult(new { transactionResponse.StatusCode, paymentStatus });
         }
 
         [HttpPost("environment")]

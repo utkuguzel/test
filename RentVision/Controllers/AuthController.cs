@@ -127,6 +127,12 @@ namespace RentVision.Controllers
             var userPlanResponse = await _apiHelper.GetUserPlansAsync();
             UserPlan plan = userPlanResponse.Find(m => m.Name.IndexOf(userPlan) != -1 && m.PayInterval == interval);
 
+            if ( string.IsNullOrWhiteSpace(Request.Form["g-recaptcha-response"]))
+            {
+                TempData["StatusMessage"] = AuthHelper.GetBackOfficeStringLocalized(userCulture, "captcha incorrect");
+                return Redirect(refererUrl);
+            }
+
             var recaptchaResponse = await _recaptcha.Validate(Request.Form["g-recaptcha-response"]);
             if ( !recaptchaResponse.success )
             {
@@ -159,7 +165,7 @@ namespace RentVision.Controllers
             }
 
             TempData["StatusCode"] = response.StatusCode;
-            TempData["StatusMessage"] = userCredentialString;
+            TempData["StatusMessage"] = "";
 
             if ( !response.IsSuccessStatusCode )
             {
@@ -170,24 +176,6 @@ namespace RentVision.Controllers
                     TempData["StatusMessage"] = localizedBackOfficeMessage;
                 }
 
-                return Redirect(refererUrl);
-            }
-
-            // Create verification code
-            var verificationCodeParameters = new Dictionary<string, string>()
-            {
-                { "email", model.Email },
-                { "culture", userCulture }
-            };
-            var verificationCodeResponse = await _apiHelper.SendApiCallAsync(
-                Configuration.ApiCalls.CreateVerificationCode,
-                HttpMethod.Post,
-                verificationCodeParameters,
-                context: HttpContext
-            );
-            if ( !verificationCodeResponse.IsSuccessStatusCode )
-            {
-                TempData["StatusMessage"] = await verificationCodeResponse.Content.ReadAsStringAsync();
                 return Redirect(refererUrl);
             }
 
@@ -209,7 +197,7 @@ namespace RentVision.Controllers
             );
 
             var subdomain = await subdomainResponse.Content.ReadAsStringAsync();
-            var redirectUrl = $"{Configuration.BackOffice.Protocol}://{subdomain}.{Configuration.BackOffice.Domain}";
+            var redirectUrl = $"{Configuration.BackOffice.Protocol}://{subdomain}.{Configuration.BackOffice.HostName}";
 
             // Add subDomainName to the list of parameters because we need it in the next call
             getUserKeyParameters.Add("subDomainName", subdomain);

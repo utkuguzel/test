@@ -34,7 +34,7 @@
             var pastedData = e.originalEvent.clipboardData.getData('text');
 
             for (var i = 0; i < 4; i++) {
-                body.find('input').eq(i).val(pastedData[i]);
+                $(".verificationForm").find('input').eq(i).val(pastedData[i]);
             }
 
             verifyCode();
@@ -57,7 +57,7 @@
         var email = $(".setup").data("email");
         
         for (var i = 0; i < 4; i++) {
-            code += body.find('input').eq(i).val();
+            code += $(".verificationForm").find('input').eq(i).val();
         }
 
         $.post("/verify/code/" + email + "/" + code, function (response) {
@@ -65,6 +65,7 @@
                 $(".verificationForm").removeClass("error").addClass("success");
 
                 setTimeout(function () {
+                    console.log("(verifyCode) Attempt to go to the next step");
                     $('.wizard').wizard('next');
                 }, 1000);
             }
@@ -75,40 +76,81 @@
     }
 
     function checkPayment() {
-        // TODO: Check payment status here
+        var checkoutUrl = $("#checkoutButton").data("skip");
+
+        if (checkoutUrl === "True") {
+            $(".wizard").wizard("next");
+        }
+        else {
+            setTimeout(checkMolliePaymentStatus, 1000);
+        }
+    }
+
+    function checkMolliePaymentStatus() {
+        var molliePaymentId = $(".step-pane-payment").data("payment-id");
+
+        console.log(molliePaymentId);
+
+        if (molliePaymentId !== undefined) {
+            $.post("/verify/transaction/" + molliePaymentId, function (response) {
+                if (response.statusCode === 200 && response.paymentStatus === "Paid") {
+                    console.log("Betaald");
+                }
+            });
+        }
+
+        setTimeout(checkMolliePaymentStatus, 1000);
     }
 
     $('.wizard').on('actionclicked.fu.wizard', function (_, data) {
-        if (data.step === 1 && data.direction === "next") {
+        if (data.step === 2 && data.direction === "next") {
             var planFree = $(".step-pane-payment").data("skip");
-
+            
             if (planFree !== "True") {
                 checkPayment();
             }
-            else if ( planFree === "True" ) {
+            else if (planFree === "True") {
+                console.log("Skip 2");
                 $(".step-pane-payment").data("skip", "");
-                $(".wizard").wizard("next");
+                $(".wizard").wizard("selectedItem", { step: 4 });
                 startSetupPoll();
             }
         }
-        else if (data.step === 2 && data.direction === "next") {
+        else if (data.step === 3 && data.direction === "next") {
             startSetupPoll();
         }
     });
 
     // Check if user is already verified
     $.post("/verify/code/" + $(".setup").data("email"), function (response) {
-        var responseObject = JSON.parse(response.responseString);
-        if (responseObject.value === true) {
-            console.log("Skip verification");
-            $('.wizard').wizard('next');
-            $(".verificationForm").removeClass("error").addClass("success");
+        if (response.statusCode === 200) {
+            $('.wizard').wizard('selectedItem', { step: 3 });
+            checkPayment();
         }
-        else {
-            // Check if there is a code set in the code attribute
+        else if (response.statusCode === 401) {
+            $('.wizard').wizard('next');
+            $(".email-working").hide();
+            $(".verification-box").show();
             checkForExistingCode();
         }
+        else {
+            createVerificationCodeEmail();
+        }
     });
+
+    function createVerificationCodeEmail() {
+        $.post("/verify/createVerificationCodeEmail/" + $(".setup").data("email"), function (response) {
+            if (response === 200) {
+                $(".email-working").fadeOut("fast", function () {
+                    $('.wizard').wizard('next');
+                    $(".verification-box").fadeIn("fast");
+                });
+            }
+            else {
+                console.log(response);
+            }
+        });
+    }
 
     function checkForExistingCode() {
         var existingCode = $(".verificationForm").data("code");
@@ -117,15 +159,19 @@
             var strExistingCode = existingCode.toString();
 
             for (var i = 0; i < 4; i++) {
-                body.find('input').eq(i).val(strExistingCode[i]);
+                $(".verificationForm").find('input').eq(i).val(strExistingCode[i]);
             }
 
             verifyCode();
+        }
+        else {
+            return false;
         }
     }
 
     $(".setup-success").hide();
     $(".setup-error").hide();
+    $(".verification-box").hide();
 
     body.on('keyup', 'input', goToNextInput);
     body.on('keydown paste', 'input', onKeyDown);

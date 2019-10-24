@@ -20,6 +20,7 @@ using Mollie.Api.Models.Subscription;
 using RentVision.Models.Configuration;
 using System.Net.Http;
 using Piranha;
+using RentVision.Helpers;
 
 namespace Twinvision.Piranha.RentVision.Controllers
 {
@@ -33,8 +34,6 @@ namespace Twinvision.Piranha.RentVision.Controllers
     [Route("[controller]")]
     public class CustomerController : Controller
     {
-        private const string RedirectUrl = "https://rentvision.eu";
-
         public static string MollieKeyLive { get; set; }
         public static string MollieKeyTest { get; set; }
         public ApiHelper _apiHelper { get; set; }
@@ -44,8 +43,9 @@ namespace Twinvision.Piranha.RentVision.Controllers
             _apiHelper = new ApiHelper(api, clientFactory);
         }
 
-        public async Task<JsonResult> CreateCustomerAsync(string email, string businessUnitName )
+        public async Task<JsonResult> CreateCustomerAsync(string email, string businessUnitName, HttpContext context)
         {
+            var apiLoginKey = context.Session.GetString("ApiLoginKey") ?? CookieHelper.GetCookie("ApiLoginKey", HttpContext);
             CustomerRequest customerRequest = new CustomerRequest()
             {
                 Email = $"{email}",
@@ -59,11 +59,10 @@ namespace Twinvision.Piranha.RentVision.Controllers
             // Set customer MollieId in db
             var urlParameters = new Dictionary<string, string>()
             {
-                { "email", email },
                 { "MollieId", customerResponse.Id }
             };
 
-            var setMollieIdResult = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.SetMollieId, HttpMethod.Post, urlParameters, context: HttpContext);
+            var setMollieIdResult = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.SetMollieId, HttpMethod.Post, urlParameters, context: context);
 
             return new JsonResult(customerResponse.Id);
         }
@@ -95,7 +94,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
             return customerList.Items.Exists(c => c.Email == customer || c.Name == customer);
         }
 
-        public async Task<string> CreatePaymentRequest(UserPlan plan, string email, string customerId, HttpContext context)
+        public async Task<PaymentResponse> CreatePaymentRequest(UserPlan plan, string email, string customerId, HttpContext context)
         {
             UserPlanMetaData metadataRequest = new UserPlanMetaData()
             {
@@ -110,11 +109,9 @@ namespace Twinvision.Piranha.RentVision.Controllers
                 SequenceType = SequenceType.First,
                 Amount = new Amount(Currency.EUR, plan.Price.ToString()),
                 Description = $"RentVision - {plan.Name}",
-                RedirectUrl = $"{RedirectUrl}/customer/paid",
-                WebhookUrl = $"{RedirectUrl}/api/mollie/getTransactionId"
+                RedirectUrl = $"{Configuration.Website.Url}/setup",
+                WebhookUrl = $"{Configuration.Website.Url}/api/mollie/updateTransaction"
             };
-
-            //{Configuration.BackOffice.Protocol}://{Configuration.BackOffice.HostName}/mollie/PaymentWebhook
 
             // Set the metadata
             paymentRequest.SetMetadata(metadataRequest);
@@ -124,82 +121,9 @@ namespace Twinvision.Piranha.RentVision.Controllers
             PaymentResponse result = await paymentClient.CreatePaymentAsync(paymentRequest);
 
             context.Session.SetString("paymentId", result.Id.ToString());
+            CookieHelper.SetCookie("paymentId", result.Id.ToString(), context);
            
-            UrlLink checkoutLink = result.Links.Checkout;
-
-            return checkoutLink.Href;
-        }
-
-        [HttpGet("paid/{paymentId?}")]
-        public async Task<IActionResult> PaidAsync(string paymentId = null)
-        {
-            paymentId = ( paymentId != null ) ? paymentId : HttpContext.Session.GetString("paymentId");
-
-            if ( paymentId != null )
-            {
-                IPaymentClient paymentClient = new PaymentClient(MollieKeyTest);
-                PaymentResponse result = await paymentClient.GetPaymentAsync(paymentId);
-                UserPlanMetaData metaDataResponse = result.GetMetadata<UserPlanMetaData>();
-
-                if ( result.Status == PaymentStatus.Paid )
-                {
-                    // Create subscription if initial payment was paid
-                    var subscriptionResponse = await CreateCustomerSubscriptionAsync(metaDataResponse, result);
-
-                    if ( subscriptionResponse.Status == SubscriptionStatus.Active )
-                    {
-                        var urlParameters = new Dictionary<string, string>()
-                        {
-                            { "email", metaDataResponse.Email },
-                            { "userPlanName", metaDataResponse.Plan.Name }
-                        };
-
-                        var setUserPlanResult = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.SetPlan, HttpMethod.Post, urlParameters, context: HttpContext);
-
-                        if ( !setUserPlanResult.IsSuccessStatusCode )
-                        {
-                            return new JsonResult(new { StatusCode = HttpStatusCode.BadRequest, Value = "Failed to set user plan" });
-                        }
-                    }
-                }
-
-                // Clear paymentId from session after everything is handled
-                HttpContext.Session.Remove("paymentId");
-                TempData["Email"] = metaDataResponse.Email;
-
-                return RedirectToAction("setup", "cms");
-            }
-
-            return new JsonResult(HttpStatusCode.BadRequest);
-        }
-
-        public async Task<SubscriptionResponse> CreateCustomerSubscriptionAsync(UserPlanMetaData metaDataResponse, PaymentResponse result)
-        {
-            IMandateClient mandateclient = new MandateClient(MollieKeyTest);
-            MandateResponse mandateResponse = await mandateclient.GetMandateAsync(metaDataResponse.CustomerId, result.MandateId);
-
-            if (mandateResponse.Status == MandateStatus.Valid)
-            {
-                int payInterval = metaDataResponse.Plan.PayInterval;
-                string price = metaDataResponse.Plan.Price.ToString();
-                string payIntervalProper = (payInterval == 1) ? "12 months" : "1 month";
-
-                ISubscriptionClient subscriptionClient = new SubscriptionClient(MollieKeyTest);
-                SubscriptionRequest subscriptionRequest = new SubscriptionRequest()
-                {
-                    Amount = new Amount(Currency.EUR, price),
-                    Interval = payIntervalProper,
-                    StartDate = DateTime.Now.AddMonths(payInterval == 1 ? 12 : 1),
-                    Description = $"RentVision Subscription - {metaDataResponse.Plan.Name} ({payIntervalProper})",
-                    WebhookUrl = $"{RedirectUrl}/api/mollie/getTransactionId"
-                };
-
-                SubscriptionResponse subscriptionResponse = await subscriptionClient.CreateSubscriptionAsync(metaDataResponse.CustomerId, subscriptionRequest);
-
-                return subscriptionResponse;
-            }
-
-            return null;
+            return result;
         }
 
         [HttpGet("deleteTestAccounts")]
