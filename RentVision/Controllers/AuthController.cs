@@ -97,7 +97,12 @@ namespace RentVision.Controllers
 
             //return Redirect($"{Configuration.BackOffice.Protocol}://{subdomain}.{Configuration.BackOffice.Domain}");
 
-            // TODO: Verify all steps before continuing
+            if (!string.IsNullOrWhiteSpace(HttpContext.Session.GetString("returnUrl")))
+            {
+                string returnUrl = HttpContext.Session.GetString("returnUrl").ToString();
+                HttpContext.Session.Remove("returnUrl");
+                return LocalRedirect(returnUrl);
+            }
 
             return RedirectToAction("setup", "cms");
         }

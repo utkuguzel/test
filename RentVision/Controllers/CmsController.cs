@@ -254,7 +254,11 @@ namespace RentVision.Controllers
             }
 
             if (email == null)
+            {
+                var returnUrl = !string.IsNullOrWhiteSpace(code) ? $"/setup/{code}" : "/setup";
+                HttpContext.Session.SetString("returnUrl", returnUrl);
                 return LocalRedirect("/login");
+            }
 
             var urlParameters = new Dictionary<string, string>()
             {
