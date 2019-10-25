@@ -151,7 +151,7 @@ namespace RentVision.Controllers
             var urlParameters = new Dictionary<string, string>()
             {
                 { "email", model.Email },
-                { "userPlanName", plan.Name },
+                { "userPlanName", "Free" },
                 { "subDomainName", model.Subdomain },
                 { "businessUnitName", model.BusinessUnitName }
             };

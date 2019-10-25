@@ -63,11 +63,12 @@
         $.post("/verify/code/" + email + "/" + code, function (response) {
             if (response.statusCode === 200) {
                 $(".verificationForm").removeClass("error").addClass("success");
+                $("#CHECK").addClass("active");
 
                 setTimeout(function () {
                     console.log("(verifyCode) Attempt to go to the next step");
-                    $('.wizard').wizard('next');
-                }, 1000);
+                    $('.wizard').wizard('selectedItem', { step: 3 });
+                }, 1250);
             }
             else {
                 $(".verificationForm").removeClass("success").addClass("error");
@@ -79,7 +80,7 @@
         var checkoutUrl = $("#checkoutButton").data("skip");
 
         if (checkoutUrl === "True") {
-            $(".wizard").wizard("next");
+            $(".wizard").wizard("selectedItem", { step: 4 });
         }
         else {
             setTimeout(checkMolliePaymentStatus, 1000);
@@ -94,7 +95,7 @@
         if (molliePaymentId !== undefined) {
             $.post("/verify/transaction/" + molliePaymentId, function (response) {
                 if (response.statusCode === 200 && response.paymentStatus === "Paid") {
-                    console.log("Betaald");
+                    $('.wizard').wizard('selectedItem', { step: 4 });
                 }
             });
         }
@@ -102,8 +103,8 @@
         setTimeout(checkMolliePaymentStatus, 1000);
     }
 
-    $('.wizard').on('actionclicked.fu.wizard', function (_, data) {
-        if (data.step === 2 && data.direction === "next") {
+    $('.wizard').on('changed.fu.wizard', function (_, data) {
+        if (data.step === 3) {
             var planFree = $(".step-pane-payment").data("skip");
             
             if (planFree !== "True") {
@@ -116,9 +117,12 @@
                 startSetupPoll();
             }
         }
-        else if (data.step === 3 && data.direction === "next") {
+
+        if (data.step === 4) {
             startSetupPoll();
         }
+
+        console.log(data.step);
     });
 
     // Check if user is already verified
@@ -128,7 +132,7 @@
             checkPayment();
         }
         else if (response.statusCode === 401) {
-            $('.wizard').wizard('next');
+            $('.wizard').wizard('selectedItem', { step: 2 });
             $(".email-working").hide();
             $(".verification-box").show();
             checkForExistingCode();
@@ -142,7 +146,7 @@
         $.post("/verify/createVerificationCodeEmail/" + $(".setup").data("email"), function (response) {
             if (response === 200) {
                 $(".email-working").fadeOut("fast", function () {
-                    $('.wizard').wizard('next');
+                    $('.wizard').wizard('selectedItem', { step: 2 });
                     $(".verification-box").fadeIn("fast");
                 });
             }

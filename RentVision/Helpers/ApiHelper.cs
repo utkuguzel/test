@@ -81,5 +81,24 @@ namespace Twinvision.Piranha.RentVision.Helpers
 
             return userPlans;
         }
+
+        public async Task<string> GetEmailFromLoginKeyAsync(string apiLoginKey, HttpContext context)
+        {
+            var GetEmailParameters = new Dictionary<string, string>()
+                {
+                    { "ApiLoginKey", apiLoginKey }
+                };
+            var emailResponse = await SendApiCallAsync(
+                Configuration.ApiCalls.GetEmail,
+                HttpMethod.Get,
+                GetEmailParameters,
+                context: context
+            );
+            if (emailResponse.IsSuccessStatusCode)
+            {
+                return await emailResponse.Content.ReadAsStringAsync();
+            }
+            return null;
+        }
     }
 }

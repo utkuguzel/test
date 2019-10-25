@@ -54,6 +54,11 @@
                             <div class="step-pane active sample-pane alert" data-step="2">
                                 <div class="verification-box">
                                     <h4>@Localizer["Verify your e-mailaddress"]</h4>
+                                    <div class="svg svg-mail">
+                                        @{
+                                            await Html.RenderPartialAsync("~/Views/Shared/Partial/_svg_mail.cshtml");
+                                        }
+                                    </div>
                                     <h5>@Localizer["Enter the code that you received in the e-mail we sent you."]</h5>
 
                                     <div class="verificationForm" @(Model.Code != null ? $"data-code={Model.Code}" : "")>

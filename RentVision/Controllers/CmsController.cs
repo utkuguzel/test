@@ -178,7 +178,7 @@ namespace RentVision.Controllers
         {
             var model = await _loader.GetPage<RegisterPage>(id, HttpContext.User, draft);
 
-            if ( userPlan != "Free" )
+            if ( HttpContext.Session.GetString("UserPlan") == null )
             {
                 HttpContext.Session.SetString("UserPlan", userPlan);
                 HttpContext.Session.SetString("PayInterval", payInterval);
@@ -237,20 +237,7 @@ namespace RentVision.Controllers
             string apiLoginKey = HttpContext.Session.GetString("ApiLoginKey") ?? CookieHelper.GetCookie("ApiLoginKey", HttpContext);
             if (apiLoginKey != null)
             {
-                var GetEmailParameters = new Dictionary<string, string>()
-                {
-                    { "ApiLoginKey", apiLoginKey }
-                };
-                var emailResponse = await _apiHelper.SendApiCallAsync(
-                    Configuration.ApiCalls.GetEmail,
-                    HttpMethod.Get,
-                    GetEmailParameters,
-                    context: HttpContext
-                );
-                if (emailResponse.IsSuccessStatusCode)
-                {
-                    email = await emailResponse.Content.ReadAsStringAsync();
-                }
+                email = await _apiHelper.GetEmailFromLoginKeyAsync(apiLoginKey, HttpContext);
             }
 
             if (email == null)
@@ -260,23 +247,43 @@ namespace RentVision.Controllers
                 return LocalRedirect("/login");
             }
 
-            var urlParameters = new Dictionary<string, string>()
+            var sessionUserPlan = HttpContext.Session.GetString("UserPlan") ?? null;
+            var sessionUserPlanInterval = HttpContext.Session.GetString("PayInterval") ?? null;
+            if ( sessionUserPlan == null || sessionUserPlanInterval == null )
             {
-                { "email", email }
-            };
-            var singleUserPlanResponse = await _apiHelper.SendApiCallAsync(
-                Configuration.ApiCalls.SingleUserPlan,
-                HttpMethod.Get,
-                urlParameters,
-                context: HttpContext
-            );
-            var singleUserPlan = await singleUserPlanResponse.Content.ReadAsStringAsync();
+                // Check if user has any payments (OPEN payments will be checked in the GenerateMollieCheckoutUrl method)
+                var customerClient = new CustomerClient(CustomerController.MollieKeyTest);
+                var customerList = await customerClient.GetCustomerListAsync();
+                var customer = customerList.Items.FirstOrDefault(c => c.Email == email);
+                if (customer != null)
+                {
+                    var paymentClient = new PaymentClient(CustomerController.MollieKeyTest);
+                    var customerPayments = await customerClient.GetCustomerPaymentListAsync(customer.Id);
+                    if (customerPayments.Items.Count > 0)
+                    {
+                        var userPlanMetaData = customerPayments.Items.FirstOrDefault().GetMetadata<UserPlanMetaData>();
+                        if (userPlanMetaData != null)
+                        {
+                            sessionUserPlan = userPlanMetaData.Plan.Name;
+                            sessionUserPlanInterval = userPlanMetaData.Plan.PayInterval.ToString();
+                        }
+                    }
+                    else
+                    {
+                        // else redirect to plans page again
+                        return LocalRedirect("/plans");
+                    }
+                }
+            }
 
-            if ( singleUserPlanResponse.StatusCode == HttpStatusCode.OK )
+            var userPlanList = await _apiHelper.GetUserPlansAsync();
+            var userPlan = userPlanList.FirstOrDefault(p => p.Name.IndexOf(sessionUserPlan) != -1 && p.PayInterval == Convert.ToInt32(sessionUserPlanInterval));
+
+            if ( userPlan != null )
             {
                 var model = await _loader.GetPage<SetupPage>(id, HttpContext.User, draft);
                 model.Email = email;
-                model.SelectedPlan = JsonConvert.DeserializeObject<UserPlan>(singleUserPlan);
+                model.SelectedPlan = userPlan;
                 if(model.SelectedPlan.Price > 0)
                 {
                     var checkoutData = await GenerateMollieCheckoutUrl(email, model.SelectedPlan, email, HttpContext);
@@ -345,6 +352,14 @@ namespace RentVision.Controllers
             List<UserPlan> userPlans = await _apiHelper.GetUserPlansAsync();
 
             return new JsonResult(userPlans);
+        }
+
+        [HttpGet("paid")]
+        public ActionResult Paid()
+        {
+            HttpContext.Session.Remove("UserPlan");
+            HttpContext.Session.Remove("PayInterval");
+            return View();
         }
 
         [Route("/api/killAllSites")]

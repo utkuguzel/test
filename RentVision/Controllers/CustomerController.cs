@@ -109,7 +109,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
                 SequenceType = SequenceType.First,
                 Amount = new Amount(Currency.EUR, plan.Price.ToString()),
                 Description = $"RentVision - {plan.Name}",
-                RedirectUrl = $"{Configuration.Website.Url}/setup",
+                RedirectUrl = $"{Configuration.Website.Url}/paid",
                 WebhookUrl = $"{Configuration.Website.Url}/api/mollie/updateTransaction"
             };
 

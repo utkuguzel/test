@@ -7,6 +7,11 @@ html {
   background-size: cover;
   font-family: 'Ubuntu', sans-serif;
 }
+.svg {
+  width: 100px;
+  margin: 0 auto;
+  padding: 20px 0;
+}
 a {
   text-shadow: 1px 1px 0px #222;
   color: #A9A9B9;
