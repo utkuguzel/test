@@ -81,17 +81,12 @@ namespace RentVision.Controllers
         {
             var model = await _loader.GetPage<StandardPage>(id, HttpContext.User, draft);
 
-            // TEST
             var rqf = HttpContext.Features.Get<IRequestCultureFeature>();
             var culture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
-
             var sites = await _api.Sites.GetAllAsync();
             var site = sites.SingleOrDefault(m => m.Culture == culture);
-
             var pageResult = await _api.Pages.GetAllAsync<StandardPage>(siteId: site.Id);
-
             model = await _api.Pages.GetByIdAsync<StandardPage>(pageResult.FirstOrDefault(m => m.Slug == model.Slug).Id);
-            // END TEST
 
             // Return user to proper culture page
             //string cultureUrl = CultureHelper.GetProperCultureUrl(Request, HttpContext);
@@ -136,13 +131,12 @@ namespace RentVision.Controllers
         {
             var model = await _loader.GetPage<StartPage>(id, HttpContext.User, draft);
 
-            // Return user to proper culture page
-            string cultureUrl = CultureHelper.GetProperCultureUrl(Request, HttpContext);
-
-            if (cultureUrl != null)
-            {
-                return LocalRedirect(cultureUrl);
-            }
+            var rqf = HttpContext.Features.Get<IRequestCultureFeature>();
+            var culture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
+            var sites = await _api.Sites.GetAllAsync();
+            var site = sites.SingleOrDefault(m => m.Culture == culture);
+            var pageResult = await _api.Pages.GetAllAsync<StartPage>(siteId: site.Id);
+            model = await _api.Pages.GetByIdAsync<StartPage>(pageResult.FirstOrDefault(m => m.Slug == model.Slug).Id);
 
             return View(model);
         }
@@ -157,13 +151,12 @@ namespace RentVision.Controllers
         {
             var model = await _loader.GetPage<LoginPage>(id, HttpContext.User, draft);
 
-            // Return user to proper culture page
-            string cultureUrl = CultureHelper.GetProperCultureUrl(Request, HttpContext);
-
-            if (cultureUrl != null)
-            {
-                return LocalRedirect(cultureUrl);
-            }
+            var rqf = HttpContext.Features.Get<IRequestCultureFeature>();
+            var culture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
+            var sites = await _api.Sites.GetAllAsync();
+            var site = sites.SingleOrDefault(m => m.Culture == culture);
+            var pageResult = await _api.Pages.GetAllAsync<LoginPage>(siteId: site.Id);
+            model = await _api.Pages.GetByIdAsync<LoginPage>(pageResult.FirstOrDefault(m => m.Slug == model.Slug).Id);
 
             return View(model);
         }
@@ -184,13 +177,12 @@ namespace RentVision.Controllers
                 HttpContext.Session.SetString("PayInterval", payInterval);
             }
 
-            // Return user to proper culture page
-            string cultureUrl = CultureHelper.GetProperCultureUrl(Request, HttpContext);
-
-            if (cultureUrl != null)
-            {
-                return LocalRedirect(cultureUrl);
-            }
+            var rqf = HttpContext.Features.Get<IRequestCultureFeature>();
+            var culture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
+            var sites = await _api.Sites.GetAllAsync();
+            var site = sites.SingleOrDefault(m => m.Culture == culture);
+            var pageResult = await _api.Pages.GetAllAsync<RegisterPage>(siteId: site.Id);
+            model = await _api.Pages.GetByIdAsync<RegisterPage>(pageResult.FirstOrDefault(m => m.Slug == model.Slug).Id);
 
             return View(model);
         }
@@ -200,13 +192,12 @@ namespace RentVision.Controllers
         {
             var model = await _loader.GetPage<ProductPage>(id, HttpContext.User, draft);
 
-            // Return user to proper culture page
-            string cultureUrl = CultureHelper.GetProperCultureUrl(Request, HttpContext);
-
-            if (cultureUrl != null)
-            {
-                return LocalRedirect(cultureUrl);
-            }
+            var rqf = HttpContext.Features.Get<IRequestCultureFeature>();
+            var culture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
+            var sites = await _api.Sites.GetAllAsync();
+            var site = sites.SingleOrDefault(m => m.Culture == culture);
+            var pageResult = await _api.Pages.GetAllAsync<ProductPage>(siteId: site.Id);
+            model = await _api.Pages.GetByIdAsync<ProductPage>(pageResult.FirstOrDefault(m => m.Slug == model.Slug).Id);
 
             return View(model);
         }
@@ -219,13 +210,12 @@ namespace RentVision.Controllers
             HttpContext.Session.Remove("UserPlan");
             HttpContext.Session.Remove("PayInterval");
 
-            // Return user to proper culture page
-            string cultureUrl = CultureHelper.GetProperCultureUrl(Request, HttpContext);
-
-            if (cultureUrl != null)
-            {
-                return LocalRedirect(cultureUrl);
-            }
+            var rqf = HttpContext.Features.Get<IRequestCultureFeature>();
+            var culture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
+            var sites = await _api.Sites.GetAllAsync();
+            var site = sites.SingleOrDefault(m => m.Culture == culture);
+            var pageResult = await _api.Pages.GetAllAsync<PlansPage>(siteId: site.Id);
+            model = await _api.Pages.GetByIdAsync<PlansPage>(pageResult.FirstOrDefault(m => m.Slug == model.Slug).Id);
 
             return View(model);
         }
