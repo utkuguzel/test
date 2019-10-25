@@ -10,7 +10,7 @@ namespace RentVision.Models.Configuration
         public class BackOffice
         {
             public const string Protocol            = "http";
-            public const string HostName            = "rentvision_backoffice.eu.ngrok.io/api";
+            public const string HostName            = "backoffice.rentvision.eu/api";
             public const string ApiKeyHeaderName    = "X-Api-Key";
             public const string ApiKey              = "TestKey";
             public static string Url = $"{Protocol}://{HostName}";
@@ -19,7 +19,7 @@ namespace RentVision.Models.Configuration
         public class Website
         {
             public const string Protocol = "http";
-            public const string HostName = "rentvision.eu.ngrok.io";
+            public const string HostName = "rentvision.eu";
             public static string Url = $"{Protocol}://{HostName}";
         }
 
