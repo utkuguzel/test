@@ -21,6 +21,8 @@ using Mollie.Api.Client;
 using Mollie.Api.Models.Payment;
 using Mollie.Api.Models.Url;
 using Mollie.Api.Models.Payment.Response;
+using System.Security.Claims;
+using Piranha.Models;
 
 namespace RentVision.Controllers
 {
@@ -43,180 +45,71 @@ namespace RentVision.Controllers
             _apiHelper = new ApiHelper(_api, _clientFactory);
         }
 
-        /// <summary>
-        /// Gets the blog archive with the given id.
-        /// </summary>
-        /// <param name="id">The unique page id</param>
-        /// <param name="year">The optional year</param>
-        /// <param name="month">The optional month</param>
-        /// <param name="page">The optional page</param>
-        /// <param name="category">The optional category</param>
-        /// <param name="tag">The optional tag</param>
-        /// <param name="draft">If a draft is requested</param>
         [Route("archive")]
         public async Task<IActionResult> Archive(Guid id, int? year = null, int? month = null, int? page = null,
             Guid? category = null, Guid? tag = null, bool draft = false)
         {
-            var model = await _loader.GetPage<BlogArchive>(id, HttpContext.User, draft);
+            var model = await GetCulturizedModelAsync<BlogArchive>(id, HttpContext.User, draft);
             model.Archive = await _api.Archives.GetByIdAsync(id, page, category, tag, year, month);
-
-            // Return user to proper culture page
-            string cultureUrl = CultureHelper.GetProperCultureUrl(Request, HttpContext);
-
-            if (cultureUrl != null)
-            {
-                return LocalRedirect(cultureUrl);
-            }
-
             return View(model);
         }
 
-        /// <summary>
-        /// Gets the page with the given id.
-        /// </summary>
-        /// <param name="id">The unique page id</param>
-        /// <param name="draft">If a draft is requested</param>
         [Route("page")]
         public async Task<IActionResult> Page(Guid id, bool draft = false)
         {
-            var model = await _loader.GetPage<StandardPage>(id, HttpContext.User, draft);
-
-            var rqf = HttpContext.Features.Get<IRequestCultureFeature>();
-            var culture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
-            var sites = await _api.Sites.GetAllAsync();
-            var site = sites.SingleOrDefault(m => m.Culture == culture);
-            var pageResult = await _api.Pages.GetAllAsync<StandardPage>(siteId: site.Id);
-            model = await _api.Pages.GetByIdAsync<StandardPage>(pageResult.FirstOrDefault(m => m.Slug == model.Slug).Id);
-
-            // Return user to proper culture page
-            //string cultureUrl = CultureHelper.GetProperCultureUrl(Request, HttpContext);
-
-            //if (cultureUrl != null)
-            //{
-            //    return LocalRedirect(cultureUrl);
-            //}
-
+            var model = await GetCulturizedModelAsync<StandardPage>(id, HttpContext.User, draft);
             return View(model);
         }
 
-        /// <summary>
-        /// Gets the post with the given id.
-        /// </summary>
-        /// <param name="id">The unique post id</param>
-        /// <param name="draft">If a draft is requested</param>
         [Route("post")]
         public async Task<IActionResult> Post(Guid id, bool draft = false)
         {
-            var model = await _loader.GetPost<BlogPost>(id, HttpContext.User, draft);
-
-            // Return user to proper culture page
-            //string cultureUrl = CultureHelper.GetProperCultureUrl(Request, HttpContext);
-
-            //if (cultureUrl != null)
-            //{
-            //    return LocalRedirect(cultureUrl);
-            //}
-
-            return View(model);
+            //var model = await GetCulturizedPostModelAsync<BlogPost>(id, HttpContext.User, draft);
+            //return View(model);
+            return new JsonResult(new { HttpStatusCode.Locked });
         }
 
-    
-        /// <summary>
-        /// Gets the startpage with the given id.
-        /// </summary>
-        /// <param name="id">The unique page id</param>
-        /// <param name="draft">If a draft is requested</param>
         [Route("start")]
         public async Task<IActionResult> Start(Guid id, bool draft = false)
         {
-            var model = await _loader.GetPage<StartPage>(id, HttpContext.User, draft);
-
-            var rqf = HttpContext.Features.Get<IRequestCultureFeature>();
-            var culture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
-            var sites = await _api.Sites.GetAllAsync();
-            var site = sites.SingleOrDefault(m => m.Culture == culture);
-            var pageResult = await _api.Pages.GetAllAsync<StartPage>(siteId: site.Id);
-            model = await _api.Pages.GetByIdAsync<StartPage>(pageResult.FirstOrDefault(m => m.Slug == model.Slug).Id);
-
+            var model = await GetCulturizedModelAsync<StartPage>(id, HttpContext.User, draft);
             return View(model);
         }
 
-        /// <summary>
-        /// Gets the loginpage with the given id.
-        /// </summary>
-        /// <param name="id">The unique page id</param>
-        /// <param name="draft">If a draft is requested</param>
         [Route("login")]
         public async Task<IActionResult> Login(Guid id, bool draft = false)
         {
-            var model = await _loader.GetPage<LoginPage>(id, HttpContext.User, draft);
-
-            var rqf = HttpContext.Features.Get<IRequestCultureFeature>();
-            var culture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
-            var sites = await _api.Sites.GetAllAsync();
-            var site = sites.SingleOrDefault(m => m.Culture == culture);
-            var pageResult = await _api.Pages.GetAllAsync<LoginPage>(siteId: site.Id);
-            model = await _api.Pages.GetByIdAsync<LoginPage>(pageResult.FirstOrDefault(m => m.Slug == model.Slug).Id);
-
+            var model = await GetCulturizedModelAsync<LoginPage>(id, HttpContext.User, draft);
             return View(model);
         }
 
-        /// <summary>
-        /// Gets the registerpage with the given id.
-        /// </summary>
-        /// <param name="id">The unique page id</param>
-        /// <param name="draft">If a draft is requested</param>
         [Route("register")]
         public async Task<IActionResult> Register(Guid id, bool draft = false, string userPlan = "Free", string payInterval = "2")
         {
-            var model = await _loader.GetPage<RegisterPage>(id, HttpContext.User, draft);
-
             if ( HttpContext.Session.GetString("UserPlan") == null )
             {
                 HttpContext.Session.SetString("UserPlan", userPlan);
                 HttpContext.Session.SetString("PayInterval", payInterval);
             }
 
-            var rqf = HttpContext.Features.Get<IRequestCultureFeature>();
-            var culture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
-            var sites = await _api.Sites.GetAllAsync();
-            var site = sites.SingleOrDefault(m => m.Culture == culture);
-            var pageResult = await _api.Pages.GetAllAsync<RegisterPage>(siteId: site.Id);
-            model = await _api.Pages.GetByIdAsync<RegisterPage>(pageResult.FirstOrDefault(m => m.Slug == model.Slug).Id);
-
+            var model = await GetCulturizedModelAsync<RegisterPage>(id, HttpContext.User, draft);
             return View(model);
         }
 
         [Route("product")]
         public async Task<IActionResult> Product(Guid id, bool draft = false)
         {
-            var model = await _loader.GetPage<ProductPage>(id, HttpContext.User, draft);
-
-            var rqf = HttpContext.Features.Get<IRequestCultureFeature>();
-            var culture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
-            var sites = await _api.Sites.GetAllAsync();
-            var site = sites.SingleOrDefault(m => m.Culture == culture);
-            var pageResult = await _api.Pages.GetAllAsync<ProductPage>(siteId: site.Id);
-            model = await _api.Pages.GetByIdAsync<ProductPage>(pageResult.FirstOrDefault(m => m.Slug == model.Slug).Id);
-
+            var model = await GetCulturizedModelAsync<ProductPage>(id, HttpContext.User, draft);
             return View(model);
         }
 
         [Route("plans")]
         public async Task<IActionResult> Plans(Guid id, bool draft = false)
         {
-            var model = await _loader.GetPage<PlansPage>(id, HttpContext.User, draft);
-
             HttpContext.Session.Remove("UserPlan");
             HttpContext.Session.Remove("PayInterval");
 
-            var rqf = HttpContext.Features.Get<IRequestCultureFeature>();
-            var culture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
-            var sites = await _api.Sites.GetAllAsync();
-            var site = sites.SingleOrDefault(m => m.Culture == culture);
-            var pageResult = await _api.Pages.GetAllAsync<PlansPage>(siteId: site.Id);
-            model = await _api.Pages.GetByIdAsync<PlansPage>(pageResult.FirstOrDefault(m => m.Slug == model.Slug).Id);
-
+            var model = await GetCulturizedModelAsync<PlansPage>(id, HttpContext.User, draft);
             return View(model);
         }
 
@@ -358,6 +251,19 @@ namespace RentVision.Controllers
             var result = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.KillAllSites, HttpMethod.Post);
             var resultString = await result.Content.ReadAsStringAsync();
             return new JsonResult(new { result.StatusCode, resultString });
+        }
+
+        public async Task<T> GetCulturizedModelAsync<T>(Guid id, ClaimsPrincipal user, bool draft)
+            where T : PageBase
+        {
+            var model = await _loader.GetPage<T>(id, HttpContext.User, draft);
+
+            var rqf = HttpContext.Features.Get<IRequestCultureFeature>();
+            var culture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
+            var sites = await _api.Sites.GetAllAsync();
+            var site = sites.SingleOrDefault(m => m.Culture == culture);
+            var pageResult = await _api.Pages.GetAllAsync<T>(siteId: site.Id);
+            return await _api.Pages.GetByIdAsync<T>(pageResult.FirstOrDefault(m => m.Slug == model.Slug).Id);
         }
     }
 }
