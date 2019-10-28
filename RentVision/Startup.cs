@@ -51,7 +51,11 @@ namespace RentVision
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMemoryCache();
+            services.AddHttpsRedirection(options =>
+            {
+                options.RedirectStatusCode = StatusCodes.Status308PermanentRedirect;
+                options.HttpsPort = 443;
+            });
             services.AddLocalization(options =>
                 options.ResourcesPath = "Resources"
             );
@@ -66,6 +70,7 @@ namespace RentVision
                 options.SupportedCultures = supportedCultures;
                 options.SupportedUICultures = supportedCultures;
             });
+            services.AddMemoryCache();
 
             // ReCaptcha
             services.Configure<RecaptchaSettings>(Configuration.GetSection("RecaptchaSettings"));
@@ -120,9 +125,6 @@ namespace RentVision
                 options.UseSqlServer(Configuration.GetConnectionString("piranha")));
             services.AddPiranhaIdentityWithSeed<IdentitySQLServerDb>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("piranha")));
-
-            //services.AddLogging(logging =>
-            //    logging.AddFile("app.log", append: true));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -132,6 +134,12 @@ namespace RentVision
             {
                 app.UseDeveloperExceptionPage();
             }
+
+#if !DEBUG
+            //app.UseHsts();
+            app.UseHttpsRedirection();
+#endif
+
 
             // Initialize Piranha
             App.Init(api);

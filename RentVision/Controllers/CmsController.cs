@@ -23,6 +23,8 @@ using Mollie.Api.Models.Url;
 using Mollie.Api.Models.Payment.Response;
 using System.Security.Claims;
 using Piranha.Models;
+using System.Threading;
+using Twinvision.Piranha.RentVision.Resources;
 
 namespace RentVision.Controllers
 {
@@ -274,6 +276,10 @@ namespace RentVision.Controllers
             var sites = await _api.Sites.GetAllAsync();
             var site = sites.SingleOrDefault(m => m.Culture == culture);
             var pageResult = await _api.Pages.GetAllAsync<T>(siteId: site.Id);
+
+            Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(culture);
+            Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(culture);
+
             return await _api.Pages.GetByIdAsync<T>(pageResult.FirstOrDefault(m => m.Slug == model.Slug).Id);
         }
     }

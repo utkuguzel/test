@@ -120,6 +120,9 @@
   <data name="BusinessUnitName" xml:space="preserve">
     <value>Business unit name</value>
   </data>
+  <data name="ChooseYourPlan" xml:space="preserve">
+    <value>Choose your plan</value>
+  </data>
   <data name="ConfirmPassword" xml:space="preserve">
     <value>Confirm password</value>
   </data>
@@ -141,13 +144,22 @@
   <data name="MinimumLength_Simple" xml:space="preserve">
     <value>The length of '{PropertyName}' must be at least {MinLength} characters.</value>
   </data>
+  <data name="Monthly" xml:space="preserve">
+    <value>Monthly</value>
+  </data>
   <data name="NotEmptyValidator" xml:space="preserve">
     <value>'{PropertyName}' must not be empty.</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>Password</value>
   </data>
+  <data name="SignUp" xml:space="preserve">
+    <value>Sign up</value>
+  </data>
   <data name="Subdomain" xml:space="preserve">
     <value>Subdomain</value>
+  </data>
+  <data name="Yearly" xml:space="preserve">
+    <value>Yearly</value>
   </data>
 </root>

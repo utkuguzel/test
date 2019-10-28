@@ -4,6 +4,7 @@ using Piranha.Models;
 using RentVision.Models.Regions;
 using System;
 using System.Collections.Generic;
+using Twinvision.Piranha.RentVision.Resources;
 
 namespace RentVision.Models
 {

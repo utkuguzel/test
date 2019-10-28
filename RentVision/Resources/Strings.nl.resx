@@ -120,6 +120,9 @@
   <data name="BusinessUnitName" xml:space="preserve">
     <value>Bedrijfsnaam</value>
   </data>
+  <data name="ChooseYourPlan" xml:space="preserve">
+    <value>Kies een pakket</value>
+  </data>
   <data name="ConfirmPassword" xml:space="preserve">
     <value>Bevestig wachtwoord</value>
   </data>
@@ -141,13 +144,22 @@
   <data name="MinimumLength_Simple" xml:space="preserve">
     <value>De lengte van '{PropertyName}' moet groter zijn dan of gelijk aan {MinLength} tekens.</value>
   </data>
+  <data name="Monthly" xml:space="preserve">
+    <value>Maandelijks</value>
+  </data>
   <data name="NotEmptyValidator" xml:space="preserve">
     <value>Het veld '{PropertyName}' mag niet leeg zijn.</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>Wachtwoord</value>
   </data>
+  <data name="SignUp" xml:space="preserve">
+    <value>Account aanmaken</value>
+  </data>
   <data name="Subdomain" xml:space="preserve">
     <value>Subdomein</value>
+  </data>
+  <data name="Yearly" xml:space="preserve">
+    <value>Jaarlijks</value>
   </data>
 </root>

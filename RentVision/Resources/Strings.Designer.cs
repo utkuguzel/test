@@ -70,6 +70,15 @@ namespace Twinvision.Piranha.RentVision.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Choose your plan.
+        /// </summary>
+        public static string ChooseYourPlan {
+            get {
+                return ResourceManager.GetString("ChooseYourPlan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Confirm password.
         /// </summary>
         public static string ConfirmPassword {
@@ -133,6 +142,15 @@ namespace Twinvision.Piranha.RentVision.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Monthly.
+        /// </summary>
+        public static string Monthly {
+            get {
+                return ResourceManager.GetString("Monthly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &apos;{PropertyName}&apos; must not be empty..
         /// </summary>
         public static string NotEmptyValidator {
@@ -151,11 +169,29 @@ namespace Twinvision.Piranha.RentVision.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sign up.
+        /// </summary>
+        public static string SignUp {
+            get {
+                return ResourceManager.GetString("SignUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Subdomain.
         /// </summary>
         public static string Subdomain {
             get {
                 return ResourceManager.GetString("Subdomain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yearly.
+        /// </summary>
+        public static string Yearly {
+            get {
+                return ResourceManager.GetString("Yearly", resourceCulture);
             }
         }
     }
