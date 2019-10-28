@@ -2,6 +2,9 @@
 
 @{
     var plans = Model.Plans;
+    var rqf = Context.Features.Get<IRequestCultureFeature>();
+    var culture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
+    var test = Localizer.WithCulture(new System.Globalization.CultureInfo(culture));
 }
 
 <!-- START PLANS -->
@@ -12,10 +15,10 @@
                 <div class="row">
                     <div class="col-sm-12 d-flex justify-content-center">
                         <div class="filterBox">
-                            <h5>@Strings.ChooseYourPlan</h5>
+                            <h5>@test["Choose your plan"]</h5>
                             <select class="planFilter">
-                                <option value="2" selected>@Strings.Monthly</option>
-                                <option value="1">@Strings.Yearly</option>
+                                <option value="2" selected>@test["Monthly"]</option>
+                                <option value="1">@test["Yearly"]</option>
                             </select>
                         </div>
                     </div>
@@ -23,7 +26,7 @@
                     {
                         foreach (var plan in plans)
                         {
-                            var price = (plan.Price == "0") ? Localizer["Free"].Value.ToString() : plan.Price.Value.ToString();
+                            var price = (plan.Price == "0") ? test["Free"].Value.ToString() : plan.Price.Value.ToString();
 
                             <div class="col-lg-4 col-sm-6">
                                 <div class="plan" data-plan="@plan.UserPlanType.Value">
@@ -34,7 +37,7 @@
                                     <h5 class="price">@price!</h5>
                                     @*<span class="paymentInterval">@plan.PaymentType</span>*@
 
-                                    <p><a class="button button-active" href="/register">@Localizer["Sign up"]</a></p>
+                                    <p><a class="button button-active" href="/register">@test["Sign up"]</a></p>
                                 </div>
 
                                 <div class="features">
