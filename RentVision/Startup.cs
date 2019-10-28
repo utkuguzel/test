@@ -51,11 +51,13 @@ namespace RentVision
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+#if !DEBUG
             services.AddHttpsRedirection(options =>
             {
                 options.RedirectStatusCode = StatusCodes.Status308PermanentRedirect;
                 options.HttpsPort = 443;
             });
+#endif
             services.AddLocalization(options =>
                 options.ResourcesPath = "Resources"
             );
