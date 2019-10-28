@@ -64,9 +64,8 @@ namespace RentVision.Controllers
         [Route("post")]
         public async Task<IActionResult> Post(Guid id, bool draft = false)
         {
-            //var model = await GetCulturizedPostModelAsync<BlogPost>(id, HttpContext.User, draft);
-            //return View(model);
-            return new JsonResult(new { HttpStatusCode.Locked });
+            var model = await GetCulturizedPostModelAsync<BlogPost>(id, HttpContext.User, draft);
+            return View(model);
         }
 
         [Route("start")]
@@ -233,7 +232,6 @@ namespace RentVision.Controllers
         public async Task<JsonResult> GetUserPlansAsync()
         {
             List<UserPlan> userPlans = await _apiHelper.GetUserPlansAsync();
-
             return new JsonResult(userPlans);
         }
 
@@ -251,6 +249,19 @@ namespace RentVision.Controllers
             var result = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.KillAllSites, HttpMethod.Post);
             var resultString = await result.Content.ReadAsStringAsync();
             return new JsonResult(new { result.StatusCode, resultString });
+        }
+
+        public async Task<T> GetCulturizedPostModelAsync<T>(Guid id, ClaimsPrincipal user, bool draft)
+            where T : PostBase
+        {
+            var model = await _loader.GetPost<T>(id, HttpContext.User, draft);
+
+            var rqf = HttpContext.Features.Get<IRequestCultureFeature>();
+            var culture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
+            var sites = await _api.Sites.GetAllAsync();
+            var site = sites.SingleOrDefault(m => m.Culture == culture);
+            var pageResult = await _api.Posts.GetAllAsync<T>(blogId: site.Id);
+            return await _api.Posts.GetByIdAsync<T>(pageResult.FirstOrDefault(m => m.Slug == model.Slug).Id);
         }
 
         public async Task<T> GetCulturizedModelAsync<T>(Guid id, ClaimsPrincipal user, bool draft)
