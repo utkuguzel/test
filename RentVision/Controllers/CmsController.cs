@@ -64,10 +64,11 @@ namespace RentVision.Controllers
         }
 
         [Route("post")]
-        public async Task<IActionResult> Post(Guid id, bool draft = false)
+        public HttpStatusCode Post(Guid id, bool draft = false)
         {
-            var model = await GetCulturizedPostModelAsync<BlogPost>(id, HttpContext.User, draft);
-            return View(model);
+            //var model = await GetCulturizedPostModelAsync<BlogPost>(id, HttpContext.User, draft);
+            //return View(model);
+            return HttpStatusCode.OK;
         }
 
         [Route("start")]
@@ -253,18 +254,41 @@ namespace RentVision.Controllers
             return new JsonResult(new { result.StatusCode, resultString });
         }
 
-        public async Task<T> GetCulturizedPostModelAsync<T>(Guid id, ClaimsPrincipal user, bool draft)
-            where T : PostBase
-        {
-            var model = await _loader.GetPost<T>(id, HttpContext.User, draft);
+        //[Route("/api/benchmarkCreateAccount/{num}")]
+        //public async Task<ActionResult> BenchmarkCreateAccount(string num)
+        //{
+        //    var urlParameters = new Dictionary<string, string>()
+        //        {
+        //            { "email", $"test{num}@test.com" },
+        //            { "userPlanName", "Free" },
+        //            { "subDomainName", $"testdomain{num}" },
+        //            { "businessUnitName", $"Test B.V." }
+        //        };
 
-            var rqf = HttpContext.Features.Get<IRequestCultureFeature>();
-            var culture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
-            var sites = await _api.Sites.GetAllAsync();
-            var site = sites.SingleOrDefault(m => m.Culture == culture);
-            var pageResult = await _api.Posts.GetAllAsync<T>(blogId: site.Id);
-            return await _api.Posts.GetByIdAsync<T>(pageResult.FirstOrDefault(m => m.Slug == model.Slug).Id);
-        }
+        //    // Attempt to create an account if everything is ok
+        //    var response = await _apiHelper.SendApiCallAsync(
+        //        Configuration.ApiCalls.CreateAccount,
+        //        HttpMethod.Post,
+        //        urlParameters,
+        //        "Welkom123!"
+        //    );
+        //    var responseMessage = await response.Content.ReadAsStringAsync();
+
+        //    return new JsonResult( new { response.StatusCode, responseMessage });
+        //}
+
+        //public async Task<T> GetCulturizedPostModelAsync<T>(Guid id, ClaimsPrincipal user, bool draft)
+        //    where T : PostBase
+        //{
+        //    var model = await _loader.GetPost<T>(id, HttpContext.User, draft);
+
+        //    var rqf = HttpContext.Features.Get<IRequestCultureFeature>();
+        //    var culture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
+        //    var sites = await _api.Sites.GetAllAsync();
+        //    var site = sites.SingleOrDefault(m => m.Culture == culture);
+        //    var pageResult = await _api.Posts.GetAllAsync<T>(blogId: id);
+        //    return await _api.Posts.GetByIdAsync<T>(pageResult.FirstOrDefault(m => m.Slug == model.Slug).Id);
+        //}
 
         public async Task<T> GetCulturizedModelAsync<T>(Guid id, ClaimsPrincipal user, bool draft)
             where T : PageBase
@@ -276,9 +300,6 @@ namespace RentVision.Controllers
             var sites = await _api.Sites.GetAllAsync();
             var site = sites.SingleOrDefault(m => m.Culture == culture);
             var pageResult = await _api.Pages.GetAllAsync<T>(siteId: site.Id);
-
-            Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(culture);
-            Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(culture);
 
             return await _api.Pages.GetByIdAsync<T>(pageResult.FirstOrDefault(m => m.Slug == model.Slug).Id);
         }
