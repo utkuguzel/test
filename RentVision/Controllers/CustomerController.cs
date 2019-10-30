@@ -34,8 +34,6 @@ namespace Twinvision.Piranha.RentVision.Controllers
     [Route("[controller]")]
     public class CustomerController : Controller
     {
-        public static string MollieKeyLive { get; set; }
-        public static string MollieKeyTest { get; set; }
         public ApiHelper _apiHelper { get; set; }
 
         public CustomerController(IApi api, IHttpClientFactory clientFactory)
@@ -53,7 +51,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
                 Locale = Locale.nl_NL
             };
 
-            ICustomerClient customerClient = new CustomerClient(MollieKeyTest);
+            ICustomerClient customerClient = new CustomerClient(MollieController.GetMollieKey());
             CustomerResponse customerResponse = await customerClient.CreateCustomerAsync(customerRequest);
 
             // Set customer MollieId in db
@@ -69,7 +67,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
 
         public async Task<ListResponse<PaymentResponse>> GetPaymentListAsync(string customerId = null)
         {
-            IPaymentClient paymentClient = new PaymentClient(MollieKeyTest);
+            IPaymentClient paymentClient = new PaymentClient(MollieController.GetMollieKey());
             ListResponse<PaymentResponse> response = null;
             if (customerId != null)
             {
@@ -84,7 +82,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
 
         public async Task<ListResponse<CustomerResponse>> GetCustomerListAsync()
         {
-            ICustomerClient customerClient = new CustomerClient(MollieKeyTest);
+            ICustomerClient customerClient = new CustomerClient(MollieController.GetMollieKey());
             ListResponse<CustomerResponse> response = await customerClient.GetCustomerListAsync();
             return response;
         }
@@ -117,7 +115,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
             paymentRequest.SetMetadata(metadataRequest);
 
             // When we retrieve the payment response, we can convert our metadata back to our custom class
-            IPaymentClient paymentClient = new PaymentClient(MollieKeyTest);
+            IPaymentClient paymentClient = new PaymentClient(MollieController.GetMollieKey());
             PaymentResponse result = await paymentClient.CreatePaymentAsync(paymentRequest);
 
             context.Session.SetString("paymentId", result.Id.ToString());
@@ -129,7 +127,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
         [HttpGet("deleteTestAccounts")]
         public async Task<IActionResult> DeleteTestAccounts()
         {
-            ICustomerClient customerClient = new CustomerClient(MollieKeyTest);
+            ICustomerClient customerClient = new CustomerClient(MollieController.GetMollieKey());
             ListResponse<CustomerResponse> response = await customerClient.GetCustomerListAsync();
 
             foreach ( var account in response.Items )

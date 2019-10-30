@@ -137,12 +137,12 @@ namespace RentVision.Controllers
             if ( sessionUserPlan == null || sessionUserPlanInterval == null )
             {
                 // Check if user has any payments (OPEN payments will be checked in the GenerateMollieCheckoutUrl method)
-                var customerClient = new CustomerClient(CustomerController.MollieKeyTest);
+                var customerClient = new CustomerClient(MollieController.GetMollieKey());
                 var customerList = await customerClient.GetCustomerListAsync();
                 var customer = customerList.Items.FirstOrDefault(c => c.Email == email);
                 if (customer != null)
                 {
-                    var paymentClient = new PaymentClient(CustomerController.MollieKeyTest);
+                    var paymentClient = new PaymentClient(MollieController.GetMollieKey());
                     var customerPayments = await customerClient.GetCustomerPaymentListAsync(customer.Id);
                     if (customerPayments.Items.Count > 0)
                     {

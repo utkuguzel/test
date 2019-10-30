@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NReco.Logging.File;
 using Piranha;
+using RentVision;
 using RentVision.Models.Configuration;
 using Twinvision.Piranha.RentVision.Helpers;
 
@@ -66,6 +67,19 @@ namespace Twinvision.Piranha.RentVision.Controllers
             }
 
             return Ok();
+        }
+
+        public static string GetMollieKey()
+        {
+            var mollieSettings = Startup.Config.GetSection("MollieSettings");
+            if (bool.TryParse(mollieSettings["useTestKey"], out bool testKeyEnabled))
+            {
+                if (testKeyEnabled)
+                {
+                    return mollieSettings["apiKeyTest"];
+                }
+            }
+            return mollieSettings["apiKeyLive"];
         }
     }
 }
