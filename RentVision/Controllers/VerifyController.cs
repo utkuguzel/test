@@ -66,7 +66,7 @@ namespace RentVision.Controllers
         }
 
         [HttpPost("createVerificationCodeEmail/{email}")]
-        public async Task<HttpStatusCode> CreateVerificationCodeEmail(string email)
+        public async Task<JsonResult> CreateVerificationCodeEmail(string email)
         {
             string userCulture = CultureHelper.GetUserCulture(Request, HttpContext);
             var verificationCodeParameters = new Dictionary<string, string>()
@@ -80,11 +80,12 @@ namespace RentVision.Controllers
                 verificationCodeParameters,
                 context: HttpContext
             );
+            var verificationCodeMessage = await verificationCodeResponse.Content.ReadAsStringAsync();
             if (!verificationCodeResponse.IsSuccessStatusCode)
             {
-                return verificationCodeResponse.StatusCode;
+                return new JsonResult(new { statusCode = verificationCodeResponse.StatusCode, statusMessage = verificationCodeMessage });
             }
-            return HttpStatusCode.OK;
+            return new JsonResult(new { statusCode = HttpStatusCode.OK, statusMessage = verificationCodeMessage });
         }
 
         [HttpPost("code/{email}")]

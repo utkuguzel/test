@@ -10,7 +10,10 @@ namespace RentVision.Models.Configuration
         public class BackOffice
         {
             public const string Protocol            = "https";
+            public const string HostName            = "rentvision_backoffice.eu.ngrok.io/api";
+#if !DEBUG
             public const string HostName            = "backoffice.rentvision.eu/api";
+#endif
             public const string ApiKeyHeaderName    = "X-Api-Key";
             public const string ApiKey              = "TestKey";
             public static string Url = $"{Protocol}://{HostName}";
@@ -19,7 +22,10 @@ namespace RentVision.Models.Configuration
         public class Website
         {
             public const string Protocol = "https";
+            public const string HostName = "rentvision.eu.ngrok.io";
+#if !DEBUG
             public const string HostName = "rentvision.eu";
+#endif
             public static string Url = $"{Protocol}://{HostName}";
         }
 
@@ -44,8 +50,8 @@ namespace RentVision.Models.Configuration
             public const string SetVerificationCodeVerified = "VerificationCode/Verified";
             public const string GetVerificationCodeStatus   = "VerificationCode/Verified";
             // Misc
-            public const string PaymentWebhook          = "Mollie/PaymentWebhook";
-            public const string SubscriptionWebhook     = "Mollie/SubscriptionWebhook";
+            public const string PaymentWebhook          = "Mollie/updateTransaction";
+            public const string SubscriptionWebhook     = "Mollie/updateSubscription";
             public const string GetTransactionStatus    = "Mollie/GetTransactionStatus";
             public const string KillAllSites            = "RentVision/KillAllSites";
         }

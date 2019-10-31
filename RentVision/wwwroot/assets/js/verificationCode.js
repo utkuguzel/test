@@ -144,14 +144,14 @@
 
     function createVerificationCodeEmail() {
         $.post("/verify/createVerificationCodeEmail/" + $(".setup").data("email"), function (response) {
-            if (response === 200) {
+            if (response.statusCode === 200) {
                 $(".email-working").fadeOut("fast", function () {
                     $('.wizard').wizard('selectedItem', { step: 2 });
                     $(".verification-box").fadeIn("fast");
                 });
             }
             else {
-                console.log(response);
+                console.log(response.statusMessage);
             }
         });
     }
