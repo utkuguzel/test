@@ -202,7 +202,7 @@ namespace RentVision.Controllers
             );
 
             var subdomain = await subdomainResponse.Content.ReadAsStringAsync();
-            var redirectUrl = $"{Configuration.BackOffice.Protocol}://{subdomain}.{Configuration.BackOffice.HostName}";
+            var redirectUrl = $"{Configuration.BackOffice.Protocol}://{subdomain}.{Configuration.BackOffice.HostName.Replace("/api","")}";
 
             // Add subDomainName to the list of parameters because we need it in the next call
             getUserKeyParameters.Add("subDomainName", subdomain);
