@@ -27,48 +27,6 @@ namespace Twinvision.Piranha.RentVision.Controllers
             _apiHelper = new ApiHelper(api, clientFactory);
         }
 
-        // This method will be triggered by the Mollie Webhook
-        // And sends the transactionId to the centralized API for further processing.
-        [HttpPost("updateTransaction")]
-        public async Task<ActionResult> UpdateTransactionAsync()
-        {
-            var mollieId = Request.Form["id"];
-            var urlParameters = new Dictionary<string, string>()
-            {
-                { "id", mollieId }
-            };
-
-            var paymentWebhookResponse = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.PaymentWebhook, HttpMethod.Post, urlParameters);
-            var responseResult = await paymentWebhookResponse.Content.ReadAsStringAsync();
-
-            if ( !paymentWebhookResponse.IsSuccessStatusCode )
-            {
-                return BadRequest(responseResult);
-            }
-
-            return Ok();
-        }
-
-        [HttpPost("updateSubscription")]
-        public async Task<ActionResult> UpdateSubscriptionAsync()
-        {
-            var mollieId = Request.Form["id"];
-            var urlParameters = new Dictionary<string, string>()
-            {
-                { "id", mollieId }
-            };
-
-            var paymentWebhookResponse = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.SubscriptionWebhook, HttpMethod.Post, urlParameters);
-            var responseResult = await paymentWebhookResponse.Content.ReadAsStringAsync();
-
-            if (!paymentWebhookResponse.IsSuccessStatusCode)
-            {
-                return BadRequest(responseResult);
-            }
-
-            return Ok();
-        }
-
         public static string GetMollieKey()
         {
             var mollieSettings = Startup.Config.GetSection("MollieSettings");

@@ -50,8 +50,8 @@ namespace RentVision.Models.Configuration
             public const string SetVerificationCodeVerified = "VerificationCode/Verified";
             public const string GetVerificationCodeStatus   = "VerificationCode/Verified";
             // Misc
-            public const string PaymentWebhook          = "Mollie/updateTransaction";
-            public const string SubscriptionWebhook     = "Mollie/updateSubscription";
+            public const string PaymentWebhook          = "Mollie/PaymentWebhook";
+            public const string SubscriptionWebhook     = "Mollie/SubscriptionWebhook";
             public const string GetTransactionStatus    = "Mollie/GetTransactionStatus";
             public const string KillAllSites            = "RentVision/KillAllSites";
         }

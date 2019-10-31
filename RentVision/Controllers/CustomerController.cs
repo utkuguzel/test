@@ -108,7 +108,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
                 Amount = new Amount(Currency.EUR, plan.Price.ToString()),
                 Description = $"RentVision - {plan.Name}",
                 RedirectUrl = $"{Configuration.Website.Url}/paid",
-                WebhookUrl = $"{Configuration.Website.Url}/api/{Configuration.ApiCalls.PaymentWebhook}"
+                WebhookUrl = $"{Configuration.BackOffice.Url}/{Configuration.ApiCalls.PaymentWebhook}"
             };
 
             // Set the metadata
