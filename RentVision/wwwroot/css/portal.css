@@ -96,6 +96,9 @@ form {
   height: auto;
   padding: 5px 20px;
 }
+.resend > a {
+  font-size: 13px;
+}
 .verificationForm input {
   margin: 0 5px;
   text-align: center;
@@ -107,6 +110,9 @@ form {
   width: 10%;
   transition: all 0.2s ease-in-out;
   border-radius: 3px;
+}
+.verificationForm input.spacer {
+  /*margin-left: 40px !important;*/
 }
 .verificationForm input:focus {
   border-color: #436692;

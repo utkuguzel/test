@@ -32,7 +32,7 @@ namespace RentVision.Controllers
             _recaptcha = recaptcha;
         }
 
-        [Route("/auth/isUserSiteReady"), HttpPost]
+        [HttpPost("/auth/isUserSiteReady")]
         public async Task<JsonResult> isUserSiteReadyAsync(string email)
         {
             var userSiteReadyResponse = await _apiHelper.SendApiCallAsync(
@@ -48,7 +48,7 @@ namespace RentVision.Controllers
         }
 
         [ValidateAntiForgeryToken]
-        [Route("/auth/login"), HttpPost]
+        [HttpPost("/auth/login")]
         public async Task<IActionResult> LoginAsync(LoginPage model)
         {
             var pageModel = await _api.Pages.GetByIdAsync<LoginPage>(model.Id);
@@ -107,22 +107,10 @@ namespace RentVision.Controllers
             return RedirectToAction("setup", "cms");
         }
 
-        [Route("/auth/register"), HttpPost, ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
+        [HttpPost("/auth/register")]
         public async Task<IActionResult> RegisterAsync( RegisterPage model )
         {
-            var pageModel = await _api.Pages.GetByIdAsync<RegisterPage>(model.Id);
-            pageModel.Email = model.Email ?? "";
-            pageModel.BusinessUnitName = model.BusinessUnitName ?? "";
-            pageModel.Subdomain = model.Subdomain ?? "";
-            pageModel.Password = model.Password ?? "";
-            pageModel.ConfirmPassword = model.ConfirmPassword ?? "";
-            pageModel.Tos = model.Tos;
-
-            if ( !ModelState.IsValid )
-            {
-                return View("~/Views/Cms/register.cshtml", pageModel);
-            }
-
             string userCulture = CultureHelper.GetUserCulture(Request, HttpContext);
             string refererUrl = Request.Headers["Referer"].ToString();
             // Get userPlan
@@ -180,6 +168,10 @@ namespace RentVision.Controllers
                 {
                     TempData["StatusMessage"] = localizedBackOfficeMessage;
                 }
+                else
+                {
+                    TempData["StatusMessage"] = userCredentialString;
+                }
 
                 return Redirect(refererUrl);
             }
@@ -187,7 +179,7 @@ namespace RentVision.Controllers
             return RedirectToAction("setup", "cms");
         }
 
-        [Route("/auth/getUserKey"), HttpPost]
+        [HttpPost("/auth/getUserKey")]
         public async Task<JsonResult> GetUserKey( string email )
         {
             var getUserKeyParameters = new Dictionary<string, string>() {

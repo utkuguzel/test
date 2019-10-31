@@ -32,8 +32,9 @@
         // Handle on input paste
         if (e.type === 'paste') {
             var pastedData = e.originalEvent.clipboardData.getData('text');
+            var codeInputLength = $(".verificationForm").find("input").length;
 
-            for (var i = 0; i < 4; i++) {
+            for (var i = 0; i < codeInputLength; i++) {
                 $(".verificationForm").find('input').eq(i).val(pastedData[i]);
             }
 
@@ -55,8 +56,9 @@
     function verifyCode() {
         var code = "";
         var email = $(".setup").data("email");
+        var codeInputLength = $(".verificationForm").find("input").length;
         
-        for (var i = 0; i < 4; i++) {
+        for (var i = 0; i < codeInputLength; i++) {
             code += $(".verificationForm").find('input').eq(i).val();
         }
 
@@ -66,7 +68,6 @@
                 $("#CHECK").addClass("active");
 
                 setTimeout(function () {
-                    console.log("(verifyCode) Attempt to go to the next step");
                     $('.wizard').wizard('selectedItem', { step: 3 });
                 }, 1250);
             }
@@ -83,14 +84,12 @@
             $(".wizard").wizard("selectedItem", { step: 4 });
         }
         else {
-            setTimeout(checkMolliePaymentStatus, 1000);
+            setTimeout(checkMolliePaymentStatus, 2000);
         }
     }
 
     function checkMolliePaymentStatus() {
         var molliePaymentId = $(".step-pane-payment").data("payment-id");
-
-        console.log(molliePaymentId);
 
         if (molliePaymentId !== undefined) {
             $.post("/verify/transaction/" + molliePaymentId, function (response) {
@@ -111,7 +110,6 @@
                 checkPayment();
             }
             else if (planFree === "True") {
-                console.log("Skip 2");
                 $(".step-pane-payment").data("skip", "");
                 $(".wizard").wizard("selectedItem", { step: 4 });
                 startSetupPoll();
@@ -121,8 +119,6 @@
         if (data.step === 4) {
             startSetupPoll();
         }
-
-        console.log(data.step);
     });
 
     // Check if user is already verified
@@ -156,13 +152,21 @@
         });
     }
 
+    function resendVerificationCode() {
+        $('.wizard').wizard('selectedItem', { step: 1 });
+        $(".email-working").show();
+        $(".verification-box").hide();
+        createVerificationCodeEmail();
+    }
+
     function checkForExistingCode() {
         var existingCode = $(".verificationForm").data("code");
 
         if (existingCode !== undefined) {
             var strExistingCode = existingCode.toString();
+            var codeInputLength = $(".verificationForm").find("input").length;
 
-            for (var i = 0; i < 4; i++) {
+            for (var i = 0; i < codeInputLength; i++) {
                 $(".verificationForm").find('input').eq(i).val(strExistingCode[i]);
             }
 
@@ -180,4 +184,6 @@
     body.on('keyup', 'input', goToNextInput);
     body.on('keydown paste', 'input', onKeyDown);
     body.on('click', 'input', onFocus);
+
+    $(".resend > a").on("click", resendVerificationCode);
 });
