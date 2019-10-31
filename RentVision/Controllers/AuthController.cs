@@ -180,8 +180,14 @@ namespace RentVision.Controllers
         }
 
         [HttpPost("/auth/getUserKey")]
-        public async Task<JsonResult> GetUserKey( string email )
+        public async Task<JsonResult> GetUserKey()
         {
+            var apiLoginKey = HttpContext.Session.GetString("ApiLoginKey") ?? CookieHelper.GetCookie("ApiLoginKey", HttpContext);
+            if (apiLoginKey == null)
+            {
+                return new JsonResult( new { statusCode = HttpStatusCode.BadRequest });
+            }
+            var email = await _apiHelper.GetEmailFromLoginKeyAsync(apiLoginKey, HttpContext);
             var getUserKeyParameters = new Dictionary<string, string>() {
                     { "email", email }
                 };

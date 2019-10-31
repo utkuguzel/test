@@ -41,7 +41,6 @@ function onSuccessCallBack(response)
             method: "POST",
             url: "/auth/getUserKey",
             dataType: "json",
-            data: { email: email },
             success: onUserKeySuccessCallBack,
             error: onUserKeyErrorCallBack
         });
@@ -67,12 +66,7 @@ function onSuccessCallBack(response)
 
 function onUserKeySuccessCallBack(data)
 {
-    $(".setup-working").fadeOut("fast", function () {
-        $(".setup-success").fadeIn("fast");
-    });
-
-    $(".setup-success").find("a").attr("href", data.realRedirectUrl);
-    //window.location.href = data.realRedirectUrl;
+    window.location.href = data.realRedirectUrl;
 }
 
 function onUserKeyErrorCallBack(jqXhr, error, errorStr)
