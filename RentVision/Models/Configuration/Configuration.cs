@@ -10,8 +10,9 @@ namespace RentVision.Models.Configuration
         public class BackOffice
         {
             public const string Protocol            = "https";
+#if DEBUG
             public const string HostName            = "rentvision_backoffice.eu.ngrok.io/api";
-#if !DEBUG
+#else
             public const string HostName            = "backoffice.rentvision.eu/api";
 #endif
             public const string ApiKeyHeaderName    = "X-Api-Key";
@@ -22,8 +23,9 @@ namespace RentVision.Models.Configuration
         public class Website
         {
             public const string Protocol = "https";
+#if DEBUG
             public const string HostName = "rentvision.eu.ngrok.io";
-#if !DEBUG
+#else
             public const string HostName = "rentvision.eu";
 #endif
             public static string Url = $"{Protocol}://{HostName}";
