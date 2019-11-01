@@ -25,6 +25,7 @@ using System.Security.Claims;
 using Piranha.Models;
 using System.Threading;
 using Twinvision.Piranha.RentVision.Resources;
+using static RentVision.Models.Configuration.Configuration;
 
 namespace RentVision.Controllers
 {
@@ -35,10 +36,6 @@ namespace RentVision.Controllers
         private readonly IHttpClientFactory _clientFactory;
         private readonly ApiHelper _apiHelper;
 
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        /// <param name="api">The current api</param>
         public CmsController(IApi api, IModelLoader loader, IHttpClientFactory clientFactory)
         {
             _api = api;
@@ -66,8 +63,6 @@ namespace RentVision.Controllers
         [Route("post")]
         public HttpStatusCode Post(Guid id, bool draft = false)
         {
-            //var model = await GetCulturizedPostModelAsync<BlogPost>(id, HttpContext.User, draft);
-            //return View(model);
             return HttpStatusCode.OK;
         }
 
@@ -185,33 +180,31 @@ namespace RentVision.Controllers
 
             return LocalRedirect("/");
         }
-        
+
         private async Task<(string checkoutUrl, string paymentId)> GenerateMollieCheckoutUrl(string email, UserPlan userPlan, string businessUnitName, HttpContext context)
         {
             var customerController = new CustomerController(_api, _clientFactory);
             var customerList = await customerController.GetCustomerListAsync();
             PaymentResponse checkoutUrl;
-            if ( !customerController.DoesCustomerExist(email, customerList) )
+            if (!customerController.DoesCustomerExist(email, customerList))
             {
-                var response = await customerController.CreateCustomerAsync(email, businessUnitName, context);
-                var mollieCustomerId = response.Value.ToString();
+                var mollieCustomerId = await customerController.CreateCustomerAsync(email, businessUnitName, context);
                 checkoutUrl = await customerController.CreatePaymentRequest(userPlan, email, mollieCustomerId, HttpContext);
             }
             else
             {
                 var mollieResponse = await _apiHelper.SendApiCallAsync(
-                    Configuration.ApiCalls.GetMollieId,
-                    HttpMethod.Get,
+                    ApiCalls.GetMollieId,
                     context: HttpContext);
                 var mollieId = await mollieResponse.Content.ReadAsStringAsync();
-                if ( !mollieResponse.IsSuccessStatusCode )
+                if (!mollieResponse.IsSuccessStatusCode)
                 {
                     throw new Exception("Failed to retrieve customer MollieId");
                 }
                 var paymentListResponse = await customerController.GetPaymentListAsync();
                 var customerPayments = paymentListResponse.Items.Where(m => m.CustomerId == mollieId).ToList();
                 // Customer exists but there are no payments
-                if ( customerPayments.Count <= 0 )
+                if (customerPayments.Count <= 0)
                 {
                     checkoutUrl = await customerController.CreatePaymentRequest(userPlan, email, mollieId, HttpContext);
                 }
@@ -219,7 +212,7 @@ namespace RentVision.Controllers
                 {
                     // Check if there are any open payments, and if so return one
                     var openPayment = customerPayments.FirstOrDefault(m => m.Status == PaymentStatus.Open);
-                    if ( openPayment != null )
+                    if (openPayment != null)
                     {
                         return (openPayment.Links.Checkout.Href, openPayment.Id);
                     }
@@ -249,7 +242,7 @@ namespace RentVision.Controllers
         [Route("/api/killAllSites")]
         public async Task<IActionResult> KillAllSites()
         {
-            var result = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.KillAllSites, HttpMethod.Post);
+            var result = await _apiHelper.SendApiCallAsync(ApiCalls.KillAllSites);
             var resultString = await result.Content.ReadAsStringAsync();
             return new JsonResult(new { result.StatusCode, resultString });
         }

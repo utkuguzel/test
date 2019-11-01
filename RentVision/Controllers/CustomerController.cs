@@ -21,6 +21,8 @@ using RentVision.Models.Configuration;
 using System.Net.Http;
 using Piranha;
 using RentVision.Helpers;
+using static RentVision.Models.Configuration.Configuration;
+using Newtonsoft.Json;
 
 namespace Twinvision.Piranha.RentVision.Controllers
 {
@@ -41,43 +43,32 @@ namespace Twinvision.Piranha.RentVision.Controllers
             _apiHelper = new ApiHelper(api, clientFactory);
         }
 
-        public async Task<JsonResult> CreateCustomerAsync(string email, string businessUnitName, HttpContext context)
+        public async Task<string> CreateCustomerAsync(string email, string businessUnitName, HttpContext context)
         {
-            var apiLoginKey = context.Session.GetString("ApiLoginKey") ?? CookieHelper.GetCookie("ApiLoginKey", HttpContext);
-            CustomerRequest customerRequest = new CustomerRequest()
-            {
-                Email = $"{email}",
-                Name = $"{businessUnitName}",
-                Locale = Locale.nl_NL
-            };
-
-            var customerClient = new CustomerClient(MollieController.GetMollieKey());
-            var customerResponse = await customerClient.CreateCustomerAsync(customerRequest);
-
-            // Set customer MollieId in db
             var urlParameters = new Dictionary<string, string>()
             {
-                { "MollieId", customerResponse.Id }
+                { "email", email },
+                { "businessUnitName", businessUnitName }
             };
-
-            var setMollieIdResult = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.SetMollieId, HttpMethod.Post, urlParameters, context: context);
-
-            return new JsonResult(customerResponse.Id);
+            var createCustomerRequest = await _apiHelper.SendApiCallAsync(ApiCalls.MollieCreateCustomer, urlParameters, context: context);
+            var createCustomerResult = await createCustomerRequest.Content.ReadAsStringAsync();
+            if (createCustomerRequest.IsSuccessStatusCode)
+            {
+                return createCustomerResult;
+            }
+            return null;
         }
 
-        public async Task<ListResponse<PaymentResponse>> GetPaymentListAsync(string customerId = null)
+        public async Task<ListResponse<PaymentResponse>> GetPaymentListAsync()
         {
-            var paymentClient = new PaymentClient(MollieController.GetMollieKey());
-            ListResponse<PaymentResponse> response = null;
-            if (customerId != null)
+            var paymentListRequest = await _apiHelper.SendApiCallAsync(ApiCalls.MollieGetPayments);
+            var paymentListResponse = await paymentListRequest.Content.ReadAsStringAsync();
+            if (paymentListRequest.IsSuccessStatusCode)
             {
-                response = await paymentClient.GetPaymentListAsync(profileId: customerId);
+                var paymentList = JsonConvert.DeserializeObject<ListResponse<PaymentResponse>>(paymentListResponse);
+                return paymentList;
             }
-            else
-            {
-                response = await paymentClient.GetPaymentListAsync();
-            }
-            return response;
+            return null;
         }
 
         public async Task<ListResponse<CustomerResponse>> GetCustomerListAsync()
@@ -107,8 +98,8 @@ namespace Twinvision.Piranha.RentVision.Controllers
                 SequenceType = SequenceType.First,
                 Amount = new Amount(Currency.EUR, plan.Price.ToString()),
                 Description = $"RentVision - {plan.Name}",
-                RedirectUrl = $"{Configuration.Website.Url}/setup",
-                WebhookUrl = $"{Configuration.BackOffice.Url}/{Configuration.ApiCalls.PaymentWebhook}"
+                RedirectUrl = $"{Website.Url}/setup",
+                WebhookUrl = $"{BackOffice.Url}/{ApiCalls.PaymentWebhook.FullUrl()}"
             };
 
             // Set the metadata

@@ -13,6 +13,7 @@ using Twinvision.Piranha.RentVision.Resources;
 using System.Globalization;
 using RentVision.Helpers;
 using Microsoft.AspNetCore.Http;
+using static RentVision.Models.Configuration.Configuration;
 
 namespace RentVision.Controllers
 {
@@ -75,8 +76,7 @@ namespace RentVision.Controllers
                 { "culture", userCulture }
             };
             var verificationCodeResponse = await _apiHelper.SendApiCallAsync(
-                Configuration.ApiCalls.CreateVerificationCode,
-                HttpMethod.Post,
+                ApiCalls.CreateVerificationCode,
                 verificationCodeParameters,
                 context: HttpContext
             );
@@ -96,8 +96,8 @@ namespace RentVision.Controllers
                 { "email", email }
             };
             var verificationCodeResponse = await _apiHelper.SendApiCallAsync(
-                Configuration.ApiCalls.GetVerificationCodeStatus,
-                HttpMethod.Get, urlParameters,
+                ApiCalls.GetVerificationCodeStatus,
+                urlParameters,
                 context: HttpContext
             );
             var responseString = await verificationCodeResponse.Content.ReadAsStringAsync();
@@ -113,8 +113,8 @@ namespace RentVision.Controllers
                 { "code", code }
             };
             var verificationCodeResponse = await _apiHelper.SendApiCallAsync(
-                Configuration.ApiCalls.SetVerificationCodeVerified,
-                HttpMethod.Post, urlParameters,
+                ApiCalls.SetVerificationCodeVerified,
+                urlParameters,
                 context: HttpContext
             );
             var responseString = await verificationCodeResponse.Content.ReadAsStringAsync();
@@ -129,8 +129,7 @@ namespace RentVision.Controllers
                 { "id", transactionId }
             };
             var transactionResponse = await _apiHelper.SendApiCallAsync(
-                Configuration.ApiCalls.GetTransactionStatus,
-                HttpMethod.Get,
+                ApiCalls.GetTransactionStatus,
                 urlParameters,
                 context: HttpContext);
             var paymentStatus = await transactionResponse.Content.ReadAsStringAsync();

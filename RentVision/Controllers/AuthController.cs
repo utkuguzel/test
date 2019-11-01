@@ -14,6 +14,7 @@ using RentVision.Models;
 using Microsoft.AspNetCore.Http;
 using reCAPTCHA.AspNetCore;
 using Newtonsoft.Json;
+using static RentVision.Models.Configuration.Configuration;
 
 namespace RentVision.Controllers
 {
@@ -33,18 +34,15 @@ namespace RentVision.Controllers
         }
 
         [HttpPost("/auth/isUserSiteReady")]
-        public async Task<JsonResult> isUserSiteReadyAsync(string email)
+        public async Task<JsonResult> IsUserSiteReadyAsync(string email)
         {
-            var userSiteReadyResponse = await _apiHelper.SendApiCallAsync(
-                Configuration.ApiCalls.UserSiteReady,
-                HttpMethod.Get,
-                new Dictionary<string, string>() { { "email", email } },
-                context: HttpContext
-            );
-
-            var response = await userSiteReadyResponse.Content.ReadAsStringAsync();
-
-            return new JsonResult( new { userSiteReadyResponse.StatusCode, response } );
+            var urlParameters = new Dictionary<string, string>()
+            {
+                { "email", email }
+            };
+            var userSiteReadyRequest = await _apiHelper.SendApiCallAsync(ApiCalls.UserSiteReady, urlParameters, context: HttpContext);
+            var response = await userSiteReadyRequest.Content.ReadAsStringAsync();
+            return new JsonResult( new { userSiteReadyRequest.StatusCode, response } );
         }
 
         [ValidateAntiForgeryToken]
@@ -58,15 +56,20 @@ namespace RentVision.Controllers
             {
                 return View("~/Views/Cms/login.cshtml", pageModel);
             }
+
             model.Email = model.Email.ToLower();
 
+            // Check if user credentials match user input
             var urlParameters = new Dictionary<string, string>()
             {
                 { "email", model.Email }
             };
-
-            // Check if user credentials match user input
-            var userCredentialResponse = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.LoginUserRentVisionApi, HttpMethod.Post, urlParameters, model.Password, HttpContext);
+            var userCredentialResponse = await _apiHelper.SendApiCallAsync(
+                ApiCalls.LoginUserRentVisionApi,
+                urlParameters,
+                model.Password,
+                HttpContext
+            );
             string userCredentialString = await userCredentialResponse.Content.ReadAsStringAsync();
             if (Guid.TryParse(userCredentialString, out Guid apiLoginKey))
             {
@@ -76,13 +79,11 @@ namespace RentVision.Controllers
             }
 
             TempData["StatusCode"] = userCredentialResponse.StatusCode;
-            TempData["StatusMessage"] = "";
+            TempData["StatusMessage"] = userCredentialResponse;
 
             if ( !userCredentialResponse.IsSuccessStatusCode )
             {
-                // Get localized back-end error message and display it to the visitor
                 string localizedBackOfficeMessage = AuthHelper.GetBackOfficeStringLocalized(userCulture, userCredentialString);
-
                 if (localizedBackOfficeMessage != null)
                 {
                     TempData["StatusMessage"] = localizedBackOfficeMessage;
@@ -90,12 +91,6 @@ namespace RentVision.Controllers
 
                 return View("~/Views/Cms/login.cshtml", pageModel);
             }
-
-            // Fetch customer subdomain and redirect
-            //var subdomainResponse = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.UserSubDomain, HttpMethod.Get, urlParameters, context: HttpContext);
-            //var subdomain = await subdomainResponse.Content.ReadAsStringAsync();
-
-            //return Redirect($"{Configuration.BackOffice.Protocol}://{subdomain}.{Configuration.BackOffice.Domain}");
 
             if (!string.IsNullOrWhiteSpace(HttpContext.Session.GetString("returnUrl")))
             {
@@ -113,21 +108,17 @@ namespace RentVision.Controllers
         {
             string userCulture = CultureHelper.GetUserCulture(Request, HttpContext);
             string refererUrl = Request.Headers["Referer"].ToString();
-            // Get userPlan
-            string userPlan = HttpContext.Session.GetString("UserPlan") ?? "Free";
-            string payInterval = HttpContext.Session.GetString("PayInterval") ?? "2";
-            int interval = Convert.ToInt32(payInterval);
-            var userPlanResponse = await _apiHelper.GetUserPlansAsync();
-            UserPlan plan = userPlanResponse.Find(m => m.Name.IndexOf(userPlan) != -1 && m.PayInterval == interval);
 
-            if ( string.IsNullOrWhiteSpace(Request.Form["g-recaptcha-response"]))
+            if (!string.IsNullOrWhiteSpace(Request.Form["g-recaptcha-response"]))
             {
-                TempData["StatusMessage"] = AuthHelper.GetBackOfficeStringLocalized(userCulture, "captcha incorrect");
-                return Redirect(refererUrl);
+                var recaptchaResponse = await _recaptcha.Validate(Request.Form["g-recaptcha-response"]);
+                if (!recaptchaResponse.success)
+                {
+                    TempData["StatusMessage"] = AuthHelper.GetBackOfficeStringLocalized(userCulture, "captcha incorrect");
+                    return Redirect(refererUrl);
+                }
             }
-
-            var recaptchaResponse = await _recaptcha.Validate(Request.Form["g-recaptcha-response"]);
-            if ( !recaptchaResponse.success )
+            else
             {
                 TempData["StatusMessage"] = AuthHelper.GetBackOfficeStringLocalized(userCulture, "captcha incorrect");
                 return Redirect(refererUrl);
@@ -145,34 +136,32 @@ namespace RentVision.Controllers
             };
 
             // Attempt to create an account if everything is ok
-            var response = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.CreateAccount, HttpMethod.Post, urlParameters, model.Password);
-            string userCredentialString = await response.Content.ReadAsStringAsync();
-            if ( Guid.TryParse(userCredentialString, out Guid apiLoginKey) )
+            var createAccountRequest = await _apiHelper.SendApiCallAsync(
+                ApiCalls.CreateAccount,
+                urlParameters,
+                model.Password
+            );
+            string createAccountResponse = await createAccountRequest.Content.ReadAsStringAsync();
+            if ( Guid.TryParse(createAccountResponse, out Guid apiLoginKey) )
             {
                 var expirationOffset = new DateTimeOffset().ToOffset(TimeSpan.FromMinutes(20));
-                HttpContext.Session.SetString("ApiLoginKey", userCredentialString);
+                HttpContext.Session.SetString("ApiLoginKey", createAccountResponse);
                 CookieHelper.SetCookie("ApiLoginKey",
-                    userCredentialString,
+                    createAccountResponse,
                     HttpContext, options: new CookieOptions { Expires = expirationOffset }
                 );
             }
 
-            TempData["StatusCode"] = response.StatusCode;
-            TempData["StatusMessage"] = "";
+            TempData["StatusCode"] = createAccountRequest.StatusCode;
+            TempData["StatusMessage"] = createAccountResponse;
 
-            if ( !response.IsSuccessStatusCode )
+            if ( !createAccountRequest.IsSuccessStatusCode )
             {
-                // Get localized back-end error message and display it to the visitor
-                string localizedBackOfficeMessage = AuthHelper.GetBackOfficeStringLocalized(userCulture, userCredentialString);
+                string localizedBackOfficeMessage = AuthHelper.GetBackOfficeStringLocalized(userCulture, createAccountResponse);
                 if ( localizedBackOfficeMessage != null )
                 {
                     TempData["StatusMessage"] = localizedBackOfficeMessage;
                 }
-                else
-                {
-                    TempData["StatusMessage"] = userCredentialString;
-                }
-
                 return Redirect(refererUrl);
             }
 
@@ -193,20 +182,19 @@ namespace RentVision.Controllers
                 };
 
             var subdomainResponse = await _apiHelper.SendApiCallAsync(
-                Configuration.ApiCalls.UserSubDomain,
-                HttpMethod.Get,
+                ApiCalls.UserSubDomain,
                 getUserKeyParameters,
                 context: HttpContext
             );
 
             var subdomain = await subdomainResponse.Content.ReadAsStringAsync();
-            var redirectUrl = $"{Configuration.BackOffice.Protocol}://{subdomain}.{Configuration.BackOffice.HostName.Replace("/api","")}";
+            var redirectUrl = $"{BackOffice.Protocol}://{subdomain}.{BackOffice.HostName.Replace("/api","")}";
 
             // Add subDomainName to the list of parameters because we need it in the next call
             getUserKeyParameters.Add("subDomainName", subdomain);
 
-            var userKeyResponse = await _apiHelper.SendApiCallAsync(Configuration.ApiCalls.GetRentVisionLoginKey,
-                HttpMethod.Post,
+            var userKeyResponse = await _apiHelper.SendApiCallAsync(
+                ApiCalls.GetRentVisionLoginKey,
                 getUserKeyParameters,
                 context: HttpContext
             );

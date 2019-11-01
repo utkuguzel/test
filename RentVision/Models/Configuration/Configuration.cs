@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace RentVision.Models.Configuration
@@ -9,14 +10,14 @@ namespace RentVision.Models.Configuration
     {
         public class BackOffice
         {
-            public const string Protocol            = "https";
+            public const string Protocol = "https";
 #if DEBUG
-            public const string HostName            = "rentvision_backoffice.eu.ngrok.io/api";
+            public const string HostName = "rentvision_backoffice.eu.ngrok.io/api";
 #else
             public const string HostName            = "backoffice.rentvision.eu/api";
 #endif
-            public const string ApiKeyHeaderName    = "X-Api-Key";
-            public const string ApiKey              = "TestKey";
+            public const string ApiKeyHeaderName = "X-Api-Key";
+            public const string ApiKey = "TestKey";
             public static string Url = $"{Protocol}://{HostName}";
         }
 
@@ -31,30 +32,65 @@ namespace RentVision.Models.Configuration
             public static string Url = $"{Protocol}://{HostName}";
         }
 
+        public enum ApiGroup
+        {
+            RentVisionAccount,
+            RentVision,
+            VerificationCode,
+            Mollie
+        }
+
+        public class ApiCall
+        {
+            public ApiGroup ApiCategory { get; set; }
+            public string Url { get; set; }
+            public HttpMethod Method { get; set; }
+
+            public ApiCall(ApiGroup apiCategory, string url, HttpMethod method) =>
+                (ApiCategory, Url, Method) = (apiCategory, url, method);
+
+            public string FullUrl()
+            {
+                return $"{Enum.GetName(typeof(ApiGroup), ApiCategory)}/{Url}";
+            }
+        }
+
+        public class UrlParameter
+        {
+            public string Parameter { get; set; }
+            public dynamic Value { get; set; }
+        }
+
         public class ApiCalls
         {
             // RentVisionAccount
-            public const string CreateAccount           = "RentVisionAccount/CreateAccount";
-            public const string LoginUserRentVisionApi  = "RentVisionAccount/LoginUserRentVisionApi";
-            public const string UserPlans               = "RentVision/UserPlans";
-            public const string SetPlan                 = "RentVisionAccount/SetPlan";
-            public const string SingleUserPlan          = "RentVisionAccount/SingleUserPlan";
-            public const string UserSiteReady           = "RentVisionAccount/UserSiteReady";
-            public const string UserSubDomain           = "RentVisionAccount/UserSubDomain";
-            public const string DeleteAccount           = "RentVisionAccount/DeleteAccount";
-            public const string GetRentVisionLoginKey   = "RentVisionAccount/GetRentVisionLoginKey";
-            public const string GetMollieId             = "RentVisionAccount/GetMollieId";
-            public const string SetMollieId             = "RentVisionAccount/SetMollieId";
-            public const string GetEmail                = "RentVisionAccount/GetEmail";
-            public const string GetPayment              = "RentVisionAccount/GetPayment";
+            public static ApiCall CreateAccount             = new ApiCall(ApiGroup.RentVisionAccount, "CreateAccount", HttpMethod.Post);
+            public static ApiCall LoginUserRentVisionApi    = new ApiCall(ApiGroup.RentVisionAccount, "LoginUserRentVisionApi", HttpMethod.Post);
+            public static ApiCall SetPlan                   = new ApiCall(ApiGroup.RentVisionAccount, "SetPlan", HttpMethod.Post);
+            public static ApiCall SingleUserPlan            = new ApiCall(ApiGroup.RentVisionAccount, "SingleUserPlan", HttpMethod.Get);
+            public static ApiCall UserSiteReady             = new ApiCall(ApiGroup.RentVisionAccount, "UserSiteReady", HttpMethod.Get);
+            public static ApiCall UserSubDomain             = new ApiCall(ApiGroup.RentVisionAccount, "UserSubDomain", HttpMethod.Get);
+            public static ApiCall DeleteAccount             = new ApiCall(ApiGroup.RentVisionAccount, "DeleteAccount", HttpMethod.Post);
+            public static ApiCall GetRentVisionLoginKey     = new ApiCall(ApiGroup.RentVisionAccount, "GetRentVisionLoginKey", HttpMethod.Post);
+            public static ApiCall GetMollieId               = new ApiCall(ApiGroup.RentVisionAccount, "GetMollieId", HttpMethod.Get);
+            public static ApiCall SetMollieId               = new ApiCall(ApiGroup.RentVisionAccount, "SetMollieId", HttpMethod.Post);
+            public static ApiCall GetEmail                  = new ApiCall(ApiGroup.RentVisionAccount, "GetEmail", HttpMethod.Get);
+            public static ApiCall GetPayments               = new ApiCall(ApiGroup.RentVisionAccount, "GetPayments", HttpMethod.Get);
+
+            // RentVision
+            public static ApiCall UserPlans     = new ApiCall(ApiGroup.RentVision, "UserPlans", HttpMethod.Get);
+            public static ApiCall KillAllSites  = new ApiCall(ApiGroup.RentVision, "KillAllSites", HttpMethod.Post);
+
             // VerificationCode
-            public const string CreateVerificationCode      = "VerificationCode/Create";
-            public const string SetVerificationCodeVerified = "VerificationCode/Verified";
-            public const string GetVerificationCodeStatus   = "VerificationCode/Verified";
-            // Misc
-            public const string PaymentWebhook          = "Mollie/PaymentWebhook";
-            public const string GetTransactionStatus    = "Mollie/GetTransactionStatus";
-            public const string KillAllSites            = "RentVision/KillAllSites";
+            public static ApiCall CreateVerificationCode        = new ApiCall(ApiGroup.VerificationCode, "Create", HttpMethod.Post);
+            public static ApiCall SetVerificationCodeVerified   = new ApiCall(ApiGroup.VerificationCode, "Verified", HttpMethod.Post);
+            public static ApiCall GetVerificationCodeStatus     = new ApiCall(ApiGroup.VerificationCode, "Verified", HttpMethod.Get);
+
+            // Mollie
+            public static ApiCall PaymentWebhook        = new ApiCall(ApiGroup.Mollie, "PaymentWebhook", HttpMethod.Post);
+            public static ApiCall GetTransactionStatus  = new ApiCall(ApiGroup.Mollie, "GetTransactionStatus", HttpMethod.Get);
+            public static ApiCall MollieCreateCustomer  = new ApiCall(ApiGroup.Mollie, "Customer", HttpMethod.Put);
+            public static ApiCall MollieGetPayments     = new ApiCall(ApiGroup.Mollie, "Payments", HttpMethod.Get);
         }
     }
 }

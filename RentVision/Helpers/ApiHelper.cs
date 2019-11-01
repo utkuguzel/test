@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using Mollie.Api.Models.Customer;
 using Newtonsoft.Json;
 using Piranha;
 using RentVision.Helpers;
@@ -9,8 +10,10 @@ using RentVision.Models.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using static RentVision.Models.Configuration.Configuration;
 
 namespace Twinvision.Piranha.RentVision.Helpers
 {
@@ -32,18 +35,18 @@ namespace Twinvision.Piranha.RentVision.Helpers
         /// <param name="data">A Dictionary containing parameter data</param>
         /// <param name="callMethod">The HttpMethod that should be used to send data</param>
         /// <returns>An HttpResponseMessage containing response data from the API</returns>
-        public async Task<HttpResponseMessage> SendApiCallAsync(string callType, HttpMethod callMethod, Dictionary<string, string> data = null, string password = null, HttpContext context = null)
+        public async Task<HttpResponseMessage> SendApiCallAsync(ApiCall call, Dictionary<string, string> data = null, string password = null, HttpContext context = null)
         {
             data = data ?? new Dictionary<string, string>();
 
             var query = QueryHelpers.AddQueryString(
-                $"{Configuration.BackOffice.Url}/{callType}",
+                $"{BackOffice.Url}/{Enum.GetName(typeof(ApiGroup), call.ApiCategory)}/{call.Url}",
                 data
             );
 
             var request = new HttpRequestMessage
             {
-                Method = callMethod,
+                Method = call.Method,
                 RequestUri = new Uri(query)
             };
 
@@ -52,7 +55,7 @@ namespace Twinvision.Piranha.RentVision.Helpers
                 request.Headers.Add("X-Password", password);
             }
 
-            if (context != null && callType != Configuration.ApiCalls.LoginUserRentVisionApi)
+            if (context != null && call.Url != ApiCalls.LoginUserRentVisionApi.Url)
             {
                 var apiLoginKey = context.Session.GetString("ApiLoginKey") ?? CookieHelper.GetCookie("ApiLoginKey", context);
                 if (apiLoginKey != null)
@@ -66,20 +69,15 @@ namespace Twinvision.Piranha.RentVision.Helpers
             }
 
             var client = _clientFactory.CreateClient("RentVisionApi");
-
             var response = await client.SendAsync(request);
-
             return response;
         }
 
         public async Task<List<UserPlan>> GetUserPlansAsync()
         {
-            var response = await SendApiCallAsync(Configuration.ApiCalls.UserPlans, HttpMethod.Get);
+            var response = await SendApiCallAsync(ApiCalls.UserPlans);
             var responseData = await response.Content.ReadAsStringAsync();
-
-            List<UserPlan> userPlans = JsonConvert.DeserializeObject<List<UserPlan>>(responseData);
-
-            return userPlans;
+            return JsonConvert.DeserializeObject<List<UserPlan>>(responseData);
         }
 
         public async Task<string> GetEmailFromLoginKeyAsync(string apiLoginKey, HttpContext context)
@@ -89,8 +87,7 @@ namespace Twinvision.Piranha.RentVision.Helpers
                     { "ApiLoginKey", apiLoginKey }
                 };
             var emailResponse = await SendApiCallAsync(
-                Configuration.ApiCalls.GetEmail,
-                HttpMethod.Get,
+                ApiCalls.GetEmail,
                 GetEmailParameters,
                 context: context
             );
