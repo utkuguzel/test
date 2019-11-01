@@ -24,7 +24,7 @@ function onUserPlansFilter()
 
 function updateUserPlans(interval)
 {
-    var userPlans = $(".plan");
+    var userPlans = $(".pricing-table-2");
 
     // Get for each plan type that's displayed on the page their corresponding plan data (if it exists) and display it.
     $.each(userPlans, function (i, v)
@@ -37,12 +37,12 @@ function updateUserPlans(interval)
 
             if (plan !== undefined)
             {
-                var price = (plan.price <= 0) ? "Free!" : "€ " + plan.price;
+                var price = (plan.price <= 0) ? "Free!" : plan.price;
 
                 $(v).find(".title").text(plan.name);
-                $(v).find(".price").text(price);
+                $(v).find(".realPrice").text(price);
 
-                $(v).find(".button").attr("href", "/register?userPlan=" + plan.name.split(" ")[0] + "&payInterval=" + plan.payInterval);
+                $(v).find(".order-btn").attr("href", "/register?userPlan=" + plan.name.split(" ")[0] + "&payInterval=" + plan.payInterval);
             }
         }
     });
@@ -56,7 +56,7 @@ function onGetUserPlansSuccess(response)
     updateUserPlans(2);
 }
 
-function onGetUserPlansError(jqXhr, error, errorStr)
+function onGetUserPlansError(_, error, errorStr)
 {
     console.log(error + ": " + errorStr);
 }

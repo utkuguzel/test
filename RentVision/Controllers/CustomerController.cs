@@ -51,8 +51,8 @@ namespace Twinvision.Piranha.RentVision.Controllers
                 Locale = Locale.nl_NL
             };
 
-            ICustomerClient customerClient = new CustomerClient(MollieController.GetMollieKey());
-            CustomerResponse customerResponse = await customerClient.CreateCustomerAsync(customerRequest);
+            var customerClient = new CustomerClient(MollieController.GetMollieKey());
+            var customerResponse = await customerClient.CreateCustomerAsync(customerRequest);
 
             // Set customer MollieId in db
             var urlParameters = new Dictionary<string, string>()
@@ -67,7 +67,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
 
         public async Task<ListResponse<PaymentResponse>> GetPaymentListAsync(string customerId = null)
         {
-            IPaymentClient paymentClient = new PaymentClient(MollieController.GetMollieKey());
+            var paymentClient = new PaymentClient(MollieController.GetMollieKey());
             ListResponse<PaymentResponse> response = null;
             if (customerId != null)
             {
@@ -82,7 +82,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
 
         public async Task<ListResponse<CustomerResponse>> GetCustomerListAsync()
         {
-            ICustomerClient customerClient = new CustomerClient(MollieController.GetMollieKey());
+            var customerClient = new CustomerClient(MollieController.GetMollieKey());
             ListResponse<CustomerResponse> response = await customerClient.GetCustomerListAsync();
             return response;
         }
@@ -107,7 +107,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
                 SequenceType = SequenceType.First,
                 Amount = new Amount(Currency.EUR, plan.Price.ToString()),
                 Description = $"RentVision - {plan.Name}",
-                RedirectUrl = $"{Configuration.Website.Url}/paid",
+                RedirectUrl = $"{Configuration.Website.Url}/setup",
                 WebhookUrl = $"{Configuration.BackOffice.Url}/{Configuration.ApiCalls.PaymentWebhook}"
             };
 
@@ -115,19 +115,19 @@ namespace Twinvision.Piranha.RentVision.Controllers
             paymentRequest.SetMetadata(metadataRequest);
 
             // When we retrieve the payment response, we can convert our metadata back to our custom class
-            IPaymentClient paymentClient = new PaymentClient(MollieController.GetMollieKey());
-            PaymentResponse result = await paymentClient.CreatePaymentAsync(paymentRequest);
+            var paymentClient = new PaymentClient(MollieController.GetMollieKey());
+            var paymentResponse = await paymentClient.CreatePaymentAsync(paymentRequest);
 
-            context.Session.SetString("paymentId", result.Id.ToString());
-            CookieHelper.SetCookie("paymentId", result.Id.ToString(), context);
+            context.Session.SetString("paymentId", paymentResponse.Id.ToString());
+            CookieHelper.SetCookie("paymentId", paymentResponse.Id.ToString(), context);
            
-            return result;
+            return paymentResponse;
         }
 
         [HttpGet("deleteTestAccounts")]
         public async Task<IActionResult> DeleteTestAccounts()
         {
-            ICustomerClient customerClient = new CustomerClient(MollieController.GetMollieKey());
+            var customerClient = new CustomerClient(MollieController.GetMollieKey());
             ListResponse<CustomerResponse> response = await customerClient.GetCustomerListAsync();
 
             foreach ( var account in response.Items )

@@ -8,6 +8,7 @@
     <link rel="stylesheet/less" type="text/css" href="~/css/config.min.css">
     <link rel="stylesheet/less" type="text/css" href="~/css/components/block.min.css">
     <link rel="stylesheet/less" type="text/css" href="~/css/components/plans.min.css">
+    <link rel="stylesheet/less" type="text/css" href="~/assets/css/pricing.css">
 }
 
 <div class="container-fluid">
@@ -18,8 +19,6 @@
     @await Html.PartialAsync("/Views/Shared/Partial/_Plans.cshtml", Model)
 
     @Html.DisplayFor(m => m.Blocks)
-
-    @*await Html.PartialAsync("/Views/Shared/Partial/_Modules.cshtml", Model)*@
 
     <partial name="/Views/Shared/Partial/_Footer.cshtml" />
 </div>
