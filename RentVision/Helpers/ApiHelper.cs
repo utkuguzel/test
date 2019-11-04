@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Mollie.Api.Models.Customer;
 using Newtonsoft.Json;
 using Piranha;
+using RentVision.Controllers;
 using RentVision.Helpers;
 using RentVision.Models;
 using RentVision.Models.Configuration;
@@ -71,13 +72,6 @@ namespace Twinvision.Piranha.RentVision.Helpers
             var client = _clientFactory.CreateClient("RentVisionApi");
             var response = await client.SendAsync(request);
             return response;
-        }
-
-        public async Task<List<UserPlan>> GetUserPlansAsync()
-        {
-            var response = await SendApiCallAsync(ApiCalls.UserPlans);
-            var responseData = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<List<UserPlan>>(responseData);
         }
 
         public async Task<string> GetEmailFromLoginKeyAsync(string apiLoginKey, HttpContext context)

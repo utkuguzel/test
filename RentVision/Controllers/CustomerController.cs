@@ -59,28 +59,33 @@ namespace Twinvision.Piranha.RentVision.Controllers
             return null;
         }
 
-        public async Task<ListResponse<PaymentResponse>> GetPaymentListAsync()
+        public async Task<List<PaymentResponse>> GetPaymentListAsync()
         {
             var paymentListRequest = await _apiHelper.SendApiCallAsync(ApiCalls.MollieGetPayments);
             var paymentListResponse = await paymentListRequest.Content.ReadAsStringAsync();
             if (paymentListRequest.IsSuccessStatusCode)
             {
-                var paymentList = JsonConvert.DeserializeObject<ListResponse<PaymentResponse>>(paymentListResponse);
+                var paymentList = JsonConvert.DeserializeObject<List<PaymentResponse>>(paymentListResponse);
                 return paymentList;
             }
             return null;
         }
 
-        public async Task<ListResponse<CustomerResponse>> GetCustomerListAsync()
+        public async Task<List<CustomerResponse>> GetCustomerListAsync()
         {
-            var customerClient = new CustomerClient(MollieController.GetMollieKey());
-            ListResponse<CustomerResponse> response = await customerClient.GetCustomerListAsync();
-            return response;
+            var customerListRequest = await _apiHelper.SendApiCallAsync(ApiCalls.MollieGetCustomers);
+            var customerListResponse = await customerListRequest.Content.ReadAsStringAsync();
+            if (customerListRequest.IsSuccessStatusCode)
+            {
+                var customerList = JsonConvert.DeserializeObject<List<CustomerResponse>>(customerListResponse);
+                return customerList;
+            }
+            return null;
         }
 
-        public bool DoesCustomerExist(string customer, ListResponse<CustomerResponse> customerList)
+        public bool DoesCustomerExist(string customer, List<CustomerResponse> customerList)
         {
-            return customerList.Items.Exists(c => c.Email == customer || c.Name == customer);
+            return customerList.Exists(c => c.Email == customer || c.Name == customer);
         }
 
         public async Task<PaymentResponse> CreatePaymentRequest(UserPlan plan, string email, string customerId, HttpContext context)

@@ -31,7 +31,7 @@
                                     var price = (plan.Price == "0") ? test["Free"].Value.ToString() : plan.Price.Value.ToString();
 
                                     <div class="col-lg-4  col-md-6">
-                                        <div class="pricing-table-2" data-plan="@plan.UserPlanType.Value">
+                                        <div class="pricing-table-2" data-plan="@plan.UserPlanType.Value" data-plan-name-localized="@test[plan.Title]">
                                             <div class="price-header">
                                                 <div class="icon"><i class="fa fa-paper-plane"></i></div>
                                                 <h3 class="title">@plan.Title</h3>

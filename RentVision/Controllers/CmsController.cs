@@ -156,8 +156,10 @@ namespace RentVision.Controllers
                 }
             }
 
-            var userPlanList = await _apiHelper.GetUserPlansAsync();
-            var userPlan = userPlanList.FirstOrDefault(p => p.Name.IndexOf(sessionUserPlan) != -1 && p.PayInterval == Convert.ToInt32(sessionUserPlanInterval));
+            var planListRequest = await _apiHelper.SendApiCallAsync(ApiCalls.GetPlans);
+            var planListResponse = await planListRequest.Content.ReadAsStringAsync();
+            var planList = JsonConvert.DeserializeObject<List<UserPlan>>(planListResponse);
+            var userPlan = planList.FirstOrDefault(p => p.Name.IndexOf(sessionUserPlan) != -1 && p.PayInterval == Convert.ToInt32(sessionUserPlanInterval));
 
             if ( userPlan != null )
             {
@@ -202,7 +204,7 @@ namespace RentVision.Controllers
                     throw new Exception("Failed to retrieve customer MollieId");
                 }
                 var paymentListResponse = await customerController.GetPaymentListAsync();
-                var customerPayments = paymentListResponse.Items.Where(m => m.CustomerId == mollieId).ToList();
+                var customerPayments = paymentListResponse.Where(m => m.CustomerId == mollieId).ToList();
                 // Customer exists but there are no payments
                 if (customerPayments.Count <= 0)
                 {
@@ -222,13 +224,6 @@ namespace RentVision.Controllers
             }
 
             return (checkoutUrl.Links.Checkout.Href, checkoutUrl.Id);
-        }
-
-        [Route("/api/getUserPlans")]
-        public async Task<JsonResult> GetUserPlansAsync()
-        {
-            List<UserPlan> userPlans = await _apiHelper.GetUserPlansAsync();
-            return new JsonResult(userPlans);
         }
 
         [HttpGet("paid")]

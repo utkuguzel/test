@@ -79,7 +79,7 @@ namespace RentVision.Controllers
             }
 
             TempData["StatusCode"] = userCredentialResponse.StatusCode;
-            TempData["StatusMessage"] = userCredentialResponse;
+            TempData["StatusMessage"] = userCredentialString;
 
             if ( !userCredentialResponse.IsSuccessStatusCode )
             {

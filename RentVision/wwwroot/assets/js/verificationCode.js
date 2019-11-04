@@ -99,7 +99,7 @@
             });
         }
 
-        setTimeout(checkMolliePaymentStatus, 1000);
+        setTimeout(checkMolliePaymentStatus, 2000);
     }
 
     $('.wizard').on('changed.fu.wizard', function (_, data) {
@@ -112,12 +112,13 @@
             else if (planFree === "True") {
                 $(".step-pane-payment").data("skip", "");
                 $(".wizard").wizard("selectedItem", { step: 4 });
-                startSetupPoll();
+                //startSetupPoll();
             }
         }
 
         if (data.step === 4) {
             startSetupPoll();
+            console.log("Check");
         }
     });
 
