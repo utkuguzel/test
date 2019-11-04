@@ -6,12 +6,10 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using RentVision.Helpers;
-using RentVision.Models.Regions;
 using System.Net;
 using Newtonsoft.Json;
 using Twinvision.Piranha.RentVision.Helpers;
 using System.Net.Http;
-using RentVision.Models.Configuration;
 using System.Collections.Generic;
 using Microsoft.Extensions.Localization;
 using Microsoft.AspNetCore.Localization;
@@ -19,12 +17,9 @@ using System.Linq;
 using Twinvision.Piranha.RentVision.Controllers;
 using Mollie.Api.Client;
 using Mollie.Api.Models.Payment;
-using Mollie.Api.Models.Url;
 using Mollie.Api.Models.Payment.Response;
 using System.Security.Claims;
 using Piranha.Models;
-using System.Threading;
-using Twinvision.Piranha.RentVision.Resources;
 using static RentVision.Models.Configuration.Configuration;
 
 namespace RentVision.Controllers

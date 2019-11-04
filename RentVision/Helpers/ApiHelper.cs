@@ -10,9 +10,12 @@ using RentVision.Models;
 using RentVision.Models.Configuration;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using static RentVision.Models.Configuration.Configuration;
 
@@ -36,20 +39,26 @@ namespace Twinvision.Piranha.RentVision.Helpers
         /// <param name="data">A Dictionary containing parameter data</param>
         /// <param name="callMethod">The HttpMethod that should be used to send data</param>
         /// <returns>An HttpResponseMessage containing response data from the API</returns>
-        public async Task<HttpResponseMessage> SendApiCallAsync(ApiCall call, Dictionary<string, string> data = null, string password = null, HttpContext context = null)
+        public async Task<HttpResponseMessage> SendApiCallAsync(ApiCall call, Dictionary<string, string> data = null, string json = null, string password = null, HttpContext context = null)
         {
             data = data ?? new Dictionary<string, string>();
+
+            var request = new HttpRequestMessage
+            {
+                Method = call.Method,
+            };
 
             var query = QueryHelpers.AddQueryString(
                 $"{BackOffice.Url}/{Enum.GetName(typeof(ApiGroup), call.ApiCategory)}/{call.Url}",
                 data
             );
 
-            var request = new HttpRequestMessage
+            request.RequestUri = new Uri(query);
+
+            if ( !string.IsNullOrWhiteSpace(json))
             {
-                Method = call.Method,
-                RequestUri = new Uri(query)
-            };
+                request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+            }
 
             if (password != null)
             {

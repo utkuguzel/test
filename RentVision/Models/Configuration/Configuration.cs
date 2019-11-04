@@ -82,12 +82,13 @@ namespace RentVision.Models.Configuration
             public static ApiCall GetVerificationCodeStatus     = new ApiCall(ApiGroup.VerificationCode, "Verified", HttpMethod.Get);
 
             // Mollie
-            public static ApiCall PaymentWebhook        = new ApiCall(ApiGroup.Mollie, "PaymentWebhook", HttpMethod.Post);
-            public static ApiCall GetTransactionStatus  = new ApiCall(ApiGroup.Mollie, "GetTransactionStatus", HttpMethod.Get);
-            public static ApiCall MollieGetCustomers    = new ApiCall(ApiGroup.Mollie, "Customers", HttpMethod.Get);
-            public static ApiCall MollieCreateCustomer  = new ApiCall(ApiGroup.Mollie, "Customer", HttpMethod.Put);
-            public static ApiCall MollieGetPayments     = new ApiCall(ApiGroup.Mollie, "Payments", HttpMethod.Get);
-            public static ApiCall MollieCreatePayment   = new ApiCall(ApiGroup.Mollie, "Payment", HttpMethod.Put);
+            public static ApiCall PaymentWebhook            = new ApiCall(ApiGroup.Mollie, "PaymentWebhook", HttpMethod.Post);
+            public static ApiCall GetTransactionStatus      = new ApiCall(ApiGroup.Mollie, "GetTransactionStatus", HttpMethod.Get);
+            public static ApiCall MollieGetCustomers        = new ApiCall(ApiGroup.Mollie, "Customers", HttpMethod.Get);
+            public static ApiCall MollieGetPayments         = new ApiCall(ApiGroup.Mollie, "Payments", HttpMethod.Get);
+            public static ApiCall MollieCreateCustomer      = new ApiCall(ApiGroup.Mollie, "Customer", HttpMethod.Post);
+            public static ApiCall MollieCreatePayment       = new ApiCall(ApiGroup.Mollie, "Payment", HttpMethod.Post);
+            public static ApiCall MollieCreateSubscription  = new ApiCall(ApiGroup.Mollie, "Subscription", HttpMethod.Post);
 
             // Plans
             public static ApiCall GetPlans          = new ApiCall(ApiGroup.Plans, "", HttpMethod.Get);

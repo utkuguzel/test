@@ -68,7 +68,7 @@ namespace RentVision.Controllers
                 ApiCalls.LoginUserRentVisionApi,
                 urlParameters,
                 model.Password,
-                HttpContext
+                context: HttpContext
             );
             string userCredentialString = await userCredentialResponse.Content.ReadAsStringAsync();
             if (Guid.TryParse(userCredentialString, out Guid apiLoginKey))
