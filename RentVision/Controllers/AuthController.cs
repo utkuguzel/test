@@ -139,7 +139,7 @@ namespace RentVision.Controllers
             var createAccountRequest = await _apiHelper.SendApiCallAsync(
                 ApiCalls.CreateAccount,
                 urlParameters,
-                model.Password
+                password: model.Password
             );
             string createAccountResponse = await createAccountRequest.Content.ReadAsStringAsync();
             if ( Guid.TryParse(createAccountResponse, out Guid apiLoginKey) )

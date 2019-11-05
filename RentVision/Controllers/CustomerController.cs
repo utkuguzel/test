@@ -107,16 +107,21 @@ namespace Twinvision.Piranha.RentVision.Controllers
                 WebhookUrl = $"{BackOffice.Url}/{ApiCalls.PaymentWebhook.FullUrl()}"
             };
 
-            // Set the metadata
             paymentRequest.SetMetadata(metadataRequest);
 
-            // When we retrieve the payment response, we can convert our metadata back to our custom class
-            var paymentClient = new PaymentClient(MollieController.GetMollieKey());
-            var paymentResponse = await paymentClient.CreatePaymentAsync(paymentRequest);
+            var paymentRequestSerialized = JsonConvert.SerializeObject(paymentRequest);
+            var apiRequest = await _apiHelper.SendApiCallAsync(ApiCalls.MollieCreatePayment, json: paymentRequestSerialized, context: context);
+            var apiResponse = await apiRequest.Content.ReadAsStringAsync();
+            if (!apiRequest.IsSuccessStatusCode)
+            {
+                throw new Exception(apiResponse);
+            }
+
+            var paymentResponse = JsonConvert.DeserializeObject<PaymentResponse>(apiResponse);
 
             context.Session.SetString("paymentId", paymentResponse.Id.ToString());
             CookieHelper.SetCookie("paymentId", paymentResponse.Id.ToString(), context);
-           
+
             return paymentResponse;
         }
 
