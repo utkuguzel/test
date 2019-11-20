@@ -103,7 +103,7 @@
                                         <i class="fas fa-times"></i>
                                     </button>
 
-                                    <a onClick="javascript:window.close('','_parent','');" href="@(Model.MollieCheckoutUrl != null ? Model.MollieCheckoutUrl : "javascript:;")" data-skip="@(Model.MollieCheckoutUrl == null ? true : false)" id="checkoutButton" target="_blank" class="btn btn-primary">
+                                    <a href="@(Model.MollieCheckoutUrl != null ? Model.MollieCheckoutUrl : "javascript:;")" data-skip="@(Model.MollieCheckoutUrl == null ? true : false)" id="checkoutButton" class="btn btn-primary">
                                         @Localizer["Checkout"]
                                         <i class="fas fa-arrow-right"></i>
                                     </a>

@@ -67,7 +67,7 @@ namespace RentVision.Controllers
             var userCredentialResponse = await _apiHelper.SendApiCallAsync(
                 ApiCalls.LoginUserRentVisionApi,
                 urlParameters,
-                model.Password,
+                password: model.Password,
                 context: HttpContext
             );
             string userCredentialString = await userCredentialResponse.Content.ReadAsStringAsync();
