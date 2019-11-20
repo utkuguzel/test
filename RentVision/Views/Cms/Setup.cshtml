@@ -3,6 +3,9 @@
 
 @{
     ViewBag.Title = Model.Title;
+
+    var rqf = Context.Features.Get<IRequestCultureFeature>();
+    var localize = Localizer.WithCulture(rqf.RequestCulture.Culture);
 }
 
 @section head {
@@ -25,19 +28,19 @@
                         <div class="steps-container">
                             <ul class="steps">
                                 <li data-step="1" data-name="campaign" class="active">
-                                    <span class="badge">1</span>@Localizer["E-mail"]
+                                    <span class="badge">1</span>@localize["E-mail"]
                                     <span class="chevron"></span>
                                 </li>
                                 <li data-step="2">
-                                    <span class="badge">2</span>@Localizer["Verification"]
+                                    <span class="badge">2</span>@localize["Verification"]
                                     <span class="chevron"></span>
                                 </li>
                                 <li data-step="3">
-                                    <span class="badge">3</span>@Localizer["Payment"]
+                                    <span class="badge">3</span>@localize["Payment"]
                                     <span class="chevron"></span>
                                 </li>
                                 <li data-step="4">
-                                    <span class="badge">4</span>@Localizer["Setup"]
+                                    <span class="badge">4</span>@localize["Setup"]
                                     <span class="chevron"></span>
                                 </li>
                             </ul>
@@ -46,20 +49,20 @@
                         <div class="step-content">
                             <div class="step-pane active sample-pane alert" data-step="1">
                                 <div class="email-working">
-                                    <h5 class="environment">@Localizer["Sending verification e-mail"]</h5>
+                                    <h5 class="environment">@localize["Sending verification e-mail"]</h5>
                                     <i class="fas fa-spinner fa-pulse"></i>
-                                    <p>@Localizer["We're sending a verification e-mail to your e-mail address, one moment please..."]</p>
+                                    <p>@localize["We're sending a verification e-mail to your e-mail address, one moment please..."]</p>
                                 </div>
                             </div>
                             <div class="step-pane active sample-pane alert" data-step="2">
                                 <div class="verification-box">
-                                    <h4>@Localizer["Verify your e-mailaddress"]</h4>
+                                    <h4>@localize["Verify your e-mailaddress"]</h4>
                                     <div class="svg svg-mail">
                                         @{
                                             await Html.RenderPartialAsync("~/Views/Shared/Partial/_svg_mail.cshtml");
                                         }
                                     </div>
-                                    <h5>@Localizer["Enter the code that you received in the e-mail we sent you."]</h5>
+                                    <h5>@localize["Enter the code that you received in the e-mail we sent you."]</h5>
 
                                     <div class="verificationForm" @(Model.Code != null ? $"data-code={Model.Code}" : "")>
                                         <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
@@ -72,69 +75,69 @@
                                     </div>
 
                                     <div class="resend" style="padding: 10px 0">
-                                        <a href="javascript:;">No code received? Click here to send a new one.</a>
+                                        <a href="javascript:;">@localize["No code received? Click here to send a new one."]</a>
                                     </div>
                                 </div>
                             </div>
                             <div class="step-pane step-pane-payment sample-pane alert" data-payment-id="@Model.MolliePaymentId" data-step="3" data-skip="@(Model.SelectedPlan.Price <= 0 ? true : false)">
-                                <h4>@Localizer["Payment"]</h4>
-                                <h5>@Localizer["Start your payment by clicking on the button below."]</h5>
+                                <h4>@localize["Payment"]</h4>
+                                <h5>@localize["Start your payment by clicking on the button below."]</h5>
 
                                 <table class="table plan-summary">
                                     <tbody>
                                         <tr>
-                                            <th>@Localizer["Package"]</th>
+                                            <th>@localize["Package"]</th>
                                             <td>RentVision - @Model.SelectedPlan.Name</td>
                                         </tr>
                                         <tr>
-                                            <th>@Localizer["Cost"]</th>
+                                            <th>@localize["Cost"]</th>
                                             <td>&euro; @Model.SelectedPlan.Price.ToString()</td>
                                         </tr>
                                         <tr>
-                                            <th>@Localizer["Subscription type"]</th>
-                                            <td>@(Model.SelectedPlan.PayInterval == 1 ? Localizer["Yearly"] : Localizer["Monthly"])</td>
+                                            <th>@localize["Subscription type"]</th>
+                                            <td>@(Model.SelectedPlan.PayInterval == 1 ? localize["Yearly"] : localize["Monthly"])</td>
                                         </tr>
                                     </tbody>
                                 </table>
 
                                 <div class="clearfix">
                                     <button type="button" class="btn btn-light btn-skip" onclick="$('#confirmSkipPaymentModal').appendTo('#modalBox')" data-toggle="modal" data-target="#confirmSkipPaymentModal">
-                                        @Localizer["Skip"]
+                                        @localize["Skip"]
                                         <i class="fas fa-times"></i>
                                     </button>
 
                                     <a href="@(Model.MollieCheckoutUrl != null ? Model.MollieCheckoutUrl : "javascript:;")" data-skip="@(Model.MollieCheckoutUrl == null ? true : false)" id="checkoutButton" class="btn btn-primary">
-                                        @Localizer["Checkout"]
+                                        @localize["Checkout"]
                                         <i class="fas fa-arrow-right"></i>
                                     </a>
                                 </div>
                             </div>
                             <div class="step-pane sample-pane alert" data-step="4">
-                                <h4>@Localizer["Environment setup"]</h4>
+                                <h4>@localize["Environment setup"]</h4>
                                 <div class="setup-working">
-                                    <h5>@Localizer["We're setting up your environment"]</h5>
+                                    <h5>@localize["We're setting up your environment"]</h5>
                                     <i class="fas fa-spinner fa-pulse"></i>
-                                    <p>@Localizer["Hold on tight, this may take a few seconds..."]</p>
+                                    <p>@localize["Hold on tight, this may take a few seconds..."]</p>
                                 </div>
 
                                 <div class="setup-success">
-                                    <h5 class="environment">@Localizer["Your environment was successfully created"]</h5>
+                                    <h5 class="environment">@localize["Your environment was successfully created"]</h5>
                                     <i class="fas fa-check"></i>
-                                    <p>@Localizer["You can visit your new dashboard by clicking on the button below"]</p>
-                                    <a href="/auth/getUserKey" class="btn btn-info">@Localizer["My dashboard"]</a>
+                                    <p>@localize["You can visit your new dashboard by clicking on the button below"]</p>
+                                    <a href="/auth/getUserKey" class="btn btn-info">@localize["My dashboard"]</a>
                                 </div>
 
                                 <div class="setup-error">
-                                    <h5 class="environment">@Localizer["An error occured"]</h5>
+                                    <h5 class="environment">@localize["An error occured"]</h5>
                                     <i class="fas fa-times"></i>
-                                    <p>@Localizer["An error occured, please try again. If this problem persists, please contact technical support."]</p>
-                                    <a href="/setup" class="btn btn-info">@Localizer["Try again"]</a>
+                                    <p>@localize["Please try again. if this problem persists, please contact technical support."]</p>
+                                    <a href="/setup" class="btn btn-info">@localize["Try again"]</a>
                                 </div>
                             </div>
                         </div>
 
                         <div class="step-buttons">
-                            <span>@Localizer["This step will update automatically when completing the action above."]</span>
+                            <span>@localize["This step will update automatically when completing the action above."]</span>
                         </div>
                     </div>
                 </div>
@@ -146,17 +149,17 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="confirmSkipPaymentModalTitle">@Localizer["Are you sure?"]</h5>
+                        <h5 class="modal-title" id="confirmSkipPaymentModalTitle">@localize["Are you sure?"]</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        @Localizer["Are you sure you want to skip payment? Skipping this step will set your account to a free plan."]
+                        @localize["Are you sure you want to skip payment? Skipping this step will set your account to a free plan."]
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">@Localizer["Close"]</button>
-                        <button type="button" class="btn btn-danger">@Localizer["Skip payment"]</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">@localize["Close"]</button>
+                        <button type="button" id="modal-button-skip" class="btn btn-danger">@localize["Skip payment"]</button>
                     </div>
                 </div>
             </div>

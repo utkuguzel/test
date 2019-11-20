@@ -120,11 +120,8 @@
   <data name="An error occured" xml:space="preserve">
     <value>Er heeft zich een fout voorgedaan</value>
   </data>
-  <data name="An error occured, please try again. If this problem persists, please contact technical support." xml:space="preserve">
-    <value>Er heeft zich een fout voorgedaan, probeer het nogmaals. Als dit probleem aanhoudt, neem dan contact op met technische ondersteuning.</value>
-  </data>
   <data name="Are you sure you want to skip payment? Skipping this step will set your account to a free plan." xml:space="preserve">
-    <value>Weet u zeker dat u de betaling wilt overslaan? Als u deze stap overslaat, wordt uw account op een gratis plan gezet.</value>
+    <value>Als u deze stap overslaat, wordt uw account naar een gratis plan gezet.</value>
   </data>
   <data name="Are you sure?" xml:space="preserve">
     <value>Weet u het zeker?</value>
@@ -138,8 +135,8 @@
   <data name="Cost" xml:space="preserve">
     <value>Prijs</value>
   </data>
-  <data name="Enter the code that you received in the e-mail we sent  you." xml:space="preserve">
-    <value>Vul de code in die u van ons ontvangen heeft.</value>
+  <data name="Enter the code that you received in the e-mail we sent you." xml:space="preserve">
+    <value>Vul de verficatiecode in die u heeft ontvangen van ons.</value>
   </data>
   <data name="Environment setup" xml:space="preserve">
     <value>Omgeving aanmaken</value>
@@ -153,11 +150,20 @@
   <data name="My dashboard" xml:space="preserve">
     <value>Mijn dashboard</value>
   </data>
+  <data name="No code received? Click here to send a new one." xml:space="preserve">
+    <value>Geen code ontvangen? Klik hier om een nieuwe te verzenden.</value>
+  </data>
   <data name="Package" xml:space="preserve">
     <value>Pakket</value>
   </data>
   <data name="Payment" xml:space="preserve">
     <value>Betaling</value>
+  </data>
+  <data name="Please try again. If this problem persists, please contact technical support." xml:space="preserve">
+    <value>Er heeft zich een fout voorgedaan, probeer het nogmaals. Als dit probleem aanhoudt, neem dan contact op met technische ondersteuning.</value>
+  </data>
+  <data name="Sending verification e-mail" xml:space="preserve">
+    <value>E-mail aan het verzenden</value>
   </data>
   <data name="Setup" xml:space="preserve">
     <value>Setup</value>
@@ -178,13 +184,16 @@
     <value>Deze stap wordt automatisch bijgewerkt wanneer de bovenstaande actie is voltooid.</value>
   </data>
   <data name="Try again" xml:space="preserve">
-    <value>Probeer opnieuw</value>
+    <value>Opnieuw proberen</value>
   </data>
   <data name="Verification" xml:space="preserve">
     <value>Verificatie</value>
   </data>
   <data name="Verify your e-mailaddress" xml:space="preserve">
     <value>Verifieer uw e-mailadres</value>
+  </data>
+  <data name="We're sending a verification e-mail to your e-mail address, one moment please..." xml:space="preserve">
+    <value>Er wordt een verificatiecode naar uw e-mailadres verstuurd, een moment geduld a.u.b...</value>
   </data>
   <data name="We're setting up your environment" xml:space="preserve">
     <value>Uw omgeving wordt aangemaakt</value>

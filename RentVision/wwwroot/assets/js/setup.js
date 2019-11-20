@@ -80,3 +80,9 @@ function onErrorCallBack(jqXhr, error, errorStr)
 {
     console.log(error + ": " + errorStr);
 }
+
+$(document).ready(function () {
+    $("#modal-button-skip").on("click", function () {
+        console.log("Skip payment trigger AJAX call set to free plan and continue");
+    });
+});
