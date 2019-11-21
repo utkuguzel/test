@@ -83,13 +83,12 @@ namespace RentVision.Controllers
             return View(model);
         }
 
-        [Route("register")]
-        public async Task<IActionResult> Register(Guid id, bool draft = false, string userPlan = "Free", string payInterval = "2")
+        [Route("register/{pid:guid?}")]
+        public async Task<IActionResult> Register(Guid id, Guid pid, bool draft = false)
         {
             if ( HttpContext.Session.GetString("UserPlan") == null )
             {
-                HttpContext.Session.SetString("UserPlan", userPlan);
-                HttpContext.Session.SetString("PayInterval", payInterval);
+                HttpContext.Session.SetString("UserPlan", pid.ToString());
             }
 
             var model = await GetCulturizedModelAsync<RegisterPage>(id, HttpContext.User, draft);
@@ -131,8 +130,7 @@ namespace RentVision.Controllers
             }
 
             var sessionUserPlan = HttpContext.Session.GetString("UserPlan") ?? null;
-            var sessionUserPlanInterval = HttpContext.Session.GetString("PayInterval") ?? null;
-            if ( sessionUserPlan == null || sessionUserPlanInterval == null )
+            if ( !Guid.TryParse(sessionUserPlan, out Guid userPlanId) )
             {
                 // Check if user has any payments (OPEN payments will be checked in the GenerateMollieCheckoutUrl method)
                 var customerClient = new CustomerClient(MollieController.GetMollieKey());
@@ -147,8 +145,7 @@ namespace RentVision.Controllers
                         var userPlanMetaData = customerPayments.Items.FirstOrDefault().GetMetadata<UserPlanMetaData>();
                         if (userPlanMetaData != null)
                         {
-                            sessionUserPlan = userPlanMetaData.Plan.Name;
-                            sessionUserPlanInterval = userPlanMetaData.Plan.PayInterval.ToString();
+                            userPlanId = userPlanMetaData.Plan.Id;
                         }
                     }
                     else
@@ -161,8 +158,8 @@ namespace RentVision.Controllers
 
             var planListRequest = await _apiHelper.SendApiCallAsync(ApiCalls.GetPlans);
             var planListResponse = await planListRequest.Content.ReadAsStringAsync();
-            var planList = JsonConvert.DeserializeObject<List<UserPlan>>(planListResponse);
-            var userPlan = planList.FirstOrDefault(p => p.Name.IndexOf(sessionUserPlan) != -1 && p.PayInterval == Convert.ToInt32(sessionUserPlanInterval));
+            var planList = JsonConvert.DeserializeObject<List<Controllers.Plan>>(planListResponse);
+            var userPlan = planList.FirstOrDefault(p => p.Id == userPlanId);
 
             if ( userPlan != null )
             {
@@ -186,7 +183,7 @@ namespace RentVision.Controllers
             return LocalRedirect("/");
         }
 
-        private async Task<(string checkoutUrl, string paymentId)> GenerateMollieCheckoutUrl(string email, UserPlan userPlan, string businessUnitName, HttpContext context)
+        private async Task<(string checkoutUrl, string paymentId)> GenerateMollieCheckoutUrl(string email, Controllers.Plan userPlan, string businessUnitName, HttpContext context)
         {
             var customerController = new CustomerController(_api, _clientFactory);
             var customerList = await customerController.GetCustomerListAsync();

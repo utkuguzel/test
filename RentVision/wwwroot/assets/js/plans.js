@@ -66,7 +66,8 @@ function updatePlans(interval)
                     }
                 }
 
-                $(v).find(".order-btn").attr("href", "/register?userPlan=" + plan.name.split(" ")[0] + "&payInterval=" + plan.payInterval);
+                //$(v).find(".order-btn").attr("href", "/register?userPlan=" + plan.name.split(" ")[0] + "&payInterval=" + plan.payInterval);
+                $(v).find(".order-btn").attr("href", "/register/" + plan.id);
 
                 ul.empty();
                 $.each(planFeatures, function (_, feature) {

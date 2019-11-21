@@ -23,6 +23,7 @@ using Piranha;
 using RentVision.Helpers;
 using static RentVision.Models.Configuration.Configuration;
 using Newtonsoft.Json;
+using RentVision.Controllers;
 
 namespace Twinvision.Piranha.RentVision.Controllers
 {
@@ -30,7 +31,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
     {
         public string CustomerId { get; set; }
         public string Email { get; set; }
-        public UserPlan Plan { get; set; }
+        public Plan Plan { get; set; }
     }
 
     [Route("[controller]")]
@@ -88,7 +89,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
             return customerList.Exists(c => c.Email == customer || c.Name == customer);
         }
 
-        public async Task<PaymentResponse> CreatePaymentRequest(UserPlan plan, string email, string customerId, HttpContext context)
+        public async Task<PaymentResponse> CreatePaymentRequest(Plan plan, string email, string customerId, HttpContext context)
         {
             UserPlanMetaData metadataRequest = new UserPlanMetaData()
             {

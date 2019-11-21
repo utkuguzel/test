@@ -30,8 +30,8 @@
                                 {
                                     var price = (plan.Price == "0") ? test["Free"].Value.ToString() : plan.Price.Value.ToString();
 
-                                    <div class="col-lg-4  col-md-6">
-                                        <div class="pricing-table-2" data-plan="@plan.UserPlanType.Value" data-plan-name-localized="@test[plan.Title]">
+                                    <div class="col-lg-4 col-md-6">
+                                        <div class="pricing-table-2" data-pid="" data-plan="@plan.UserPlanType.Value" data-plan-name-localized="@test[plan.Title]">
                                             <div class="price-header">
                                                 <div class="icon"><i class="fa fa-paper-plane"></i></div>
                                                 <h3 class="title">@plan.Title</h3>
@@ -54,10 +54,6 @@
                                             <div class="price-body">
                                                 <ul>
                                                     <li><b>Free</b> Security Service</li>
-                                                    <li><b>Free</b> Security Service</li>
-                                                    <li><b>Free</b> Security Service</li>
-                                                    <li><b>Free</b> Security Service</li>
-                                                    <li><b>Free</b> Security Service</li>
                                                 </ul>
                                             </div>
                                             <div class="price-footer">
@@ -65,53 +61,6 @@
                                             </div>
                                         </div>
                                     </div>
-
-                                    @*<div class="col-lg-4 col-sm-6">
-                                        <div class="plan" data-plan="@plan.UserPlanType.Value">
-                                            <h3 class="title" style="text-shadow: none !important;">@plan.Title</h3>
-                                            <i class="material-icons-outlined">@plan.Icon.Value</i>
-
-                                            <h5 class="price">@price!</h5>
-
-                                            <p><a class="button button-active" href="/register">@test["Sign up"]</a></p>
-                                        </div>
-
-                                        <div class="features">
-                                            <ul>
-                                                @{
-                                                    foreach (var feature in Model.Features)
-                                                    {
-                                                        string inactive = "";
-                                                        string icon = "fa-check";
-
-                                                        switch (plan.UserPlanType)
-                                                        {
-                                                            case "Free":
-                                                                inactive = (feature.PlanFreeEnabled) ? "" : "inactive";
-                                                                icon = (feature.PlanFreeEnabled) ? "fa-check" : "fa-times";
-                                                                break;
-                                                            case "Basic":
-                                                                inactive = (feature.PlanBasicEnabled) ? "" : "inactive";
-                                                                icon = (feature.PlanBasicEnabled) ? "fa-check" : "fa-times";
-                                                                break;
-                                                            case "Pro":
-                                                                inactive = (feature.PlanProEnabled) ? "" : "inactive";
-                                                                icon = (feature.PlanProEnabled) ? "fa-check" : "fa-times";
-                                                                break;
-                                                        }
-
-                                                        <li class="@inactive">
-                                                            <div class="feature">
-                                                                <i class="fas @icon"></i>
-
-                                                                @feature.Title
-                                                            </div>
-                                                        </li>
-                                                    }
-                                                }
-                                            </ul>
-                                        </div>
-                                    </div>*@
                                 }
                             }
                         </div>

@@ -12,7 +12,7 @@ namespace RentVision.Models
         public SetupFields SetupFields { get; set; }
         
         public string Email { get; set; }
-        public UserPlan SelectedPlan { get; set; }
+        public Controllers.Plan SelectedPlan { get; set; }
         public string Code { get; set; }
         public string MollieCheckoutUrl { get; set; }
         public string MolliePaymentId { get; set; }

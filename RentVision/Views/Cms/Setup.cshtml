@@ -95,7 +95,7 @@
                                         </tr>
                                         <tr>
                                             <th>@localize["Subscription type"]</th>
-                                            <td>@(Model.SelectedPlan.PayInterval == 1 ? localize["Yearly"] : localize["Monthly"])</td>
+                                            <td>@(Model.SelectedPlan.PayInterval == RentVision.Controllers.PaymentInterval.Yearly ? localize["Yearly"] : localize["Monthly"])</td>
                                         </tr>
                                     </tbody>
                                 </table>
