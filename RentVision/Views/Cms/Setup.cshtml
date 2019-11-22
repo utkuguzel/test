@@ -83,6 +83,13 @@
                                 <h4>@localize["Payment"]</h4>
                                 <h5>@localize["Start your payment by clicking on the button below."]</h5>
 
+                                @if( Model.IsUpgrade )
+                                {
+                                    <div id="upgradeNotification">
+                                        <i class="fas fa-info"></i> @localize["Your new plan cost for this period has been compensated with your old plan cost"]
+                                    </div>
+                                }
+
                                 <table class="table plan-summary">
                                     <tbody>
                                         <tr>
@@ -90,7 +97,7 @@
                                             <td>RentVision - @Model.SelectedPlan.Name</td>
                                         </tr>
                                         <tr>
-                                            <th>@localize["Cost"]</th>
+                                            <th>@localize["Subscription cost"]</th>
                                             <td>&euro; @Model.SelectedPlan.Price.ToString()</td>
                                         </tr>
                                         <tr>

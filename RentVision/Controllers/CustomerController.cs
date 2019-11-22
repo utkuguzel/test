@@ -32,6 +32,7 @@ namespace Twinvision.Piranha.RentVision.Controllers
         public string CustomerId { get; set; }
         public string Email { get; set; }
         public Plan Plan { get; set; }
+        public bool IsUpgrade { get; set; } = false;
     }
 
     [Route("[controller]")]

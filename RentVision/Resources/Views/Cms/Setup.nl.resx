@@ -177,6 +177,9 @@
   <data name="Start your payment by clicking on the button below." xml:space="preserve">
     <value>Start uw betaling door op de knop onder dit bericht te klikken.</value>
   </data>
+  <data name="Subscription cost" xml:space="preserve">
+    <value>Prijs abonnement</value>
+  </data>
   <data name="Subscription type" xml:space="preserve">
     <value>Abonnementstype</value>
   </data>
@@ -206,5 +209,8 @@
   </data>
   <data name="Your environment was successfully created" xml:space="preserve">
     <value>Uw omgeving is succesvol aangemaakt</value>
+  </data>
+  <data name="Your new plan cost for this period has been compensated with your old plan cost" xml:space="preserve">
+    <value>Uw kosten voor de upgrade naar het nieuwe plan zijn gewijzigd.</value>
   </data>
 </root>

@@ -2,7 +2,15 @@
 var uppercase = /[A-Z]/;
 
 function init() {
+    $(".passwordRequirements").hide();
     $("#password, #confirmPassword").on("keyup paste", onInputChanged);
+    $("#password, #confirmPassword").on("focus", showPasswordRequirements);
+}
+
+function showPasswordRequirements() {
+    if (!$(".passwordRequirements").is(":visible")) {
+        $(".passwordRequirements").slideDown();
+    }
 }
 
 function onInputChanged(e) {
@@ -38,10 +46,14 @@ function onInputChanged(e) {
 
     if (succes) {
         $("button[disabled]").removeAttr("disabled");
+        $(".passwordRequirements").addClass("success").removeClass("error");
     }
     else {
         $("button").attr("disabled");
+        $(".passwordRequirements").removeClass("success").addClass("error");
     }
+
+    showPasswordRequirements();
 }
 
 function hasNumber(myString) {

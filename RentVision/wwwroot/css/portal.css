@@ -20,6 +20,20 @@ a:hover {
   text-decoration: none;
   color: #2276D9;
 }
+#upgradeNotification {
+  margin: 0 0 20px 0;
+  background: rgba(0, 0, 255, 0.15);
+  color: #4a4a79;
+  border: 1px solid #cabeff;
+  border-radius: 2px;
+  font-family: -apple-system, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue;
+  font-size: 14px;
+  font-weight: 600;
+}
+#upgradeNotification i {
+  font-size: 1em;
+  padding: 0 10px 0 0;
+}
 .statusMessage {
   display: block;
   padding: 5px 0;
@@ -266,6 +280,11 @@ form {
 .form input[type="email"],
 .setup input[type="email"] {
   height: 50px;
+  background: #f4f5ff;
+  border: 1px solid #eaecf3;
+  box-shadow: inset 0 0 2px #d0d9ea;
+  font-family: -apple-system, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue;
+  font-size: 14px;
 }
 .form input[name="firstname"],
 .setup input[name="firstname"] {
@@ -345,6 +364,14 @@ div.requirements {
   border: 1px solid rgba(198, 17, 32, 0.2);
   border-radius: 2px;
   color: hsl(340, 89%, 25%) !important;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  transition: background 0.2s border 0.2s color 0.2s text-shadow 0.2s;
+}
+.passwordRequirements.success,
+div.requirements.success {
+  background: rgba(32, 171, 55, 0.2);
+  border: 1px solid rgba(58, 167, 79, 0.2);
+  color: hsl(144, 68%, 25%) !important;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 .passwordRequirements span,

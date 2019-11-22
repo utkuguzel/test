@@ -180,6 +180,7 @@ namespace RentVision.Controllers
                     var checkoutData = await GenerateMollieCheckoutUrl(email, model.SelectedPlan, email, HttpContext);
                     model.MollieCheckoutUrl = checkoutData.checkoutUrl;
                     model.MolliePaymentId = checkoutData.paymentId;
+                    model.IsUpgrade = checkoutData.IsUpgrade;
                 }
                 if (!string.IsNullOrWhiteSpace(code))
                 {
@@ -192,7 +193,7 @@ namespace RentVision.Controllers
             return LocalRedirect("/");
         }
 
-        private async Task<(string checkoutUrl, string paymentId)> GenerateMollieCheckoutUrl(string email, Plan userPlan, string businessUnitName, HttpContext context)
+        private async Task<(string checkoutUrl, string paymentId, bool IsUpgrade)> GenerateMollieCheckoutUrl(string email, Plan userPlan, string businessUnitName, HttpContext context)
         {
             var customerController = new CustomerController(_api, _clientFactory);
             var mollieResponse = await _apiHelper.SendApiCallAsync(ApiCalls.GetMollieId, context: HttpContext);
@@ -208,7 +209,7 @@ namespace RentVision.Controllers
                 var checkoutUrl = await customerController.CreatePaymentRequest(userPlan, email, mollieId, HttpContext);
                 if (checkoutUrl != null)
                 {
-                    return (checkoutUrl.Links.Checkout.Href, checkoutUrl.Id);
+                    return (checkoutUrl.Links.Checkout.Href, checkoutUrl.Id, false);
                 }
             }
             else
@@ -216,11 +217,12 @@ namespace RentVision.Controllers
                 var openPayment = customerPayments.FirstOrDefault(m => m.Status == PaymentStatus.Open);
                 if (openPayment != null)
                 {
-                    return (openPayment.Links.Checkout.Href, openPayment.Id);
+                    var openPaymentMetaData = openPayment.GetMetadata<UserPlanMetaData>();
+                    return (openPayment.Links.Checkout.Href, openPayment.Id, openPaymentMetaData.IsUpgrade);
                 }
             }
 
-            return (null, null);
+            return (null, null, false);
         }
 
         [HttpGet("paid")]
