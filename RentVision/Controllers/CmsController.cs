@@ -88,6 +88,22 @@ namespace RentVision.Controllers
         {
             if ( HttpContext.Session.GetString("UserPlan") == null )
             {
+                if (pid == Guid.Empty)
+                {
+                    var callRequest = await _apiHelper.SendApiCallAsync(ApiCalls.GetPlans);
+                    var callResponse = await callRequest.Content.ReadAsStringAsync();
+                    var planList = JsonConvert.DeserializeObject<List<Plan>>(callResponse);
+                    var freePlan = planList.FirstOrDefault(plan => plan.Name == "Free");
+                    if ( freePlan != null )
+                    {
+                        pid = freePlan.Id;
+                    }
+                    else
+                    {
+                        throw new Exception("Free plan does not exist in database");
+                    }
+                }
+                
                 HttpContext.Session.SetString("UserPlan", pid.ToString());
             }
 
@@ -222,14 +238,6 @@ namespace RentVision.Controllers
             }
 
             return (null, null, false);
-        }
-
-        [HttpGet("paid")]
-        public ActionResult Paid()
-        {
-            HttpContext.Session.Remove("UserPlan");
-            HttpContext.Session.Remove("PayInterval");
-            return View();
         }
 
         [Route("/api/killAllSites")]

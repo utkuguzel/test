@@ -25,9 +25,26 @@
         sib.select().focus();
     }
 
+    function goToPreviousInput(e) {
+        var t = $(e.target),
+            sib = t.prev('input');
+
+        if (!sib || !sib.length) {
+            sib = body.find('input').eq(0);
+        }
+
+        sib.select().focus();
+    }
+
     // 17 = CTRL, 86 = V
     function onKeyDown(e) {
         var key = e.which;
+
+        // Handle backspace
+        if (key === 8) {
+            goToPreviousInput(e);
+            return true;
+        }
 
         // Handle on input paste
         if (e.type === 'paste') {
@@ -51,6 +68,7 @@
 
     function onFocus(e) {
         $(e.target).select();
+        $(".verificationForm input.focus").focus();
     }
 
     function verifyCode() {
@@ -112,7 +130,6 @@
             else if (planFree === "True") {
                 $(".step-pane-payment").data("skip", "");
                 $(".wizard").wizard("selectedItem", { step: 4 });
-                //startSetupPoll();
             }
         }
 
