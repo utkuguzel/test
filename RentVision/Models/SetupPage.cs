@@ -17,5 +17,6 @@ namespace RentVision.Models
         public string MollieCheckoutUrl { get; set; }
         public string MolliePaymentId { get; set; }
         public bool IsUpgrade { get; set; } = false;
+        public string UpgradePrice { get; set; }
     }
 }

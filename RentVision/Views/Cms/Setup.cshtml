@@ -97,6 +97,13 @@
                                             <th>@localize["Package"]</th>
                                             <td>RentVision - @Model.SelectedPlan.Name</td>
                                         </tr>
+                                        @if (Model.IsUpgrade)
+                                        {
+                                            <tr>
+                                                <th>@localize["Cost"]</th>
+                                                <td>&euro; @Model.UpgradePrice</td>
+                                            </tr>
+                                        }
                                         <tr>
                                             <th>@localize["Subscription cost"]</th>
                                             <td>&euro; @Model.SelectedPlan.Price.ToString()</td>

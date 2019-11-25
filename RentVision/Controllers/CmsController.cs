@@ -166,7 +166,6 @@ namespace RentVision.Controllers
                     }
                     else
                     {
-                        // else redirect to plans page again
                         return LocalRedirect("/plans");
                     }
                 }
@@ -196,11 +195,14 @@ namespace RentVision.Controllers
                     model.MollieCheckoutUrl = checkoutData.checkoutUrl;
                     model.MolliePaymentId = checkoutData.paymentId;
                     model.IsUpgrade = checkoutData.IsUpgrade;
+                    model.UpgradePrice = checkoutData.UpgradePrice;
                 }
                 if (!string.IsNullOrWhiteSpace(code))
                 {
                     model.Code = code;
                 }
+
+                HttpContext.Session.Remove("UserPlan");
 
                 return View(model);
             }
@@ -208,7 +210,7 @@ namespace RentVision.Controllers
             return LocalRedirect("/");
         }
 
-        private async Task<(string checkoutUrl, string paymentId, bool IsUpgrade)> GenerateMollieCheckoutUrl(string email, Plan userPlan, string businessUnitName, HttpContext context)
+        private async Task<(string checkoutUrl, string paymentId, bool IsUpgrade, string UpgradePrice)> GenerateMollieCheckoutUrl(string email, Plan userPlan, string businessUnitName, HttpContext context)
         {
             var customerController = new CustomerController(_api, _clientFactory);
             var mollieResponse = await _apiHelper.SendApiCallAsync(ApiCalls.GetMollieId, context: HttpContext);
@@ -224,7 +226,7 @@ namespace RentVision.Controllers
                 var checkoutUrl = await customerController.CreatePaymentRequest(userPlan, email, mollieId, HttpContext);
                 if (checkoutUrl != null)
                 {
-                    return (checkoutUrl.Links.Checkout.Href, checkoutUrl.Id, false);
+                    return (checkoutUrl.Links.Checkout.Href, checkoutUrl.Id, false, null);
                 }
             }
             else
@@ -233,11 +235,11 @@ namespace RentVision.Controllers
                 if (openPayment != null)
                 {
                     var openPaymentMetaData = openPayment.GetMetadata<UserPlanMetaData>();
-                    return (openPayment.Links.Checkout.Href, openPayment.Id, openPaymentMetaData.IsUpgrade);
+                    return (openPayment.Links.Checkout.Href, openPayment.Id, openPaymentMetaData.IsUpgrade, openPaymentMetaData.UpgradePrice);
                 }
             }
 
-            return (null, null, false);
+            return (null, null, false, null);
         }
 
         [Route("/api/killAllSites")]
