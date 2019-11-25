@@ -109,6 +109,7 @@ namespace RentVision.Controllers
             string userCulture = CultureHelper.GetUserCulture(Request, HttpContext);
             string refererUrl = Request.Headers["Referer"].ToString();
 
+#if !DEBUG
             if (!string.IsNullOrWhiteSpace(Request.Form["g-recaptcha-response"]))
             {
                 var recaptchaResponse = await _recaptcha.Validate(Request.Form["g-recaptcha-response"]);
@@ -123,6 +124,7 @@ namespace RentVision.Controllers
                 TempData["StatusMessage"] = AuthHelper.GetBackOfficeStringLocalized(userCulture, "captcha incorrect");
                 return Redirect(refererUrl);
             }
+#endif
 
             model.Email = model.Email.ToLower();
             model.Subdomain = model.Subdomain.ToLower();

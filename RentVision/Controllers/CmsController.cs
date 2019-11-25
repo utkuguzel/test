@@ -106,7 +106,6 @@ namespace RentVision.Controllers
         public async Task<IActionResult> Plans(Guid id, bool draft = false)
         {
             HttpContext.Session.Remove("UserPlan");
-            HttpContext.Session.Remove("PayInterval");
 
             var model = await GetCulturizedModelAsync<PlansPage>(id, HttpContext.User, draft);
             return View(model);
