@@ -24,6 +24,7 @@ using RentVision.Helpers;
 using static RentVision.Models.Configuration.Configuration;
 using Newtonsoft.Json;
 using RentVision.Controllers;
+using System.Linq;
 
 namespace Twinvision.Piranha.RentVision.Controllers
 {
@@ -40,24 +41,28 @@ namespace Twinvision.Piranha.RentVision.Controllers
     public class CustomerController : Controller
     {
         public ApiHelper _apiHelper { get; set; }
+        private readonly IApi _api;
+        private readonly IHttpClientFactory _clientFactory;
 
         public CustomerController(IApi api, IHttpClientFactory clientFactory)
         {
+            _api = api;
+            _clientFactory = clientFactory;
             _apiHelper = new ApiHelper(api, clientFactory);
         }
 
-        public async Task<string> CreateCustomerAsync(string email, string businessUnitName, HttpContext context)
+        public async Task<CustomerResponse> CreateCustomerAsync(string email, string businessUnitName, HttpContext context)
         {
             var urlParameters = new Dictionary<string, string>()
             {
                 { "email", email },
                 { "businessUnitName", businessUnitName }
             };
-            var createCustomerRequest = await _apiHelper.SendApiCallAsync(ApiCalls.MollieCreateCustomer, urlParameters, context: context);
-            var createCustomerResult = await createCustomerRequest.Content.ReadAsStringAsync();
-            if (createCustomerRequest.IsSuccessStatusCode)
+            var createCustomerCall = await _apiHelper.SendApiCallAsync(ApiCalls.MollieCreateCustomer, urlParameters, context: context);
+            var createCustomerResponse = await createCustomerCall.Content.ReadAsStringAsync();
+            if (createCustomerCall.IsSuccessStatusCode)
             {
-                return createCustomerResult;
+                return JsonConvert.DeserializeObject<CustomerResponse>(createCustomerResponse);
             }
             return null;
         }
@@ -86,12 +91,46 @@ namespace Twinvision.Piranha.RentVision.Controllers
             return null;
         }
 
-        public bool DoesCustomerExist(string customer, List<CustomerResponse> customerList)
+        public async Task<CustomerResponse> GetCustomerAsync(string email)
         {
-            return customerList.Exists(c => c.Email == customer || c.Name == customer);
+            var customerList = await GetCustomerListAsync();
+            var customer = customerList.FirstOrDefault(c => c.Email == email);
+            return customer;
         }
 
-        public async Task<PaymentResponse> CreatePaymentRequest(Plan plan, string email, string customerId, HttpContext context)
+        public async Task<CustomerResponse> GetCustomerFromIdAsync(string customerId)
+        {
+            var customerList = await GetCustomerListAsync();
+            var customer = customerList.FirstOrDefault(c => c.Id == customerId);
+            return customer;
+        }
+
+        public async Task<PaymentResponse> GetLatestCustomerPayment(string customerId)
+        {
+            var paymentListResponse = await GetPaymentListAsync();
+            var latestPayment = paymentListResponse.Where(m => m.CustomerId == customerId).OrderByDescending(p => p.CreatedAt).FirstOrDefault();
+            return latestPayment;
+        }
+
+        [HttpGet("payment/create/{planId:guid}/{customerId}")]
+        public async Task<ActionResult> CreatePaymentAsync(Guid planId, string customerId)
+        {
+            var planController = new PlanController(_api, _clientFactory);
+            var plan = await planController.GetPlanAsync(planId);
+            if (plan == null)
+            {
+                return BadRequest("Invalid plan ID specified");
+            }
+            var customer = await GetCustomerFromIdAsync(customerId);
+            if (customer == null)
+            {
+                return BadRequest("Invalid customer ID specified");
+            }
+            var paymentResponse = await CreatePaymentRequestAsync(plan, customer.Email, customer.Id, HttpContext);
+            return Redirect(paymentResponse.Links.Checkout.Href);
+        }
+
+        public async Task<PaymentResponse> CreatePaymentRequestAsync(Plan plan, string email, string customerId, HttpContext context)
         {
             UserPlanMetaData metadataRequest = new UserPlanMetaData()
             {

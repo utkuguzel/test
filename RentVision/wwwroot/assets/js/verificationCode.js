@@ -97,8 +97,9 @@
 
     function checkPayment() {
         var checkoutUrl = $("#checkoutButton").data("skip");
+        var paymentError = $(".step-pane-payment").data("error");
 
-        if (checkoutUrl === "True") {
+        if (checkoutUrl === "True" && paymentError === "False") {
             $(".wizard").wizard("selectedItem", { step: 4 });
         }
         else {
@@ -114,6 +115,8 @@
                 if (response.statusCode === 200 && response.paymentStatus === "Paid") {
                     $('.wizard').wizard('selectedItem', { step: 4 });
                 }
+
+                console.log(response);
             });
         }
 
@@ -135,7 +138,7 @@
 
         if (data.step === 4) {
             startSetupPoll();
-            console.log("Check");
+            //console.log("Check");
         }
     });
 
@@ -163,9 +166,6 @@
                     $('.wizard').wizard('selectedItem', { step: 2 });
                     $(".verification-box").fadeIn("fast");
                 });
-            }
-            else {
-                console.log(response.statusMessage);
             }
         });
     }

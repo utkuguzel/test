@@ -28,8 +28,6 @@ function isUserSiteReady()
         error: onErrorCallBack
     });
 
-    console.log("IS USER SITE READY");
-
     timer = setTimeout(isUserSiteReady, 1000);
 }
 

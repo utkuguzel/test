@@ -25,22 +25,39 @@ a {
 	}
 }
 
-#upgradeNotification {
+.notification {
     margin: 0 0 20px 0;
-    background: #b8daea;
-    color: #4a5879;
-    border: 1px solid #cabeff;
+    padding: 10px;
     border-radius: 2px;
     font-family: -apple-system, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue;
     font-size: 14px;
     font-weight: 600;
 
-    i {
-        font-size: 1em;
-        padding: 0 10px 0 0;
+    &.info {
+        background: #b8daea;
+        color: #4a5879 !important;
+        border: 1px solid #cabeff;
     }
 
-    p {
+    &.error {
+        background: #eab8b8;
+        color: #794a4a !important;
+        border: 1px solid #f5a6a6;
+    }
+
+    &.success {
+        background: #bbeab8;
+        color: #4f794a !important;
+        border: 1px solid #a6cead;
+    }
+
+    i {
+        font-size: 1em !important;
+        margin: 0 !important;
+        padding: 0 10px 0 0 !important;
+    }
+
+    span {
         display: inline-block;
     }
 }
@@ -98,14 +115,16 @@ form {
 
 .wizard {
     span {
-        color: #AAA !important;
-
         &.badge-info {
             color: #FFF !important;
         }
 
         &.badge-success {
             color: #FFF !important;
+        }
+
+        .step-buttons {
+            color: #AAA;
         }
     }
 
@@ -383,7 +402,7 @@ form {
             font-size: 0.9em;
         }
 
-        span {
+        .step-buttons span {
             font-size: 0.8em;
             color: #AAA;
         }

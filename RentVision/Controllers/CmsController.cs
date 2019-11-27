@@ -29,6 +29,7 @@ using static RentVision.Models.Configuration.Configuration;
 using Mollie.Api.Models.Payment.Request;
 using Mollie.Api.Models;
 using System.Reflection;
+using Mollie.Api.Models.Customer;
 
 namespace RentVision.Controllers
 {
@@ -86,28 +87,20 @@ namespace RentVision.Controllers
         [Route("register/{pid:guid?}")]
         public async Task<IActionResult> Register(Guid id, Guid pid, bool draft = false)
         {
-            if ( HttpContext.Session.GetString("UserPlan") == null )
+            var model = await GetCulturizedModelAsync<RegisterPage>(id, HttpContext.User, draft);
+            var planController = new PlanController(_api, _clientFactory);
+            var plans = await planController.GetPlansListAsync();
+            var selectedPlan = plans.FirstOrDefault(plan => plan.Name.ToLower().IndexOf("free") != -1);
+            if (pid != Guid.Empty)
             {
-                if (pid == Guid.Empty)
-                {
-                    var callRequest = await _apiHelper.SendApiCallAsync(ApiCalls.GetPlans);
-                    var callResponse = await callRequest.Content.ReadAsStringAsync();
-                    var planList = JsonConvert.DeserializeObject<List<Plan>>(callResponse);
-                    var freePlan = planList.FirstOrDefault(plan => plan.Name == "Free");
-                    if ( freePlan != null )
-                    {
-                        pid = freePlan.Id;
-                    }
-                    else
-                    {
-                        throw new Exception("Free plan does not exist in database");
-                    }
-                }
-                
-                HttpContext.Session.SetString("UserPlan", pid.ToString());
+                selectedPlan = plans.FirstOrDefault(plan => plan.Id == pid);
+            }
+            if (HttpContext.Session.GetString("UserPlan") == null)
+            {
+                HttpContext.Session.SetString("UserPlan", selectedPlan.Id.ToString());
             }
 
-            var model = await GetCulturizedModelAsync<RegisterPage>(id, HttpContext.User, draft);
+            model.SelectedUserPlan = selectedPlan;
             return View(model);
         }
 
@@ -130,6 +123,7 @@ namespace RentVision.Controllers
         [Route("setup/{code?}")]
         public async Task<IActionResult> Setup(Guid id, string code, bool draft = false)
         {
+            CustomerResponse customer = null;
             var customerController = new CustomerController(_api, _clientFactory);
             string email = null;
             string apiLoginKey = HttpContext.Session.GetString("ApiLoginKey") ?? CookieHelper.GetCookie("ApiLoginKey", HttpContext);
@@ -146,23 +140,15 @@ namespace RentVision.Controllers
             }
 
             var sessionUserPlan = HttpContext.Session.GetString("UserPlan") ?? null;
-            if ( !Guid.TryParse(sessionUserPlan, out Guid userPlanId) )
+            if (!Guid.TryParse(sessionUserPlan, out Guid userPlanId))
             {
-                // Check if user has any payments (OPEN payments will be checked in the GenerateMollieCheckoutUrl method)
-                var customerClient = new CustomerClient(MollieController.GetMollieKey());
-                var customerList = await customerClient.GetCustomerListAsync();
-                var customer = customerList.Items.FirstOrDefault(c => c.Email == email);
+                customer = await customerController.GetCustomerAsync(email);
                 if (customer != null)
                 {
-                    var paymentClient = new PaymentClient(MollieController.GetMollieKey());
-                    var customerPayments = await customerClient.GetCustomerPaymentListAsync(customer.Id);
-                    if (customerPayments.Items.Count > 0)
+                    var latestPayment = await customerController.GetLatestCustomerPayment(customer.Id);
+                    if (latestPayment != null)
                     {
-                        var userPlanMetaData = customerPayments.Items.FirstOrDefault().GetMetadata<UserPlanMetaData>();
-                        if (userPlanMetaData != null)
-                        {
-                            userPlanId = userPlanMetaData.Plan.Id;
-                        }
+                        userPlanId = latestPayment.GetMetadata<UserPlanMetaData>().Plan.Id;
                     }
                     else
                     {
@@ -176,27 +162,39 @@ namespace RentVision.Controllers
             var planList = JsonConvert.DeserializeObject<List<Controllers.Plan>>(planListResponse);
             var userPlan = planList.FirstOrDefault(p => p.Id == userPlanId);
 
-            if ( userPlan != null )
+            if (userPlan != null)
             {
-                // Create mollie customer account if they don't exist yet
-                var customerList = await customerController.GetCustomerListAsync();
-                string mollieCustomerId = null;
-                if (!customerController.DoesCustomerExist(email, customerList))
+                if (customer == null)
                 {
-                    mollieCustomerId = await customerController.CreateCustomerAsync(email, email, HttpContext);
+                    customer = await customerController.CreateCustomerAsync(email, email, HttpContext);
                 }
 
                 var model = await _loader.GetPage<SetupPage>(id, HttpContext.User, draft);
                 model.Email = email;
                 model.SelectedPlan = userPlan;
-                if(model.SelectedPlan.Price > 0)
+                if (model.SelectedPlan.Price > 0)
                 {
-                    var checkoutData = await GenerateMollieCheckoutUrl(email, model.SelectedPlan, email, HttpContext);
-                    model.MollieCheckoutUrl = checkoutData.checkoutUrl;
-                    model.MolliePaymentId = checkoutData.paymentId;
-                    model.IsUpgrade = checkoutData.IsUpgrade;
-                    model.UpgradePrice = checkoutData.UpgradePrice;
+                    var latestPayment = await customerController.GetLatestCustomerPayment(customer.Id);
+                    PaymentResponse paymentResponse = latestPayment;
+                    if (latestPayment == null)
+                    {
+                        paymentResponse = await customerController.CreatePaymentRequestAsync(userPlan, email, customer.Id, HttpContext);
+                    }
+                    var latestPaymentMetadata = paymentResponse.GetMetadata<UserPlanMetaData>();
+                    if (paymentResponse.Status == PaymentStatus.Open )
+                    {
+                        model.MollieCheckoutUrl = paymentResponse.Links.Checkout.Href;
+                    }
+                    else if (paymentResponse.Status != PaymentStatus.Paid)
+                    {
+                        model.MollieCheckoutUrl = $"/customer/payment/create/{userPlan.Id}/{customer.Id}";
+                    }
+                    model.MolliePaymentId = paymentResponse.Id;
+                    model.paymentStatus = paymentResponse.Status;
+                    model.IsUpgrade = latestPaymentMetadata.IsUpgrade;
+                    model.UpgradePrice = latestPaymentMetadata.UpgradePrice;
                 }
+
                 if (!string.IsNullOrWhiteSpace(code))
                 {
                     model.Code = code;
@@ -223,7 +221,7 @@ namespace RentVision.Controllers
             var customerPayments = paymentListResponse.Where(m => m.CustomerId == mollieId).ToList();
             if (customerPayments.Count <= 0)
             {
-                var checkoutUrl = await customerController.CreatePaymentRequest(userPlan, email, mollieId, HttpContext);
+                var checkoutUrl = await customerController.CreatePaymentRequestAsync(userPlan, email, mollieId, HttpContext);
                 if (checkoutUrl != null)
                 {
                     return (checkoutUrl.Links.Checkout.Href, checkoutUrl.Id, false, null);

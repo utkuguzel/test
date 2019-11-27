@@ -1,3 +1,4 @@
+using Mollie.Api.Models.Payment;
 using Piranha.AttributeBuilder;
 using Piranha.Models;
 using RentVision.Models.Regions;
@@ -18,5 +19,6 @@ namespace RentVision.Models
         public string MolliePaymentId { get; set; }
         public bool IsUpgrade { get; set; } = false;
         public string UpgradePrice { get; set; }
+        public PaymentStatus? paymentStatus { get; set; }
     }
 }

@@ -68,7 +68,7 @@
                                         <input class="focus" type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
                                         <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
                                         <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
-                                        
+
                                         <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
                                         <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
                                         <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
@@ -79,16 +79,30 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="step-pane step-pane-payment sample-pane alert" data-payment-id="@Model.MolliePaymentId" data-step="3" data-skip="@(Model.SelectedPlan.Price <= 0 ? true : false)">
+                            <div class="step-pane step-pane-payment sample-pane alert" data-payment-id="@Model.MolliePaymentId" data-step="3" data-error="@(Model.paymentStatus != null ? true : false)" data-skip="@(Model.SelectedPlan.Price <= 0 ? true : false)">
                                 <h4>@localize["Payment"]</h4>
                                 <h5>@localize["Start your payment by clicking on the button below."]</h5>
 
-                                @if( Model.IsUpgrade )
+                                @if (Model.IsUpgrade)
                                 {
-                                    <div id="upgradeNotification">
+                                    <div class="notification info">
                                         <i class="fas fa-info"></i>
-                                        <p>@localize["Your new plan cost for this period has been compensated with your old plan cost"]</p>
+                                        <span>@localize["Your new plan cost for this period has been compensated with your old plan cost"]</span>
                                     </div>
+                                }
+
+                                @{
+                                    if (Model.paymentStatus != null)
+                                    {
+                                        string paymentStatus = Enum.GetName(typeof(Mollie.Api.Models.Payment.PaymentStatus), Model.paymentStatus);
+                                        string notificationClass = Model.paymentStatus == Mollie.Api.Models.Payment.PaymentStatus.Paid ? "success" : "error";
+                                        string notificationIcon = Model.paymentStatus == Mollie.Api.Models.Payment.PaymentStatus.Paid ? "fa-check" : "fa-times";
+
+                                        <div class="notification @notificationClass">
+                                            <i class="fas @notificationIcon"></i>
+                                            <span>@localize["Payment" + paymentStatus]</span>
+                                        </div>
+                                    }
                                 }
 
                                 <table class="table plan-summary">
@@ -116,10 +130,10 @@
                                 </table>
 
                                 <div class="clearfix">
-                                    <button type="button" class="btn btn-light btn-skip" onclick="$('#confirmSkipPaymentModal').appendTo('#modalBox')" data-toggle="modal" data-target="#confirmSkipPaymentModal">
-                                        @localize["Skip"]
+                                    <a href="/payment/cancel" class="btn btn-light btn-skip">
+                                        @localize["Cancel"]
                                         <i class="fas fa-times"></i>
-                                    </button>
+                                    </a>
 
                                     <a href="@(Model.MollieCheckoutUrl != null ? Model.MollieCheckoutUrl : "javascript:;")" data-skip="@(Model.MollieCheckoutUrl == null ? true : false)" id="checkoutButton" class="btn btn-primary">
                                         @localize["Checkout"]

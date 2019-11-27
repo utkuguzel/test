@@ -20,21 +20,35 @@ a:hover {
   text-decoration: none;
   color: #2276D9;
 }
-#upgradeNotification {
+.notification {
   margin: 0 0 20px 0;
-  background: #b8daea;
-  color: #4a5879;
-  border: 1px solid #cabeff;
+  padding: 10px;
   border-radius: 2px;
   font-family: -apple-system, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue;
   font-size: 14px;
   font-weight: 600;
 }
-#upgradeNotification i {
-  font-size: 1em;
-  padding: 0 10px 0 0;
+.notification.info {
+  background: #b8daea;
+  color: #4a5879 !important;
+  border: 1px solid #cabeff;
 }
-#upgradeNotification p {
+.notification.error {
+  background: #eab8b8;
+  color: #794a4a !important;
+  border: 1px solid #f5a6a6;
+}
+.notification.success {
+  background: #bbeab8;
+  color: #4f794a !important;
+  border: 1px solid #a6cead;
+}
+.notification i {
+  font-size: 1em !important;
+  margin: 0 !important;
+  padding: 0 10px 0 0 !important;
+}
+.notification span {
   display: inline-block;
 }
 .statusMessage {
@@ -80,14 +94,14 @@ form {
   background-color: #fafafa;
   margin: 0;
 }
-.wizard span {
-  color: #AAA !important;
-}
 .wizard span.badge-info {
   color: #FFF !important;
 }
 .wizard span.badge-success {
   color: #FFF !important;
+}
+.wizard span .step-buttons {
+  color: #AAA;
 }
 .wizard .step-content {
   float: initial !important;
@@ -333,7 +347,7 @@ form {
 .setup .setup-content p {
   font-size: 0.9em;
 }
-.setup .setup-content span {
+.setup .setup-content .step-buttons span {
   font-size: 0.8em;
   color: #AAA;
 }

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Http;
 using static RentVision.Models.Configuration.Configuration;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace RentVision.Controllers
 {
@@ -51,11 +52,18 @@ namespace RentVision.Controllers
         }
 
         [HttpGet()]
-        public async Task<List<Plan>> Index()
+        public async Task<List<Plan>> GetPlansListAsync()
         {
             var response = await _apiHelper.SendApiCallAsync(ApiCalls.GetPlans);
             var responseData = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<List<Plan>>(responseData);
+        }
+
+        [HttpGet("{pid:guid}")]
+        public async Task<Plan> GetPlanAsync(Guid pid)
+        {
+            var plans = await GetPlansListAsync();
+            return plans.FirstOrDefault(p => p.Id == pid);
         }
 
         [HttpGet("features")]

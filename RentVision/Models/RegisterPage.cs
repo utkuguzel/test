@@ -14,7 +14,7 @@ namespace RentVision.Models
         [Region]
         public RegisterFields Fields { get; set; }
 
-        public UserPlan SelectedUserPlan { get; set; }
+        public Controllers.Plan SelectedUserPlan { get; set; }
 
         [BindProperty, Required]
         public string Email { get; set; }

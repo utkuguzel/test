@@ -10,7 +10,6 @@ namespace RentVision.Helpers
         {
             options = options ?? new CookieOptions();
             context.Response.Cookies.Append(key, value, options: options);
-
             return true;
         }
 

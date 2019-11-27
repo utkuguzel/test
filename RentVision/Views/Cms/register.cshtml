@@ -4,6 +4,9 @@
 @{
     ViewBag.Title = Model.Title;
 
+    var rqf = Context.Features.Get<IRequestCultureFeature>();
+    var localize = Localizer.WithCulture(rqf.RequestCulture.Culture);
+
     // Check if there's an error set in tempData and display it
     string statusMessage = TempData["StatusMessage"] != null ? TempData["StatusMessage"].ToString() : "";
     string[] errors = (TempData["Errors"] != null) ? (string[])TempData["Errors"] : null;
@@ -32,11 +35,19 @@
             }
         }
 
-        <span class="statusMessage">@Html.ValidationSummary()</span>
+        @if ( !Html.ViewData.ModelState.IsValid )
+        {
+            <span class="statusMessage">@Html.ValidationSummary()</span>
+        }
 
         <form method="post" action="@Model.Fields.ButtonLink.Value">
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="Id" />
+
+            <div class="notification info">
+                <i class="fas fa-info"></i>
+                <span>@string.Format(Localizer["selectedPlan"].Value, Model.SelectedUserPlan.Name)</span>
+            </div>
 
             <div class="form-group mb-3">
                 <label for="email">@Model.Fields.Email.Value</label>

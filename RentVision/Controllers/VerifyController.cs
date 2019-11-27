@@ -134,6 +134,9 @@ namespace RentVision.Controllers
                 context: HttpContext);
             var paymentStatus = await transactionResponse.Content.ReadAsStringAsync();
 
+            if (paymentStatus == "Paid")
+                HttpContext.Session.Remove("paymentId");
+
             return new JsonResult(new { transactionResponse.StatusCode, paymentStatus });
         }
 
