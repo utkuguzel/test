@@ -112,26 +112,34 @@ namespace Twinvision.Piranha.RentVision.Controllers
             return latestPayment;
         }
 
-        [HttpGet("payment/create/{planId:guid}/{customerId}")]
-        public async Task<ActionResult> CreatePaymentAsync(Guid planId, string customerId)
+        [HttpGet("payment/create/{customerId}")]
+        public async Task<ActionResult> CreatePaymentAsync(string customerId)
         {
             var planController = new PlanController(_api, _clientFactory);
-            var plan = await planController.GetPlanAsync(planId);
-            if (plan == null)
-            {
-                return BadRequest("Invalid plan ID specified");
-            }
             var customer = await GetCustomerFromIdAsync(customerId);
             if (customer == null)
             {
                 return BadRequest("Invalid customer ID specified");
             }
-            var paymentResponse = await CreatePaymentRequestAsync(plan, customer.Email, customer.Id, HttpContext);
+            var latestPayment = await GetLatestCustomerPayment(customer.Id);
+            if (latestPayment == null)
+            {
+                return BadRequest($"No payments found for customer {customer.Email}");
+            }
+            var latestPaymentMetadata = latestPayment.GetMetadata<UserPlanMetaData>();
+            var plan = latestPaymentMetadata.Plan;
+            if (plan == null)
+            {
+                return BadRequest("Invalid plan ID specified");
+            }
+            var paymentResponse = await CreatePaymentRequestAsync(plan, customer.Email, customer.Id, HttpContext, latestPayment.Amount.Value, latestPaymentMetadata);
             return Redirect(paymentResponse.Links.Checkout.Href);
         }
 
-        public async Task<PaymentResponse> CreatePaymentRequestAsync(Plan plan, string email, string customerId, HttpContext context)
+        public async Task<PaymentResponse> CreatePaymentRequestAsync(Plan plan, string email, string customerId, HttpContext context, string price = null, UserPlanMetaData metadata = null )
         {
+            price = price ?? plan.Price.ToString();
+
             UserPlanMetaData metadataRequest = new UserPlanMetaData()
             {
                 CustomerId = customerId,
@@ -139,11 +147,16 @@ namespace Twinvision.Piranha.RentVision.Controllers
                 Plan = plan
             };
 
+            if (metadata != null)
+            {
+                metadataRequest = metadata;
+            }
+
             PaymentRequest paymentRequest = new PaymentRequest()
             {
                 CustomerId = $"{customerId}",
                 SequenceType = SequenceType.First,
-                Amount = new Amount(Currency.EUR, plan.Price.ToString()),
+                Amount = new Amount(Currency.EUR, price),
                 Description = $"RentVision - {plan.Name}",
                 RedirectUrl = $"{Website.Url}/setup",
                 WebhookUrl = $"{BackOffice.Url}/{ApiCalls.PaymentWebhook.FullUrl()}"

@@ -147,6 +147,18 @@
   <data name="Hold on tight, this may take a few seconds..." xml:space="preserve">
     <value>Een moment geduld a.u.b. dit kan een aantal seconden duren...</value>
   </data>
+  <data name="ModalButtonAbortPayment" xml:space="preserve">
+    <value>Abort</value>
+  </data>
+  <data name="ModalButtonClose" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="ModalButtonSkipPayment" xml:space="preserve">
+    <value>Continue with a free plan</value>
+  </data>
+  <data name="ModalSkipPayment" xml:space="preserve">
+    <value>Wilt u de betaling overslaan en in plaats daarvan verdergaan met een gratis plan?</value>
+  </data>
   <data name="Monthly" xml:space="preserve">
     <value>Maandelijks</value>
   </data>

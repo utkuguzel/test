@@ -159,6 +159,9 @@
   <data name="Subdomain" xml:space="preserve">
     <value>Subdomain</value>
   </data>
+  <data name="TermsOfService" xml:space="preserve">
+    <value>You must agree to our terms of service before continuing.</value>
+  </data>
   <data name="Yearly" xml:space="preserve">
     <value>Yearly</value>
   </data>

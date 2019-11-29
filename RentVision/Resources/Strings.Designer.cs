@@ -187,6 +187,15 @@ namespace Twinvision.Piranha.RentVision.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You must agree to our terms of service before continuing..
+        /// </summary>
+        public static string TermsOfService {
+            get {
+                return ResourceManager.GetString("TermsOfService", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Yearly.
         /// </summary>
         public static string Yearly {

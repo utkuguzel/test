@@ -43,6 +43,9 @@ namespace RentVision.Models
                 .Matches(x => x.ConfirmPassword)
                 .WithName(x => Strings.ConfirmPassword)
                 .WithMessage(x => Strings.EqualValidator);
+            RuleFor(user => user.Tos)
+                .NotEmpty()
+                .WithMessage(x => Strings.TermsOfService);
         }
     }
 }

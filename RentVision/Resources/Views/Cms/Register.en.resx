@@ -118,6 +118,6 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="selectedPlan" xml:space="preserve">
-    <value>U registreerd een account met het {0} pakket.</value>
+    <value>You are registering an account with the {0} plan selected.</value>
   </data>
 </root>

@@ -159,6 +159,9 @@
   <data name="Subdomain" xml:space="preserve">
     <value>Subdomein</value>
   </data>
+  <data name="TermsOfService" xml:space="preserve">
+    <value>U dient akkoord te gaan met de Algemene Voorwaarden voordat u door kunt gaan.</value>
+  </data>
   <data name="Yearly" xml:space="preserve">
     <value>Jaarlijks</value>
   </data>

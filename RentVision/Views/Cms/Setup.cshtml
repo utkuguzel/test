@@ -1,5 +1,6 @@
 @model SetupPage
 @inject IApi Api
+@using Mollie.Api.Models.Payment
 
 @{
     ViewBag.Title = Model.Title;
@@ -79,11 +80,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="step-pane step-pane-payment sample-pane alert" data-payment-id="@Model.MolliePaymentId" data-step="3" data-error="@(Model.paymentStatus != null ? true : false)" data-skip="@(Model.SelectedPlan.Price <= 0 ? true : false)">
+                            <div class="step-pane step-pane-payment sample-pane alert" data-payment-id="@Model.MolliePaymentId" data-step="3" data-error="@(Model.PaymentStatus != null ? true : false)" data-skip="@(Model.SelectedPlan.Price <= 0 ? true : false)">
                                 <h4>@localize["Payment"]</h4>
                                 <h5>@localize["Start your payment by clicking on the button below."]</h5>
 
-                                @if (Model.IsUpgrade)
+                                @if (Model.IsUpgrade && Model.PaymentStatus != PaymentStatus.Paid)
                                 {
                                     <div class="notification info">
                                         <i class="fas fa-info"></i>
@@ -92,11 +93,11 @@
                                 }
 
                                 @{
-                                    if (Model.paymentStatus != null)
+                                    if ( Model.PaymentStatus != null && ( !Model.FirstPayment && (!Model.IsUpgrade || Enum.IsDefined(typeof(PaymentStatus), Model.PaymentStatus))))
                                     {
-                                        string paymentStatus = Enum.GetName(typeof(Mollie.Api.Models.Payment.PaymentStatus), Model.paymentStatus);
-                                        string notificationClass = Model.paymentStatus == Mollie.Api.Models.Payment.PaymentStatus.Paid ? "success" : "error";
-                                        string notificationIcon = Model.paymentStatus == Mollie.Api.Models.Payment.PaymentStatus.Paid ? "fa-check" : "fa-times";
+                                        string paymentStatus = Enum.GetName(typeof(PaymentStatus), Model.PaymentStatus);
+                                        string notificationClass = Model.PaymentStatus == PaymentStatus.Paid ? "success" : "error";
+                                        string notificationIcon = Model.PaymentStatus == PaymentStatus.Paid ? "fa-check" : "fa-times";
 
                                         <div class="notification @notificationClass">
                                             <i class="fas @notificationIcon"></i>
@@ -105,41 +106,44 @@
                                     }
                                 }
 
-                                <table class="table plan-summary">
-                                    <tbody>
-                                        <tr>
-                                            <th>@localize["Package"]</th>
-                                            <td>RentVision - @Model.SelectedPlan.Name</td>
-                                        </tr>
-                                        @if (Model.IsUpgrade)
-                                        {
+                                @if (Model.PaymentStatus != PaymentStatus.Paid)
+                                {
+                                    <table class="table plan-summary">
+                                        <tbody>
                                             <tr>
-                                                <th>@localize["Cost"]</th>
-                                                <td>&euro; @Model.UpgradePrice</td>
+                                                <th>@localize["Package"]</th>
+                                                <td>RentVision - @Model.SelectedPlan.Name</td>
                                             </tr>
-                                        }
-                                        <tr>
-                                            <th>@localize["Subscription cost"]</th>
-                                            <td>&euro; @Model.SelectedPlan.Price.ToString()</td>
-                                        </tr>
-                                        <tr>
-                                            <th>@localize["Subscription type"]</th>
-                                            <td>@(Model.SelectedPlan.PayInterval == RentVision.Controllers.PaymentInterval.Yearly ? localize["Yearly"] : localize["Monthly"])</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                            @if (Model.IsUpgrade)
+                                            {
+                                                <tr>
+                                                    <th>@localize["Cost"]</th>
+                                                    <td>&euro; @Model.UpgradePrice</td>
+                                                </tr>
+                                            }
+                                            <tr>
+                                                <th>@localize["Subscription cost"]</th>
+                                                <td>&euro; @Model.SelectedPlan.Price.ToString()</td>
+                                            </tr>
+                                            <tr>
+                                                <th>@localize["Subscription type"]</th>
+                                                <td>@(Model.SelectedPlan.PayInterval == RentVision.Controllers.PaymentInterval.Yearly ? localize["Yearly"] : localize["Monthly"])</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
 
-                                <div class="clearfix">
-                                    <a href="/payment/cancel" class="btn btn-light btn-skip">
-                                        @localize["Cancel"]
-                                        <i class="fas fa-times"></i>
-                                    </a>
+                                    <div class="clearfix">
+                                        <button class="btn btn-light btn-skip" data-toggle="modal" data-target="#confirmSkipPaymentModal">
+                                            @localize["Cancel"]
+                                            <i class="fas fa-times"></i>
+                                        </button>
 
-                                    <a href="@(Model.MollieCheckoutUrl != null ? Model.MollieCheckoutUrl : "javascript:;")" data-skip="@(Model.MollieCheckoutUrl == null ? true : false)" id="checkoutButton" class="btn btn-primary">
-                                        @localize["Checkout"]
-                                        <i class="fas fa-arrow-right"></i>
-                                    </a>
-                                </div>
+                                        <a href="@(Model.MollieCheckoutUrl != null ? Model.MollieCheckoutUrl : "javascript:;")" data-skip="@(Model.MollieCheckoutUrl == null ? true : false)" id="checkoutButton" class="btn btn-primary">
+                                            @localize["Checkout"]
+                                            <i class="fas fa-arrow-right"></i>
+                                        </a>
+                                    </div>
+                                }
                             </div>
                             <div class="step-pane sample-pane alert" data-step="4">
                                 <h4>@localize["Environment setup"]</h4>
@@ -184,11 +188,16 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        @localize["Are you sure you want to skip payment? Skipping this step will set your account to a free plan."]
+                        @localize["ModalSkipPayment"]
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">@localize["Close"]</button>
-                        <button type="button" id="modal-button-skip" class="btn btn-danger">@localize["Skip payment"]</button>
+                        <div class="float-left">
+                            <button type="button" class="btn btn-warning" id="modal-button-abort">@localize["ModalButtonAbortPayment"]</button>
+                            <button type="button" class="btn btn-danger" id="modal-button-skip">@localize["ModalButtonSkipPayment"]</button>
+                        </div>
+                        <div class="float-right">
+                            <button type="button" class="btn btn-success">@localize["ModalButtonClose"]</button>
+                        </div>
                     </div>
                 </div>
             </div>

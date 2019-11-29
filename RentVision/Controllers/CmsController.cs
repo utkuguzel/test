@@ -178,6 +178,7 @@ namespace RentVision.Controllers
                     PaymentResponse paymentResponse = latestPayment;
                     if (latestPayment == null)
                     {
+                        model.FirstPayment = true;
                         paymentResponse = await customerController.CreatePaymentRequestAsync(userPlan, email, customer.Id, HttpContext);
                     }
                     var latestPaymentMetadata = paymentResponse.GetMetadata<UserPlanMetaData>();
@@ -187,10 +188,10 @@ namespace RentVision.Controllers
                     }
                     else if (paymentResponse.Status != PaymentStatus.Paid)
                     {
-                        model.MollieCheckoutUrl = $"/customer/payment/create/{userPlan.Id}/{customer.Id}";
+                        model.MollieCheckoutUrl = $"/customer/payment/create/{customer.Id}";
                     }
                     model.MolliePaymentId = paymentResponse.Id;
-                    model.paymentStatus = paymentResponse.Status;
+                    model.PaymentStatus = paymentResponse.Status;
                     model.IsUpgrade = latestPaymentMetadata.IsUpgrade;
                     model.UpgradePrice = latestPaymentMetadata.UpgradePrice;
                 }
@@ -205,7 +206,7 @@ namespace RentVision.Controllers
                 return View(model);
             }
 
-            return LocalRedirect("/");
+            return LocalRedirect("/plans");
         }
 
         private async Task<(string checkoutUrl, string paymentId, bool IsUpgrade, string UpgradePrice)> GenerateMollieCheckoutUrl(string email, Plan userPlan, string businessUnitName, HttpContext context)
@@ -246,6 +247,12 @@ namespace RentVision.Controllers
             var result = await _apiHelper.SendApiCallAsync(ApiCalls.KillAllSites);
             var resultString = await result.Content.ReadAsStringAsync();
             return new JsonResult(new { result.StatusCode, resultString });
+        }
+
+        [Route("/hero")]
+        public ActionResult Hero()
+        {
+            return View("/Views/Shared/Partial/_svg_hero.cshtml");
         }
 
         //[Route("/api/benchmarkCreateAccount/{num}")]

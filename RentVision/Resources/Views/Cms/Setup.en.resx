@@ -117,11 +117,26 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ModalButtonAbortPayment" xml:space="preserve">
+    <value>Abort</value>
+  </data>
+  <data name="ModalButtonClose" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="ModalButtonSkipPayment" xml:space="preserve">
+    <value>Continue with a free plan</value>
+  </data>
+  <data name="ModalSkipPayment" xml:space="preserve">
+    <value>Would you like to skip payment and continue with a free plan instead?</value>
+  </data>
   <data name="PaymentCanceled" xml:space="preserve">
     <value>You have canceled your payment.</value>
   </data>
   <data name="PaymentExpired" xml:space="preserve">
     <value>Your payment expired. Please try again by clicking on the green button below.</value>
+  </data>
+  <data name="PaymentFailed" xml:space="preserve">
+    <value>Failed to process your payment. Please try again.</value>
   </data>
   <data name="PaymentOpen" xml:space="preserve">
     <value>You have an open payment. Please proceed to checkout to continue.</value>

@@ -21,13 +21,93 @@
                                                       IE 10+, Safari 5 */
     }
 
+    #Cloud_One {
+        position: absolute;
+        left: 315px;
+        top: 143px;
+        animation: clouds 60s linear infinite;
+    }
+
+    #Cloud_Two {
+        position: absolute;
+        left: 315px;
+        top: 143px;
+        animation: clouds 40s linear infinite;
+    }
+
+    #Bird_One, #Bird_Two, #Bird_Three {
+        animation: birds 20s linear infinite;
+    }
+
+    #Bird_One_Wing {
+        animation: flapOne 0.7s alternate infinite;
+    }
+
+    #Bird_Two_Wing {
+        animation: flapTwo 0.5s alternate infinite;
+    }
+
+    #Bird_Three_Wing {
+        animation: flapThree 0.3s alternate infinite;
+    }
+
+    @@keyframes flapOne {
+        from {
+            transform: rotateZ(0);
+        }
+
+        to {
+            transform: rotateZ(-1deg);
+        }
+    }
+
+    @@keyframes flapTwo {
+        from {
+            transform: rotateZ(0);
+        }
+
+        to {
+            transform: rotateZ(-1deg);
+        }
+    }
+
+    @@keyframes flapThree {
+        from {
+            transform: rotateZ(0);
+        }
+
+        to {
+            transform: rotateZ(-1deg);
+        }
+    }
+
+    @@keyframes birds {
+        from {
+            transform: translateX(800px);
+        }
+
+        to {
+            transform: translateX(-800px);
+        }
+    }
+
+    @@keyframes clouds {
+        from {
+            transform: translateX(0);
+        }
+
+        to {
+            transform: translateX(100px);
+        }
+    }
+
     @@keyframes myOrbit {
         from {
             transform: rotate(0deg) translateX(150px) rotate(0deg);
         }
 
         to {
-            transform: rotate(360deg) translateX(150px) rotate(-360deg);
+            transform: rotate(-180deg) translateX(150px) rotate(180deg);
         }
     }
 </style>
