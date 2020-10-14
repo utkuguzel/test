@@ -25,11 +25,11 @@ namespace RentVision.Controllers
         private ApiHelper _apiHelper;
         private IRecaptchaService _recaptcha;
 
-        public AuthController(IApi api, IHttpClientFactory clientFactory, IRecaptchaService recaptcha )
+        public AuthController(IApi api, IHttpClientFactory clientFactory, IRecaptchaService recaptcha)
         {
             _api = api;
             _clientFactory = clientFactory;
-            _apiHelper = new ApiHelper( _api, _clientFactory );
+            _apiHelper = new ApiHelper(_api, _clientFactory);
             _recaptcha = recaptcha;
         }
 
@@ -42,7 +42,7 @@ namespace RentVision.Controllers
             };
             var userSiteReadyRequest = await _apiHelper.SendApiCallAsync(ApiCalls.UserSiteReady, urlParameters, context: HttpContext);
             var response = await userSiteReadyRequest.Content.ReadAsStringAsync();
-            return new JsonResult( new { userSiteReadyRequest.StatusCode, response } );
+            return new JsonResult(new { userSiteReadyRequest.StatusCode, response });
         }
 
         [ValidateAntiForgeryToken]
@@ -52,7 +52,7 @@ namespace RentVision.Controllers
             var pageModel = await _api.Pages.GetByIdAsync<LoginPage>(model.Id);
             string userCulture = CultureHelper.GetUserCulture(Request, HttpContext);
 
-            if ( string.IsNullOrEmpty(model.Email))
+            if (string.IsNullOrEmpty(model.Email))
             {
                 return View("~/Views/Cms/login.cshtml", pageModel);
             }
@@ -81,7 +81,7 @@ namespace RentVision.Controllers
             TempData["StatusCode"] = userCredentialResponse.StatusCode;
             TempData["StatusMessage"] = "";
 
-            if ( !userCredentialResponse.IsSuccessStatusCode )
+            if (!userCredentialResponse.IsSuccessStatusCode)
             {
                 string localizedBackOfficeMessage = AuthHelper.GetBackOfficeStringLocalized(userCulture, userCredentialString);
                 if (localizedBackOfficeMessage != null)
@@ -104,7 +104,7 @@ namespace RentVision.Controllers
 
         [ValidateAntiForgeryToken]
         [HttpPost("/auth/register")]
-        public async Task<IActionResult> RegisterAsync( RegisterPage model )
+        public async Task<IActionResult> RegisterAsync(RegisterPage model)
         {
             string userCulture = CultureHelper.GetUserCulture(Request, HttpContext);
             string refererUrl = Request.Headers["Referer"].ToString();
@@ -136,7 +136,9 @@ namespace RentVision.Controllers
                 { "subDomainName", model.Subdomain },
                 { "businessUnitName", model.BusinessUnitName }
             };
-
+#if DEBUG
+            urlParameters.Add("test", "true");
+#endif
             // Attempt to create an account if everything is ok
             var createAccountRequest = await _apiHelper.SendApiCallAsync(
                 ApiCalls.CreateAccount,
@@ -144,7 +146,7 @@ namespace RentVision.Controllers
                 password: model.Password
             );
             string createAccountResponse = await createAccountRequest.Content.ReadAsStringAsync();
-            if ( Guid.TryParse(createAccountResponse, out Guid apiLoginKey) )
+            if (Guid.TryParse(createAccountResponse, out Guid apiLoginKey))
             {
                 var expirationOffset = new DateTimeOffset().ToOffset(TimeSpan.FromMinutes(20));
                 HttpContext.Session.SetString("ApiLoginKey", createAccountResponse);
@@ -157,10 +159,10 @@ namespace RentVision.Controllers
             TempData["StatusCode"] = createAccountRequest.StatusCode;
             TempData["StatusMessage"] = "";
 
-            if ( !createAccountRequest.IsSuccessStatusCode )
+            if (!createAccountRequest.IsSuccessStatusCode)
             {
                 string localizedBackOfficeMessage = AuthHelper.GetBackOfficeStringLocalized(userCulture, createAccountResponse);
-                if ( localizedBackOfficeMessage != null )
+                if (localizedBackOfficeMessage != null)
                 {
                     TempData["StatusMessage"] = localizedBackOfficeMessage;
                 }
@@ -176,7 +178,7 @@ namespace RentVision.Controllers
             var apiLoginKey = HttpContext.Session.GetString("ApiLoginKey") ?? CookieHelper.GetCookie("ApiLoginKey", HttpContext);
             if (apiLoginKey == null)
             {
-                return new JsonResult( new { statusCode = HttpStatusCode.BadRequest });
+                return new JsonResult(new { statusCode = HttpStatusCode.BadRequest });
             }
             var email = await _apiHelper.GetEmailFromLoginKeyAsync(apiLoginKey, HttpContext);
             var getUserKeyParameters = new Dictionary<string, string>() {
@@ -190,7 +192,7 @@ namespace RentVision.Controllers
             );
 
             var subdomain = await subdomainResponse.Content.ReadAsStringAsync();
-            var redirectUrl = $"{BackOffice.Protocol}://{subdomain}.{BackOffice.HostName.Replace("/api","")}";
+            var redirectUrl = $"{Website.Protocol}://{subdomain}.{Website.HostName}";
 
             // Add subDomainName to the list of parameters because we need it in the next call
             getUserKeyParameters.Add("subDomainName", subdomain);
@@ -204,7 +206,7 @@ namespace RentVision.Controllers
             string userKey = await userKeyResponse.Content.ReadAsStringAsync();
             string realRedirectUrl = redirectUrl + "/externLogin?externLoginKey=" + userKey;
 
-            return new JsonResult( new { statusCode = HttpStatusCode.OK, realRedirectUrl } );
+            return new JsonResult(new { statusCode = HttpStatusCode.OK, realRedirectUrl });
         }
     }
 }

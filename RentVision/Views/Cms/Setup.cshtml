@@ -207,6 +207,8 @@
 @section script {
     <script src="//www.fuelcdn.com/fuelux/3.13.0/js/fuelux.min.js"></script>
     @* Custom scripts *@
-    <script type="text/javascript" src="~/assets/js/setup.js"></script>
-    <script type="text/javascript" src="~/assets/js/verificationCode.js"></script>
+    
+    @* Caching is prevented in this piece of code because it only gets triggered rarely and cache is not easily cleared *@
+    <script type="text/javascript" src="~/assets/js/setup.js?preventcaching=@(new Random().Next())"></script>
+    <script type="text/javascript" src="~/assets/js/verificationCode.js?preventcaching=@(new Random().Next())"></script>
 }

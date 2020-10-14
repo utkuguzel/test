@@ -67,13 +67,14 @@ namespace RentVision.Controllers
         }
 
         [HttpGet("features")]
-        public async Task<List<PlanFeature>> GetPlanFeaturesAsync()
+        public async Task<List<PlanFeature>> GetPlanFeaturesAsync(Guid planId)
         {
             var rqf = HttpContext.Features.Get<IRequestCultureFeature>();
             var culture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
             var urlParameters = new Dictionary<string, string>()
             {
-                { "culture", culture }
+                { "culture", culture },
+                { "id", planId.ToString() }
             };
             var response = await _apiHelper.SendApiCallAsync(ApiCalls.GetPlanFeatures, urlParameters);
             var responseData = await response.Content.ReadAsStringAsync();

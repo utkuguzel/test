@@ -9,7 +9,10 @@
     // Get current siteId based on users' culture
     var sites = await WebApp.Api.Sites.GetAllAsync();
     var site = sites.SingleOrDefault(m => m.Culture == culture);
-
+    if(site == null)
+    {
+        site = sites.Single(m => m.Culture == "en");
+    }
     // Get current start page
     var pageResult = await WebApp.Api.Pages.GetAllAsync<StartPage>(siteId: site.Id);
     var siteStartPage = pageResult.SingleOrDefault(m => m.Route == "/start" && m.SiteId == site.Id);
@@ -34,25 +37,6 @@
 
     <div id="rightmenu">
         <ul id="menuoptions">
-            @*<li class="headerOption home">
-                <div class="headerHoverBar"></div>
-                <i class="fa fa-angle-down"></i>
-                Home
-                <ul class="headerDropdown">
-                    @{ 
-                        foreach ( var headerItem in headerItems )
-                        {
-                            <a href="@headerItem.PageLink.Page.Permalink">
-                                <li>
-                                    <div class="headerHoverBar"></div>
-                                    @headerItem.Title
-                                </li>
-                            </a>
-                        }
-                    }
-                </ul>
-            </li>*@
-
             @{ 
                 foreach ( var headerItem in startPage.HeaderItems )
                 {

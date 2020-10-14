@@ -1,11 +1,11 @@
-@{ 
+@using Twinvision.Piranha.RentVision.Models.Extensions;
+@{
     var rqf = Context.Features.Get<IRequestCultureFeature>();
     var culture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
 
     // Get current siteId based on users' culture
-    var sites = await WebApp.Api.Sites.GetAllAsync();
-    var site = sites.SingleOrDefault(m => m.Culture == culture);
-
+    var site = await WebApp.Api.GetCulturedSite(culture);
+    
     var sitemap = WebApp.Site.Sitemap;
     var homePageResult = await WebApp.Api.Pages.GetStartpageAsync<StartPage>(site.Id);
     var termsAndConditions = await WebApp.Api.Pages.GetBySlugAsync<StandardPage>($"terms-and-conditions", site.Id);

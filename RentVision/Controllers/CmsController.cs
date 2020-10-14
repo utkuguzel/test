@@ -244,7 +244,7 @@ namespace RentVision.Controllers
         [Route("/api/killAllSites")]
         public async Task<IActionResult> KillAllSites()
         {
-            var result = await _apiHelper.SendApiCallAsync(ApiCalls.KillAllSites);
+            var result = await _apiHelper.SendApiCallAsync(ApiCalls.KillAllTestSites);
             var resultString = await result.Content.ReadAsStringAsync();
             return new JsonResult(new { result.StatusCode, resultString });
         }
@@ -294,12 +294,16 @@ namespace RentVision.Controllers
         public async Task<T> GetCulturizedModelAsync<T>(Guid id, ClaimsPrincipal user, bool draft)
             where T : PageBase
         {
-            var model = await _loader.GetPage<T>(id, HttpContext.User, draft);
+            var model = await _loader.GetPage<T>(id, user, draft);
 
             var rqf = HttpContext.Features.Get<IRequestCultureFeature>();
             var culture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
             var sites = await _api.Sites.GetAllAsync();
             var site = sites.SingleOrDefault(m => m.Culture == culture);
+            if(site == null)
+            {
+                site = sites.Single(m => m.Culture == "en");
+            }
             var pageResult = await _api.Pages.GetAllAsync<T>(siteId: site.Id);
 
             return await _api.Pages.GetByIdAsync<T>(pageResult.FirstOrDefault(m => m.Slug == model.Slug).Id);

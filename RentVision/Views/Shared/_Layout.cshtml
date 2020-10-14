@@ -1,30 +1,14 @@
 ﻿<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <link rel="shortcut icon" href="~/favicon.ico" />
-    <link rel="stylesheet" type="text/css" href="~/assets/css/reset.css">
-
-    <!-- Fonts -->
-	<link href="https://fonts.googleapis.com/css?family=Roboto|Open+Sans|Ubuntu:300,400,500,700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
-
-    <!-- Fontawesome -->
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" SameSite="Lax" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-
-	<!-- Bootstrap -->
-	<link rel="stylesheet" href="~/css/bootstrap.min.css">
-
-    <title>@ViewBag.Title</title>
-
-    @if (Model is Piranha.Models.IMeta) {
+    @if (Model is Piranha.Models.IMeta)
+    {
         <partial name="Partial/_Meta.cshtml" />
     }
 
-    <!-- Custom styles -->
-    <link rel="stylesheet" href="~/assets/css/hero.css">
+    <title>@ViewBag.Title</title>
+
+    <partial name="Partial/_Head.cshtml" />
 
     @RenderSection("head", required: false)
 </head>
@@ -33,19 +17,7 @@
 
     @RenderBody()
 
-    <!-- Scripts -->
-    <script src="~/assets/js/less.min.js"></script>
-
-    <!-- Bootstrap -->
-    <script type="text/javascript" src="~/assets/js/jquery-3.4.1.min.js"></script>
-    <script type="text/javascript" src="~/assets/js/jquery.color-2.1.2.min.js"></script>
-    <script type="text/javascript" src="~/assets/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="~/assets/js/popper.min.js"></script>
-
-    <!-- Custom scripts -->
-    <script src="~/assets/js/header.js"></script>
-    <script src="~/assets/js/loader.js"></script>
-    <script src="~/assets/js/hero.js"></script>
+    <partial name="Partial/_Scripts.cshtml" />
 
     @RenderSection("script", required: false)
 </body>

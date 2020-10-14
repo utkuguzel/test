@@ -1,6 +1,6 @@
 ﻿var email;
 var timer;
-var nopes = 0;
+var environmentReadyCalls = 0;
 
 function startSetupPoll()
 {
@@ -28,7 +28,7 @@ function isUserSiteReady()
         error: onErrorCallBack
     });
 
-    timer = setTimeout(isUserSiteReady, 1000);
+    timer = setTimeout(isUserSiteReady, 5000);
 }
 
 function onSuccessCallBack(response)
@@ -53,9 +53,9 @@ function onSuccessCallBack(response)
     }
     else if (response.response === "false")
     {
-        nopes += 1;
+        environmentReadyCalls += 1;
 
-        if (nopes >= 30) {
+        if (environmentReadyCalls >= 30) {
             clearTimeout(timer);
             $(".setup-working").fadeOut("fast", function () {
                 $(".setup-error").fadeIn("fast");
